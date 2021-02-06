@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeActivity">
+    tools:context=".ThomasActivity">
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello Android!"
-        android:textSize="30sp"
-        tools:layout_editor_absoluteX="176dp"
-        tools:layout_editor_absoluteY="214dp" />
+        android:text="Hello Thomas!"
+        android:textSize="30dp"
+        tools:layout_editor_absoluteX="160dp"
+        tools:layout_editor_absoluteY="284dp" />
 </RelativeLayout>
