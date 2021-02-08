@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Demo One</string>
+    <string name="why_are_you_here">why are you here?</string>
+    <string name="confused_person">confused person</string>
+    <string name="back_to_main">BACK TO MAIN</string>
+    <string name="message">Message</string>
+    <string name="next">Next</string>
+    <string name="change_title_s_color">Change Title\'s Color</string>
+</resources>
