@@ -4,21 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/design_default_color_primary_dark"
     tools:context=".MainActivity">
 
     <Button
         android:id="@+id/buttonMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:backgroundTint="#B85A5A"
         android:text="Message"
         android:translationX="75dp"
-        android:translationY="200dp" />
+        android:translationY="200dp"
+        app:cornerRadius="50dp" />
 
     <Button
         android:id="@+id/buttonNext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:backgroundTint="#1E70D5"
         android:text="Next"
-        android:translationX="200dp"
-        android:translationY="200dp" />
+        android:translationX="225dp"
+        android:translationY="200dp"
+        app:cornerRadius="50dp" />
 </RelativeLayout>
