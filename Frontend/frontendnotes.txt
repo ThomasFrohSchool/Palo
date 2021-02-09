@@ -3,3 +3,6 @@ This will be nice place for us to keep notes while we're working
        (_.==================================._)
 
 //add test
+
+DOING:
+- Create login page
