@@ -20,15 +20,15 @@
         android:layout_marginLeft="40dp"
         android:layout_marginBottom="525dp"
         android:text="@string/login"
-        android:textSize="30sp"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="129dp" />
+        android:textSize="30sp" />
 
     <EditText
         android:id="@+id/username"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_action_user"
+        android:drawablePadding="10dp"
         android:layout_marginStart="24dp"
         android:layout_marginBottom="400dp"
         android:layout_marginEnd="24dp"
@@ -44,6 +44,8 @@
         android:id="@+id/password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_action_lock"
+        android:drawablePadding="10dp"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
         android:layout_marginStart="24dp"
@@ -51,7 +53,7 @@
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="350dp"
         android:hint="@string/prompt_password"
-        android:imeActionLabel="@string/action_sign_in"
+        android:imeActionLabel="@string/action_log_in"
         android:imeOptions="actionDone"
         android:inputType="textPassword"
         android:selectAllOnFocus="true"
@@ -72,7 +74,7 @@
         android:layout_marginEnd="48dp"
         android:layout_marginBottom="275dp"
         android:enabled="false"
-        android:text="@string/action_sign_in"
+        android:text="@string/action_log_in"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
@@ -81,7 +83,7 @@
         app:layout_constraintVertical_bias="0.383" />
 
     <Button
-        android:id="@+id/createAccountButton"
+        android:id="@+id/createAccount"
         android:layout_alignParentBottom="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -92,12 +94,8 @@
         android:layout_marginEnd="48dp"
         android:layout_marginBottom="50dp"
         android:enabled="false"
-        android:text="@string/sign_up"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_bias="0.383" />
+        android:text="@string/create_account_msg"
+        />
 
     <ProgressBar
         android:id="@+id/loading"
