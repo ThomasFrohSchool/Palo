@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/design_default_color_primary_dark"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:id="@+id/relativeLayout">
 
     <Button
         android:id="@+id/buttonMessage"
@@ -13,17 +14,22 @@
         android:layout_height="wrap_content"
         android:backgroundTint="#B85A5A"
         android:text="Message"
-        android:translationX="75dp"
+        android:translationX="100dp"
         android:translationY="200dp"
-        app:cornerRadius="50dp" />
+        app:cornerRadius="50dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/buttonNext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
         android:backgroundTint="#1E70D5"
         android:text="Next"
-        android:translationX="225dp"
+        android:translationX="200dp"
         android:translationY="200dp"
-        app:cornerRadius="50dp" />
+        app:cornerRadius="50dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </RelativeLayout>
