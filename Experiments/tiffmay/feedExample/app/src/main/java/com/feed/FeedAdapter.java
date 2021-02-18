@@ -11,7 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.feed.models.Song;
+import com.feed.models.Palo;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -19,45 +19,66 @@ import java.util.List;
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
 
     LayoutInflater inflater;
-    List<Song> songs;
+    List<Palo> palos;
 
-    public FeedAdapter(Context context, List<Song> songs){
+    public FeedAdapter(Context context, List<Palo> palos){
         this.inflater = LayoutInflater.from(context);
-        this.songs = songs;
+        this.palos = palos;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.custom_list_layout,parent,false);
+        View view = inflater.inflate(R.layout.basic_palo_layout,parent,false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.songTitleTV.setText(songs.get(position).getTitle());
-        holder.songArtistTV.setText(songs.get(position).getArtist());
-        Picasso.get().load(songs.get(position).getAlbumCover()).into(holder.songCoverImage);
+        holder.authorUserNameTV.setText(palos.get(position).getAuthorUsername());
+        holder.postdateTV.setText(palos.get(position).getPostDate());
+        holder.captionTV.setText(palos.get(position).getCaption());
+        Picasso.get().load(palos.get(position).getProfileImage()).into(holder.authorProfileImage);
+
+        // Attached Song stuff...
+        holder.songTitleTV.setText(palos.get(position).getAttachedSong().getTitle());
+        holder.songArtistTV.setText(palos.get(position).getAttachedSong().getArtist());
+        Picasso.get().load(palos.get(position).getAttachedSong().getAlbumCover()).into(holder.songCoverImage);
     }
 
 
     @Override
     public int getItemCount() {
-        return songs.size();
+        return palos.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
+        //views for palo
+        TextView authorUserNameTV, postdateTV, captionTV;
+        ImageView authorProfileImage;
+
+        // views for interation with palo
+        TextView commentTV, likeTV;
+        
+        // views for attached song
         TextView songTitleTV, songArtistTV;
         ImageView songCoverImage;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            authorUserNameTV = itemView.findViewById(R.id.paloAuthorUserName);
+            postdateTV = itemView.findViewById(R.id.paloDate);
+            captionTV = itemView.findViewById(R.id.paloCaption);
+            authorProfileImage = itemView.findViewById(R.id.paloAuthorProfileImage);
+            commentTV = itemView.findViewById(R.id.paloComment);
+            likeTV = itemView.findViewById(R.id.paloLike);
 
             songTitleTV = itemView.findViewById(R.id.songTitle);
             songArtistTV = itemView.findViewById(R.id.songArtist);
             songCoverImage = itemView.findViewById(R.id.coverImage);
-
-            itemView.setOnClickListener(v -> Toast.makeText(v.getContext(), "Song was clicked! :)", Toast.LENGTH_SHORT).show());
+            itemView.setOnClickListener(v -> Toast.makeText(v.getContext(), "POST was clicked!", Toast.LENGTH_SHORT).show());
+//            commentTV.setOnClickListener(v -> Toast.makeText(v.getContext(), "Comment was clicked! this will eventually allow you to make a comment...", Toast.LENGTH_SHORT).show());
+//            likeTV.setOnClickListener(v -> Toast.makeText(v.getContext(), "LIKE was clicked! this will eventually allow you to like this palo...", Toast.LENGTH_SHORT).show());
         }
     }
 }

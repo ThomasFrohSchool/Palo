@@ -25,7 +25,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void extractSongs() {
-        JsonArrayRequest request = SongRequestHandler.songRequest(recyclerView, getApplicationContext());
+        JsonArrayRequest request = SongRequestHandler.paloRequest(recyclerView, getApplicationContext());
         VolleySingleton.getInstance(this).addToRequestQueue(request);
     }
 }
