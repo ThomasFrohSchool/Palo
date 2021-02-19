@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Palo</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="login">Log In</string>
+    <string name="create_account_msg">First time here? Sign up.</string>
+
+    <!-- Strings related to new account-->
+    <string name="prompt_name">Name</string>
+    <string name="new_account">New Account</string>
+    <string name="create_account">Create account.</string>
+    <string name="logout">logout</string>
+
+
+</resources>
