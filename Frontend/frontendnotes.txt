@@ -6,3 +6,4 @@ This will be nice place for us to keep notes while we're working
 
 DOING:
 - Create login page
+- Add Bottom Nav. Bar
