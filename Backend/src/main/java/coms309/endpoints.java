@@ -27,6 +27,7 @@ class WelcomeController {
 
     @Autowired
     UserTable userTable;
+    PostsTable postsTable;
 
     private String success = "{\"message\":\"success\"}";
     private String failure = "{\"message\":\"failure\"}";
@@ -56,6 +57,18 @@ class WelcomeController {
             return null;
         return myuser.get(0);
     }
+
+
+    //FOR POSTS
+    @PostMapping(path = "/createPost")
+    String createPost(@RequestBody Posts post){
+        if (post == null)
+            return failure;
+    postsTable.save(post);
+        return success;
+    }
+
+
 
     @GetMapping("/exp1/wow")
     public String uniWow(HttpServletRequest req){
