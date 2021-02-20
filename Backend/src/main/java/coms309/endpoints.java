@@ -28,6 +28,9 @@ class WelcomeController {
     @Autowired
     UserTable userTable;
 
+    private String success = "{\"message\":\"success\"}";
+    private String failure = "{\"message\":\"failure\"}";
+
     @GetMapping("/")
     public String welcome() {
         return "Hello and welcome to COMS 309";
@@ -38,17 +41,24 @@ class WelcomeController {
         return userTable.findAll();
     }
 
-    @GetMapping("/api/v1/getUsers")
-    public String getUsers() {
-        return "lOL";
+    @PostMapping(path = "/addUser")
+    String createUser(@RequestBody User user){
+        if (user == null)
+            return failure;
+        userTable.save(user);
+        return success;
     }
+
+    @PostMapping(path = "/login")
+    User login(@RequestBody User request){
+        List<User> myuser = userTable.findByUsername(request.getUsername());
+        if (myuser.size() == 0 || !(myuser.get(0).getPassword().equals(request.getPassword())))
+            return null;
+        return myuser.get(0);
+    }
+
     @GetMapping("/exp1/wow")
     public String uniWow(HttpServletRequest req){
 	return "~~~UNI-WOW~~~<br> You're accessing this site from: " + req.getRemoteAddr();
     }
-    /*@RequestMapping(method=RequestMethod.POST, path="/api/v1/addUser")
-    public String postUser(@RequestBody User user){
-        users.add(user);
-	    return "User: " + users.get(users.size()-1) + " Has been added";
-    }*/
 }
