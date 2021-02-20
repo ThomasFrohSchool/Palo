@@ -6,13 +6,11 @@
 
     <application
         android:allowBackup="true"
-        android:fullBackupContent="@xml/my_backup_rules">
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Palo">
-        <activity android:name=".activities.UserProfileActivity"/>
         <activity android:name=".activities.login.RegisterActivity" />
         <activity android:name=".activities.login.LoginActivity">
             <intent-filter>
