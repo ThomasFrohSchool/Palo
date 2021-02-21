@@ -8,12 +8,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.toolbox.StringRequest;
 import com.palo.palo.R;
 import com.palo.palo.SharedPrefManager;
-import com.palo.palo.activities.HomeActivity;
+import com.palo.palo.activities.MainActivity;
 import com.palo.palo.model.User;
 import com.palo.palo.volley.ServerURLs;
 import com.palo.palo.volley.VolleySingleton;
@@ -37,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if (SharedPrefManager.getInstance(this).isLoggedIn()) {
             finish();
-            startActivity(new Intent(this, HomeActivity.class));
+            startActivity(new Intent(this, MainActivity.class));
         }
         
         emailField = findViewById(R.id.loginEmail);
@@ -71,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
                             SharedPrefManager.getInstance(getApplicationContext()).login(user);
 
                             finish();
-                            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
 
                         } else {
                             Toast.makeText(getApplicationContext(), json.getString("message"), Toast.LENGTH_SHORT).show();
