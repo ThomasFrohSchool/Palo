@@ -1,5 +1,6 @@
 package coms309;
 
+import java.sql.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,31 +10,70 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import coms309.User;
-import java.util.ArrayList;
+import coms309.Posts;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
 
 @RestController
 class WelcomeController {
-    ArrayList<User> users = new ArrayList<User>();
+
+    @Autowired
+    UserTable userTable;
+    @Autowired
+    PostsTable postsTable;
+
+    private String success = "\"message\":\"success\"";
+    private String failure = "\"message\":\"failure\"";
+
     @GetMapping("/")
     public String welcome() {
         return "Hello and welcome to COMS 309";
     }
-
-    @GetMapping("/api/v1/getUsers")
-    public String getUsers() {
-        String userString = "";
-        for(int i=0; i<users.size(); i++){
-            userString = userString + users.get(i) + "<br>";
-        }
-        return userString;
+ 
+    @GetMapping(path = "/users")
+    List<User> getAllUsers(){
+        return userTable.findAll();
     }
+
+    @PostMapping(path = "/register")
+    String createUser(@RequestBody User user){
+        if (user == null)
+            return "{ \"error\":\"true\","+failure+"\"user\":\""+user+"\"}";
+        userTable.save(user);
+        return "{ \"error\":\"false\","+success+"\"user\":\""+user+"\"}";
+    }
+
+    @PostMapping(path = "/login")
+    User login(@RequestBody User request){
+        List<User> myuser = userTable.findByUsername(request.getUsername());
+        if (myuser.size() == 0 || !(myuser.get(0).getPassword().equals(request.getPassword())))
+            return null;
+        return myuser.get(0);
+    }
+
+
+    //FOR POSTS
+    @PostMapping(path = "/createPost")
+    String createPost(@RequestBody Posts post){
+        if (post == null)
+            return failure;
+    postsTable.save(post);
+        return success;
+    }
+
+
+
     @GetMapping("/exp1/wow")
     public String uniWow(HttpServletRequest req){
 	return "~~~UNI-WOW~~~<br> You're accessing this site from: " + req.getRemoteAddr();
-    }
-    @RequestMapping(method=RequestMethod.POST, path="/api/v1/addUser")
-    public String postUser(@RequestBody User user){
-        users.add(user);
-	    return "User: " + users.get(users.size()-1) + " Has been added";
     }
 }
