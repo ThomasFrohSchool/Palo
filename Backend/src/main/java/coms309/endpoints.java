@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import coms309.User;
+import coms309.Posts;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ class WelcomeController {
 
     @Autowired
     UserTable userTable;
+    @Autowired
     PostsTable postsTable;
 
     private String success = "{\"message\":\"success\"}";
