@@ -30,7 +30,7 @@ class User {
 	public User(){
 	}
 	public String toString(){
-		return this.getUsername() + ":" + this.getPassword();
+		return "{\"username\":\""+this.getUsername()+"\", \"email\":\"" + this.getEmail()+"\",\"id\""+this.getId()+"\"}";
 	}
 	public int getId(){
 		return this.id;

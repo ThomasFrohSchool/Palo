@@ -31,8 +31,8 @@ class WelcomeController {
     @Autowired
     PostsTable postsTable;
 
-    private String success = "{\"message\":\"success\"}";
-    private String failure = "{\"message\":\"failure\"}";
+    private String success = "\"message\":\"success\"";
+    private String failure = "\"message\":\"failure\"";
 
     @GetMapping("/")
     public String welcome() {
@@ -44,12 +44,12 @@ class WelcomeController {
         return userTable.findAll();
     }
 
-    @PostMapping(path = "/addUser")
+    @PostMapping(path = "/register")
     String createUser(@RequestBody User user){
         if (user == null)
-            return failure;
+            return "{ \"error\":\"true\","+failure+"\"user\":\""+user+"\"}";
         userTable.save(user);
-        return success;
+        return "{ \"error\":\"false\","+success+"\"user\":\""+user+"\"}";
     }
 
     @PostMapping(path = "/login")
