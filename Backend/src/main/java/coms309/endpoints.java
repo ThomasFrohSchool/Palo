@@ -57,11 +57,11 @@ class WelcomeController {
     }
 
     @PostMapping(path = "/login")
-    User login(@RequestBody User request){
+    String login(@RequestBody User request){
         List<User> myuser = userTable.findByUsername(request.getUsername());
         if (myuser.size() == 0 || !(myuser.get(0).getPassword().equals(request.getPassword())))
             return null;
-        return myuser.get(0);
+        return "{ \"error\":\"false\","+success+",\"user\":"+myuser.get(0)+"}";
     }
 
 
