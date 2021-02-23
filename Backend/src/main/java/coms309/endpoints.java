@@ -48,7 +48,11 @@ class WelcomeController {
     String createUser(@RequestBody User user){
         if (user == null)
             return "{ \"error\":\"true\","+failure+"\"user\":\""+user+"\"}";
-        userTable.save(user);
+        try {
+            userTable.save(user);
+        } catch (Exception e){
+            return "{ \"error\":\"true\","+failure+"\"user\":\""+user+"\"}";
+        }
         return "{ \"error\":\"false\","+success+"\"user\":\""+user+"\"}";
     }
 
