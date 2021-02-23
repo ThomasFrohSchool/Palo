@@ -9,6 +9,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.palo.palo.R;
 import com.palo.palo.SharedPrefManager;
@@ -28,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText passwordField;
     Button register;
     Button login;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,14 +41,13 @@ public class LoginActivity extends AppCompatActivity {
             finish();
             startActivity(new Intent(this, MainActivity.class));
         }
-        
+
         emailField = findViewById(R.id.loginEmail);
         passwordField = findViewById(R.id.loginPassword);
 
         register = findViewById(R.id.toRegisterPage);
         register.setOnClickListener(v -> {
             finish();
-//            Intent i = new Intent(LoginActivity.this, RegisterActivity.class);
             startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
         });
         login = findViewById(R.id.loginButton);
@@ -58,36 +60,36 @@ public class LoginActivity extends AppCompatActivity {
         String password = passwordField.getText().toString();
 
         if (hasEmptyCredentials(email, password)) return;
+        Map<String, String> params = new HashMap<>();
+        params.put("password", password);
+        params.put("username", email);
 
-        StringRequest request = new StringRequest(Request.Method.POST, ServerURLs.LOGIN,
-                response -> {
-                    try {
-                        JSONObject json = new JSONObject(response);
-                        if(!json.getBoolean("error")) {
-                            JSONObject userJson = json.getJSONObject("user");
+        JsonObjectRequest request = new JsonObjectRequest(ServerURLs.LOGIN, new JSONObject(params), new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject json) {
+                try {
+                    if(!json.getBoolean("error")) {
 
-                            User user = new User(userJson.getInt("id"), userJson.getString("username"), userJson.getString("email"));
-                            SharedPrefManager.getInstance(getApplicationContext()).login(user);
+                        JSONObject userJson = json.getJSONObject("user");
 
-                            finish();
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        User user = new User(Integer.parseInt(userJson.getString("id")), userJson.getString("username"), userJson.getString("email"));
+                        SharedPrefManager.getInstance(getApplicationContext()).login(user);
 
-                        } else {
-                            Toast.makeText(getApplicationContext(), json.getString("message"), Toast.LENGTH_SHORT).show();
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                        finish();
+                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
                     }
-                }, error -> Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show()) 
-            {
-               @Override
-                  protected Map<String, String> getParams() {
-                      Map<String, String> params = new HashMap<>();
-                      params.put("username", email);
-                      params.put("password", password);
-                      return params;
-                  }
-            };
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }}, new Response.ErrorListener(){
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+            }
+        });
+
         VolleySingleton.getInstance(this).addToRequestQueue(request);
     }
 
