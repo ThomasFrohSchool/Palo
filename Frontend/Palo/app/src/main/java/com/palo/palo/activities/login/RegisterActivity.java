@@ -9,6 +9,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.palo.palo.R;
 import com.palo.palo.SharedPrefManager;
@@ -55,36 +58,35 @@ public class RegisterActivity extends AppCompatActivity {
         String password = passwordRegField.getText().toString().trim();
 
         if (hasEmptyCredentials(username, email, password)) return;
+        Map<String, String> params = new HashMap<>();
+        params.put("username", username);
+        params.put("password", password);
+        params.put("email", email);
 
-        StringRequest request = new StringRequest(Request.Method.POST, ServerURLs.REGISTER,
-                response -> {
-                    try {
-                        JSONObject json = new JSONObject(response);
-                        if(!json.getBoolean("error")) {
-                            JSONObject userJson = json.getJSONObject("user");
-
-                            User user = new User(userJson.getInt("id"), userJson.getString("username"), userJson.getString("email"));
-                            SharedPrefManager.getInstance(getApplicationContext()).login(user);
-
-                            finish();
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-
-                        } else {
-                            Toast.makeText(getApplicationContext(), json.getString("message"), Toast.LENGTH_SHORT).show();
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }, error -> Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show())
-        {
+        JsonObjectRequest request = new JsonObjectRequest(ServerURLs.REGISTER, new JSONObject(params), new Response.Listener<JSONObject>() {
             @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put("username", email);
-                params.put("password", password);
-                return params;
+            public void onResponse(JSONObject json) {
+                try {
+                    if(!json.getBoolean("error")) {
+                        JSONObject userJson = json.getJSONObject("user");
+
+                        User user = new User(Integer.parseInt(userJson.getString("id")), userJson.getString("username"), userJson.getString("email"));
+                        SharedPrefManager.getInstance(getApplicationContext()).login(user);
+
+                        finish();
+                        startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }}, new Response.ErrorListener(){
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             }
-        };
+        });
         VolleySingleton.getInstance(this).addToRequestQueue(request);
     }
 
