@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".StringActivity">
+
+    <Button
+        android:id="@+id/stringInReq"
+        android:layout_width="175dp"
+        android:layout_height="48dp"
+        android:text="string request"
+        android:translationX="100dp"
+        tools:layout_editor_absoluteX="115dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Response: "
+        android:translationY="100dp" />
+
+    <TextView
+        android:id="@+id/msgStrResponse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:translationY="120dp" />
+</RelativeLayout>
