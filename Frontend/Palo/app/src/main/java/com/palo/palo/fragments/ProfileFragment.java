@@ -7,9 +7,12 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.palo.palo.R;
+import com.palo.palo.SharedPrefManager;
+import com.palo.palo.model.User;
 
 
 public class ProfileFragment extends Fragment {
@@ -29,5 +32,14 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         TextView headerET = view.findViewById(R.id.profile_header);
+        User user = SharedPrefManager.getInstance(getActivity().getApplicationContext()).getUser();
+        headerET.setText(user.getUsername());
+        Button logoutButton = view.findViewById(R.id.logout);
+        logoutButton.setOnClickListener(v -> {
+            if (v.equals(logoutButton)) {
+                SharedPrefManager.getInstance(getActivity().getApplicationContext()).logout();
+            }
+        });
+
     }
 }
