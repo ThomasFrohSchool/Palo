@@ -1,4 +1,4 @@
-package coms309;
+package coms309.Users;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;

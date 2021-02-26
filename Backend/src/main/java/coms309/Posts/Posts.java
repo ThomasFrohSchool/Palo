@@ -1,4 +1,4 @@
-package coms309;
+package coms309.Posts;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
