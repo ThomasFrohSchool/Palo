@@ -1,4 +1,4 @@
-package coms309;
+package coms309.Posts;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

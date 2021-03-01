@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
-import coms309.User;
-import coms309.Posts;
-import java.util.List;
+
+import coms309.Users.*;
+import coms309.Posts.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,55 +26,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 class WelcomeController {
 
-    @Autowired
-    UserTable userTable;
-    @Autowired
-    PostsTable postsTable;
 
-    private String success = "\"message\":\"success\"";
-    private String failure = "\"message\":\"failure\"";
 
     @GetMapping("/")
     public String welcome() {
         return "Hello and welcome to COMS 309";
     }
- 
-    @GetMapping(path = "/users")
-    List<User> getAllUsers(){
-        return userTable.findAll();
-    }
-
-    @PostMapping(path = "/register")
-    String createUser(@RequestBody User user){
-        if (user == null)
-            return "{ \"error\":\"true\","+failure+",\"user\":"+user+"}";
-        try {
-            userTable.save(user);
-        } catch (Exception e){
-            return "{ \"error\":\"true\","+failure+",\"user\":"+user+"}";
-        }
-        return "{ \"error\":\"false\","+success+",\"user\":"+user+"}";
-    }
-
-    @PostMapping(path = "/login")
-    String login(@RequestBody User request){
-        List<User> myuser = userTable.findByUsername(request.getUsername());
-        if (myuser.size() == 0 || !(myuser.get(0).getPassword().equals(request.getPassword())))
-            return null;
-        return "{ \"error\":\"false\","+success+",\"user\":"+myuser.get(0)+"}";
-    }
-
-
-    //FOR POSTS
-    @PostMapping(path = "/createPost")
-    String createPost(@RequestBody Posts post){
-        if (post == null)
-            return failure;
-    postsTable.save(post);
-        return success;
-    }
-
-
 
     @GetMapping("/exp1/wow")
     public String uniWow(HttpServletRequest req){
