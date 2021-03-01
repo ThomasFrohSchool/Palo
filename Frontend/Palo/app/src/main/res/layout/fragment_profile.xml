@@ -5,31 +5,116 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.ProfileFragment">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/profile_header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Profile will go here..."
-            android:textSize="40sp"
-            app:layout_constraintBottom_toTopOf="@id/logout"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            />
 
         <Button
             android:id="@+id/logout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="93dp"
+            android:layout_height="50dp"
             android:layout_gravity="bottom"
             android:text="LOGOUT"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/profile_header"/>
+            tools:layout_editor_absoluteY="0dp" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_manage"
+            tools:layout_editor_absoluteX="363dp"
+            tools:layout_editor_absoluteY="9dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/profileName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Username will go here..."
+        android:translationY="50dp" />
+
+    <ImageView
+        android:id="@+id/profileImage"
+        android:layout_width="85dp"
+        android:layout_height="80dp"
+        android:translationY="75dp"
+        tools:src="@tools:sample/avatars" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="496dp"
+        android:translationY="235dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/paloAmt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="x"
+        android:translationX="100dp"
+        android:translationY="75dp" />
+
+    <TextView
+        android:id="@+id/Palos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Palos"
+        android:translationX="115dp"
+        android:translationY="75dp" />
+
+    <TextView
+        android:id="@+id/followerAmt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="x"
+        android:translationX="180dp"
+        android:translationY="75dp" />
+
+    <TextView
+        android:id="@+id/Followers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:translationX="195dp"
+        android:translationY="75dp" />
+
+    <TextView
+        android:id="@+id/followingAmt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="x"
+        android:translationX="300dp"
+        android:translationY="75dp" />
+
+    <TextView
+        android:id="@+id/Following"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:translationX="320dp"
+        android:translationY="75dp" />
+
+    <Button
+        android:id="@+id/updateProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Update Profile"
+        android:translationX="250dp"
+        android:translationY="130dp" />
+
+    <TextView
+        android:id="@+id/pinnedSong"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pinned Song"
+        android:translationX="100dp"
+        android:translationY="135dp" />
 
 </FrameLayout>
