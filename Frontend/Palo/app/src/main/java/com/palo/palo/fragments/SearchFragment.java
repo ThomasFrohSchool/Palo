@@ -7,12 +7,15 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.palo.palo.R;
 
 
 public class SearchFragment extends Fragment {
+    EditText search;
 
     public SearchFragment() {}
 
@@ -28,6 +31,9 @@ public class SearchFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        TextView headerET = view.findViewById(R.id.search_header);
+        //TextView headerET = view.findViewById(R.id.search_header);
+        SearchView search = view.findViewById((R.id.spotifySearch));
     }
+
+
 }
