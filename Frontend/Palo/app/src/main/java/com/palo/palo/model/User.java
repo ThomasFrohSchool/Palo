@@ -3,7 +3,7 @@ package com.palo.palo.model;
 public class User {
     private int id;
     private String username;
-    private String email;
+    public String email;
     
     /*
         Future things user could have:
