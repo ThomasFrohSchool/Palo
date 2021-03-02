@@ -46,21 +46,29 @@ public class SpotifyController {
     
             for (Map.Entry bod : body.entrySet()) {
                 if (postData.length() != 0) postData.append('&');
-                postData.append(URLEncoder.encode("UTF-8"));
+                postData.append(URLEncoder.encode(String.valueOf(bod.getKey()),"UTF-8"));
                 postData.append('=');
                 postData.append(URLEncoder.encode(String.valueOf(bod.getValue()), "UTF-8"));
             }
+
+
     
-            byte[] postDataBytes = postData.toString().getBytes("UTF-8");
+            byte[] postDataBytes  = postData.toString().getBytes("UTF-8");
+
     
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
             con.setRequestMethod("POST");
-            int responseCode = con.getResponseCode();
+
             con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             con.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
             con.setDoOutput(true);
             con.getOutputStream().write(postDataBytes);
-            
+
+
+            int responseCode = con.getResponseCode();
+
+
             BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
             String line;
             StringBuffer response = new StringBuffer();
@@ -68,12 +76,16 @@ public class SpotifyController {
                 response.append(line);
             }
             in.close();
+
+
     
             System.out.println(response.toString());
     
     
             JSONObject myResponse = new JSONObject(response.toString());
             System.out.println(myResponse.getString("access_token"));
+
+
     
             return myResponse.getString("access_token");
     
@@ -82,6 +94,12 @@ public class SpotifyController {
             return e.toString();
         }
     }
+
+    @GetMapping(path = "/token")
+    public String token(){
+        return getToken();
+    }
+
 
     @GetMapping(path = "/search")
     public String search(@RequestParam("q") String q){
