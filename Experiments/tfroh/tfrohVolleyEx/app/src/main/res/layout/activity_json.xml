@@ -17,12 +17,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Response: "
-        android:translationY="50dp" />
+        android:translationY="95dp" />
 
     <TextView
         android:id="@+id/msgResponse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        android:translationY="75dp" />
+        android:translationY="120dp" />
+
+    <Button
+        android:id="@+id/jsonArrInReq"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="JSON array request"
+        android:translationX="90dp"
+        android:translationY="45dp" />
 </RelativeLayout>
