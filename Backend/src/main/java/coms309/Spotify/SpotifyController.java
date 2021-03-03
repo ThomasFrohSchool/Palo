@@ -10,6 +10,7 @@ import java.net.URLEncoder;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -27,8 +28,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RestController
 public class SpotifyController {
 
-    private String success = "\"message\":\"success\"";
-    private String failure = "\"message\":\"failure\"";
 
     private String getToken() {
         try {
@@ -92,9 +91,56 @@ public class SpotifyController {
     public String search(@RequestParam("q") String q) {
         String authToken = getToken();
 
-        String url = "https://api.spotify.com/v1/search";
-        
+        StringBuilder query = new StringBuilder("https://api.spotify.com/v1/search?q=");
+        Scanner scan = new Scanner(q);
+        while(scan.hasNext()){
+            query.append(scan.next());
+            if(scan.hasNext()){
+                query.append("%20");
+            }
+        }
 
-        return q;
+        query.append("&type=artist%2Calbum%2Ctrack&market=US&limit=3");
+
+        String url = query.toString();
+        URL obj;
+
+        try {
+            obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+            con.setRequestProperty("Authorization", "Bearer " + authToken);
+            con.setRequestProperty("Content-Type","application/json");
+            con.setRequestMethod("GET");   
+
+            int responseCode = con.getResponseCode();
+
+            if(responseCode != 200){
+                return String.valueOf(responseCode);
+            }
+            
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));           //reading input
+            String line;
+            StringBuffer response = new StringBuffer();
+            while ((line = in.readLine()) != null) {
+                response.append(line);
+            }
+            in.close();
+
+            JSONObject myResponse = new JSONObject(response.toString());
+            return myResponse.toString();
+
+
+
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        return "didnt make it thru";
     }
 }
