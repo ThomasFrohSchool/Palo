@@ -24,4 +24,11 @@
         android:layout_height="wrap_content"
         android:text="Search!"
         android:layout_below="@id/spotifySearch"/>
+
+    <TextView
+        android:id="@+id/songResult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Response: "
+        android:layout_below="@id/button"/>
 </RelativeLayout>
