@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import net.minidev.json.JSONArray;
 import top.jfunc.json.impl.JSONObject;
+
 
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -129,6 +132,68 @@ public class SpotifyController {
             in.close();
 
             JSONObject myResponse = new JSONObject(response.toString());
+
+            JSONObject albums = (JSONObject) myResponse.getJsonObject("albums");
+            JSONArray items = (JSONArray) albums.get("items");
+
+            //String type = (String) item.get("type");
+            //String id = (String) item.get("id");
+
+            //String fxnResponse = getAlbum(id);
+
+
+            return items.toString();
+
+
+
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        return "didnt make it thru";
+    }
+
+
+
+    private String getAlbum(String id){
+        String authToken = getToken();
+
+        StringBuilder query = new StringBuilder("https://api.spotify.com/v1/albums/");
+
+        
+        query.append(id);
+
+        String url = query.toString();
+        URL obj;
+
+        try {
+            obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+            con.setRequestProperty("Authorization", "Bearer " + authToken);
+            con.setRequestProperty("Content-Type","application/json");
+            con.setRequestMethod("GET");   
+
+            int responseCode = con.getResponseCode();
+
+            if(responseCode != 200){
+                return String.valueOf(responseCode);
+            }
+            
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));           //reading input
+            String line;
+            StringBuffer response = new StringBuffer();
+            while ((line = in.readLine()) != null) {
+                response.append(line);
+            }
+            in.close();
+
+            JSONObject myResponse = new JSONObject(response.toString());
             return myResponse.toString();
 
 
@@ -143,4 +208,5 @@ public class SpotifyController {
 
         return "didnt make it thru";
     }
+    
 }
