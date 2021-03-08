@@ -103,14 +103,14 @@ public class CreatePaloFragment extends Fragment {
             try {
                 if(!json.getBoolean("error")) {
                     Toast.makeText(getActivity(), "successfully posted.", Toast.LENGTH_LONG).show();
-
+//                    startActivity(new Intent(getActivity(), MainActivity.class));
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }, error -> Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_LONG).show());
         VolleySingleton.getInstance(v.getContext()).addToRequestQueue(request);
-
+        startActivity(new Intent(getActivity(), MainActivity.class));
     }
     private  JsonArrayRequest searchRequest(String text){
         return null;
