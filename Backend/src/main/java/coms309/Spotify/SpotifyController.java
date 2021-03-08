@@ -22,9 +22,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import net.minidev.json.JSONArray;
+import aj.org.objectweb.asm.Type;
+import top.jfunc.json.impl.JSONArray;
 import top.jfunc.json.impl.JSONObject;
-
 
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -73,10 +73,8 @@ public class SpotifyController {
             }
             in.close();
 
-            System.out.println(response.toString());
 
             JSONObject myResponse = new JSONObject(response.toString());
-            System.out.println(myResponse.getString("access_token"));
 
             return myResponse.getString("access_token");
 
@@ -133,16 +131,53 @@ public class SpotifyController {
 
             JSONObject myResponse = new JSONObject(response.toString());
 
-            JSONObject albums = (JSONObject) myResponse.getJsonObject("albums");
-            JSONArray items = (JSONArray) albums.get("items");
+            JSONObject albums = new JSONObject(myResponse.getString("albums"));
+            JSONObject artists = new JSONObject(myResponse.getString("artists"));
+            JSONObject tracks = new JSONObject(myResponse.getString("tracks"));
 
-            //String type = (String) item.get("type");
-            //String id = (String) item.get("id");
+            JSONArray albumItems = new JSONArray(albums.getString("items"));
+            JSONArray artistItems = new JSONArray(artists.getString("items"));
+            JSONArray trackItems = new JSONArray(tracks.getString("items"));
+
+            /*
+            //JSONObject 
+            JSONObject albumItem;
+            JSONObject artistItem;
+            JSONObject trackItem;
+            String type;
+            String id;
+
+            StringBuilder toRet = new StringBuilder("");
+
+            */
+            /*
+            for(int i = 0; i<4;i++){
+                albumItem = new JSONObject(albumItems.get(i).toString());
+                artistItem = new JSONObject(artistItems.get(i).toString());
+                trackItem = new JSONObject(trackItems.get(i).toString());
+
+                type = albumItem.getString("type");
+                id = albumItem.getString("id");
+
+                toRet.append("Type: " + type + " ID: " + id + "\n");
+
+                type = artistItem.getString("type");
+                id = artistItem.getString("id");
+
+                toRet.append("Type: " + type + " ID: " + id + "\n");
+
+                type = trackItem.getString("type");
+                id = trackItem.getString("id");
+
+                toRet.append("Type: " + type + " ID: " + id + "\n");
+            }
+            */
+
 
             //String fxnResponse = getAlbum(id);
 
 
-            return items.toString();
+            return myResponse.toString();
 
 
 
