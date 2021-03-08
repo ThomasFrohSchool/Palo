@@ -14,8 +14,6 @@ public class Song {
         this.id = id;
     }
 
-
-    public Song(){}
     public Song(String title, String artist, String albumCover){
         this.title = title;
         this.artist = artist;
