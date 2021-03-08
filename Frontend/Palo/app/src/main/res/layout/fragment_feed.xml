@@ -6,18 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".fragments.FeedFragment">
 
-    <TextView
-        android:id="@+id/feed_header"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/songList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Feed will go here..."
-        android:textSize="40sp"
-        android:gravity="center_horizontal|center_vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </FrameLayout>

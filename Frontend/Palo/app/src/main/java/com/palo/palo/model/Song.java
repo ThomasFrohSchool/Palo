@@ -11,6 +11,15 @@ public class Song {
         this.title = title;
         this.artist = artist;
         this.albumCover = albumCover;
+        this.id = id;
+    }
+
+
+    public Song(){}
+    public Song(String title, String artist, String albumCover){
+        this.title = title;
+        this.artist = artist;
+        this.albumCover = albumCover;
     }
 
     public String getTitle() {

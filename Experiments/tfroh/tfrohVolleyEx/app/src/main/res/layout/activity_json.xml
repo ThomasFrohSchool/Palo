@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".JsonActivity">
+
+    <Button
+        android:id="@+id/jsonInReq"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="JSON Request"
+        android:translationX="120dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Response: "
+        android:translationY="95dp" />
+
+    <TextView
+        android:id="@+id/msgResponse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:translationY="120dp" />
+
+    <Button
+        android:id="@+id/jsonArrInReq"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="JSON array request"
+        android:translationX="90dp"
+        android:translationY="45dp" />
+</RelativeLayout>
