@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottomNavBar;
     final Fragment feedFrag = new FeedFragment();
     final Fragment palolistFrag = new PaloListFragment();
-    final Fragment createNewFrag = new CreatePaloFragment();
+//    final Fragment createNewFrag = new CreatePaloFragment();
     final Fragment searchFrag = new SearchFragment();
     final Fragment profileFrag = new ProfileFragment();
     final FragmentManager fm = getSupportFragmentManager();
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         if(SharedPrefManager.getInstance(this).isLoggedIn()){
             fm.beginTransaction().add(R.id.main_frame, feedFrag, "feedFrag").commit(); // will show feed on default
             fm.beginTransaction().add(R.id.main_frame, palolistFrag, "palolistFrag").hide(palolistFrag).commit();
-            fm.beginTransaction().add(R.id.main_frame, createNewFrag, "createNewFrag").hide(createNewFrag).commit();
+//            fm.beginTransaction().add(R.id.main_frame, createNewFrag, "createNewFrag").hide(createNewFrag).commit();
             fm.beginTransaction().add(R.id.main_frame, searchFrag, "searchFrag").hide(searchFrag).commit();
             fm.beginTransaction().add(R.id.main_frame, profileFrag, "profileFrag").hide(profileFrag).commit();
 
@@ -64,8 +64,9 @@ public class MainActivity extends AppCompatActivity {
                 } else if (id == R.id.action_create){
 //                        CreatePaloFragment createPaloFragment = new CreatePaloFragment();
 //                        openFragment(createPaloFragment);
-                    fm.beginTransaction().hide(active).show(createNewFrag).commit();
-                    active = createNewFrag;
+                    startActivity(new Intent(this, CreateNewPostActivity.class));
+//                    fm.beginTransaction().hide(active).show(createNewFrag).commit();
+//                    active = createNewFrag;
                     return true;
                 } else if (id == R.id.action_home){
 //                        FeedFragment feedFragment = new FeedFragment();

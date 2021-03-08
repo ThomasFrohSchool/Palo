@@ -1,6 +1,7 @@
 package com.palo.palo.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -21,6 +22,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 
 import com.palo.palo.R;
 import com.palo.palo.SharedPrefManager;
+import com.palo.palo.activities.MainActivity;
 import com.palo.palo.volley.VolleySingleton;
 
 import org.json.JSONException;
@@ -64,6 +66,7 @@ public class CreatePaloFragment extends Fragment {
         cancel.setOnClickListener(v -> {
             Toast toast = Toast.makeText(getActivity(), "cancel clicked.", Toast.LENGTH_LONG);
             toast.show();
+            startActivity(new Intent(getActivity(), MainActivity.class));
         });
         postButton = view.findViewById(R.id.post_create_new_post);
         postButton.setOnClickListener(v -> post(view));
