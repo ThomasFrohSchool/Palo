@@ -135,9 +135,69 @@ public class SpotifyController {
             JSONObject artists = new JSONObject(myResponse.getString("artists"));
             JSONObject tracks = new JSONObject(myResponse.getString("tracks"));
 
-            JSONArray albumItems = new JSONArray(albums.getString("items"));
-            JSONArray artistItems = new JSONArray(artists.getString("items"));
-            JSONArray trackItems = new JSONArray(tracks.getString("items"));
+            JSONArray albumItems = null;   //array of items
+            JSONArray artistItems = null;
+            JSONArray trackItems = null;
+
+            JSONObject albumItem; //individual item
+            JSONObject artistItem;
+            JSONObject trackItem;
+
+            StringBuilder albumBuilder = new StringBuilder("Albums: ");
+            StringBuilder artistBuilder = new StringBuilder("Artists: ");
+            StringBuilder trackBuilder = new StringBuilder("Tracks: ");
+
+
+            String name;
+            String id;
+
+            for(int i = 0; i<4; i++){
+                for(int k = 0; k<4; k++){
+                    if(i ==0){ //albums
+                        if(k == 0){
+                            albumItems = new JSONArray(albums.getString("items"));
+                        }
+
+                        if(albumItems.size() > k){
+                            albumItem = new JSONObject(albumItems.get(k).toString());
+
+                            name = albumItem.getString("name");
+                            id = albumItem.getString("id");
+    
+                            albumBuilder.append("#" + k + " :  Name: \"" + name + "\"  ID: \"" + id+ "\"  ");
+                        }
+
+
+                    }else if(i == 1){//artists
+                        
+                        if(k == 0){
+                            artistItems = new JSONArray(artists.getString("items"));
+                        }
+                        if(artistItems.size() > k){
+                            artistItem = new JSONObject(artistItems.get(k).toString());
+
+                            name = artistItem.getString("name");
+                            id = artistItem.getString("id");
+                            artistBuilder.append("#" + k + " :  Name: \"" + name + "\"  ID: \"" + id+ "\"  ");
+                        }
+
+
+                    }else if(i == 2){//tracks
+                        if(k == 0){
+                            trackItems = new JSONArray(tracks.getString("items"));
+                        }
+                        if(trackItems.size() > k){
+                            trackItem = new JSONObject(trackItems.get(k).toString());
+
+                            name = trackItem.getString("name");
+                            id = trackItem.getString("id");
+                            trackBuilder.append("#" + k + " :  Name: \"" + name + "\"  ID: \"" + id+ "\"  ");
+    
+                        }
+
+                    }
+                }
+            }
 
             /*
             //JSONObject 
@@ -177,7 +237,7 @@ public class SpotifyController {
             //String fxnResponse = getAlbum(id);
 
 
-            return myResponse.toString();
+            return (albumBuilder.toString() + "\n" + artistBuilder.toString()+ "\n" + trackBuilder.toString());
 
 
 
