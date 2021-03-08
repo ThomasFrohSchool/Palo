@@ -78,16 +78,13 @@ public class SearchFragment extends Fragment {
 
     private void makeStringSongRequest() {
         //p.show();
-        System.out.println(url + "/search?q=" + song.getText().toString());
         StringRequest stringRequest = new StringRequest(Request.Method.GET,
                 url + "/search?q=" + song.getText().toString(),
                 response -> {
-                    Log.d(STRINGTAG, response.toString());
-                    System.out.println(url + "/search?q=" + song.getText().toString());
-                    req.setText("Response: " + response.toString());
-                }, error -> VolleyLog.d(STRINGTAG, "Error: " + error.getMessage()));
+                    Log.d(STRINGTAG, response);
+                    req.setText("Response: " + response);
+                }, error -> error.printStackTrace());
         //p.hide();
-        System.out.println(url + "/search?q=" + song.getText().toString());
         VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(stringRequest);
     }
 }
