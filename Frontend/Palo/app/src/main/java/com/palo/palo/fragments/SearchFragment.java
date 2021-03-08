@@ -29,7 +29,8 @@ public class SearchFragment extends Fragment {
     private EditText song;
     private TextView req;
     private Button b;
-    private String url = "https://60dfb9a0-6de1-47ff-9b9b-69c16d317496.mock.pstmn.io";
+    //private String url = "https://60dfb9a0-6de1-47ff-9b9b-69c16d317496.mock.pstmn.io";
+    private String url = "http://coms-309-021.cs.iastate.edu:8080";
     private ProgressDialog p;
     private String JSONTAG = SearchFragment.class.getSimpleName();
     private String STRINGTAG = SearchFragment.class.getSimpleName();
@@ -77,14 +78,16 @@ public class SearchFragment extends Fragment {
 
     private void makeStringSongRequest() {
         //p.show();
+        System.out.println(url + "/search?q=" + song.getText().toString());
         StringRequest stringRequest = new StringRequest(Request.Method.GET,
                 url + "/search?q=" + song.getText().toString(),
                 response -> {
                     Log.d(STRINGTAG, response.toString());
+                    System.out.println(url + "/search?q=" + song.getText().toString());
                     req.setText("Response: " + response.toString());
                 }, error -> VolleyLog.d(STRINGTAG, "Error: " + error.getMessage()));
         //p.hide();
-
+        System.out.println(url + "/search?q=" + song.getText().toString());
         VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(stringRequest);
     }
 }
