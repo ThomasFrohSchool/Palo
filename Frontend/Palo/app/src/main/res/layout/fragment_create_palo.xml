@@ -15,20 +15,7 @@
         tools:context=".fragments.CreatePaloFragment">
 
 
-        <Button
-            android:id="@+id/cancel_create_new_post"
-            android:layout_width="40dp"
-            android:layout_height="wrap_content"
-            android:text="x"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
-        <Button
-            android:id="@+id/post_create_new_post"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="POST"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+
         <EditText
             android:id="@+id/caption_create_new_post"
             android:layout_width="match_parent"
@@ -46,7 +33,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cancel_create_new_post" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/attached_song_title"

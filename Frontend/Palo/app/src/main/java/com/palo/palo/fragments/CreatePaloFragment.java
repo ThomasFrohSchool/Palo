@@ -32,11 +32,11 @@ import java.util.Date;
 
 
 public class CreatePaloFragment extends Fragment {
-    Button postButton;
     EditText captionField;
     EditText searchField;
     ImageButton searchButton;
     RecyclerView searchRecyclerView;
+    View myView;
     
     // temp server url's
     private static String server_url = "https://9eddb02a-d334-4848-ab3a-744f07eb89d2.mock.pstmn.io";
@@ -56,21 +56,14 @@ public class CreatePaloFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        myView = view;
         captionField = view.findViewById(R.id.caption_create_new_post);
         
         searchField = view.findViewById(R.id.attached_song_search_bar_edit_text);
         searchButton = view.findViewById(R.id.attached_song_search_bar_button);
         searchButton.setOnClickListener(v -> search(view));
-        
-        Button cancel = view.findViewById(R.id.cancel_create_new_post);
-        cancel.setOnClickListener(v -> {
-            Toast toast = Toast.makeText(getActivity(), "cancel clicked.", Toast.LENGTH_LONG);
-            toast.show();
-            startActivity(new Intent(getActivity(), MainActivity.class));
-        });
-        postButton = view.findViewById(R.id.post_create_new_post);
-        postButton.setOnClickListener(v -> post(view));
     }
+
     private void search(View view){
         String searchText = searchField.getText().toString();
         JsonArrayRequest request = searchRequest(searchText);
@@ -79,19 +72,19 @@ public class CreatePaloFragment extends Fragment {
         //update searchRecycleView with results from request...
     }
     
-    private void post(View v){
+    public void post(){
         // sending: {"author_id": "", "postdate":"", "caption":"", "attachment":{"title":"","artist":"",album_cover":""}}
         // recieves currently {"error":"boolean"}
         JSONObject newPost = new JSONObject();
         try {
-            newPost.put("author_id", SharedPrefManager.getInstance(v.getContext()).getUser().getId());
+            newPost.put("author_id", SharedPrefManager.getInstance(myView.getContext()).getUser().getId());
             newPost.put("postdate", new Date().getTime());
             newPost.put("caption", captionField.getText().toString());
 
             JSONObject song = new JSONObject();
-            song.put("title", ((TextView) v.findViewById(R.id.songTitle)).getText().toString());
-            song.put("artist", ((TextView) v.findViewById(R.id.songArtist)).getText().toString());
-            song.put("album_cover", ((TextView) v.findViewById(R.id.coverImageURL)).getText().toString());
+            song.put("title", ((TextView) myView.findViewById(R.id.songTitle)).getText().toString());
+            song.put("artist", ((TextView) myView.findViewById(R.id.songArtist)).getText().toString());
+            song.put("album_cover", ((TextView) myView.findViewById(R.id.coverImageURL)).getText().toString());
             newPost.put("attachment", song);
             System.out.println(newPost.toString());
 
@@ -109,7 +102,7 @@ public class CreatePaloFragment extends Fragment {
                 e.printStackTrace();
             }
         }, error -> Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_LONG).show());
-        VolleySingleton.getInstance(v.getContext()).addToRequestQueue(request);
+        VolleySingleton.getInstance(myView.getContext()).addToRequestQueue(request);
         startActivity(new Intent(getActivity(), MainActivity.class));
     }
     private  JsonArrayRequest searchRequest(String text){
