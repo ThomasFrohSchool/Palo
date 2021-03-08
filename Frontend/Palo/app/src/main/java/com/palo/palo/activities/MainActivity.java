@@ -22,6 +22,8 @@ import com.palo.palo.fragments.ProfileFragment;
 import com.palo.palo.fragments.SearchFragment;
 import com.palo.palo.model.User;
 
+import static com.spotify.sdk.android.authentication.LoginActivity.REQUEST_CODE;
+
 public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottomNavBar;
 

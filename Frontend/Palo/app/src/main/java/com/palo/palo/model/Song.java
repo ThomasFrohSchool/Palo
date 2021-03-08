@@ -4,6 +4,16 @@ public class Song {
     private  String title;
     private String artist;
     private String albumCover;
+    private String id;
+
+    public Song(){}
+    public Song(String title, String artist, String albumCover, String id){
+        this.title = title;
+        this.artist = artist;
+        this.albumCover = albumCover;
+        this.id = id;
+    }
+
 
     public Song(){}
     public Song(String title, String artist, String albumCover){
@@ -18,6 +28,14 @@ public class Song {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getArtist() {

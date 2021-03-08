@@ -3,9 +3,9 @@ package com.palo.palo.model;
 public class User {
     private int id;
     private String username;
-    private String email;
+    public String email;
     private String profileImage;
-    
+
     /*
         Future things user could have:
          - groups
