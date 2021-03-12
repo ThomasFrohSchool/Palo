@@ -24,6 +24,10 @@ import com.palo.palo.model.User;
 
 import static com.spotify.sdk.android.authentication.LoginActivity.REQUEST_CODE;
 
+/**
+ * This class is for setting up the app and preparing the navigation bar.
+ * It is associated with activity_main.xml.
+ */
 public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottomNavBar;
 
@@ -74,6 +78,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This method opens a fragment whenever a user presses on a different button on the nav bar.
+     * @param fragment: The pressed fragment.
+     */
     private void openFragment(Fragment fragment){
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.main_frame, fragment);

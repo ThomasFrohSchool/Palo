@@ -14,7 +14,10 @@ import com.palo.palo.R;
 import com.palo.palo.SharedPrefManager;
 import com.palo.palo.model.User;
 
-
+/**
+ * This fragment is for the users profile page and its functionality.
+ * This class is associated with the fragment_profile.xml.
+ */
 public class ProfileFragment extends Fragment {
 
     public ProfileFragment() {}

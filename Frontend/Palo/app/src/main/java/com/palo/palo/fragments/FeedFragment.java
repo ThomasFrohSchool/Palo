@@ -28,7 +28,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * This fragment is for the feed and its functionalities.
+ * This class is associated with fragment_feed.xml.
+ */
 public class FeedFragment extends Fragment {
     RecyclerView recyclerView;
     private static String SERVER_URL = "https://6e8134ce-7a91-4a1d-8c23-f06c12c6fcfd.mock.pstmn.io";
@@ -50,11 +53,20 @@ public class FeedFragment extends Fragment {
         extractSongs();
     }
 
+    /**
+     * This method is for extracting the song from a Palo.
+     */
     private void extractSongs() {
         JsonArrayRequest request = paloRequest(recyclerView, getActivity().getApplicationContext());
         VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(request);
     }
 
+    /**
+     *
+     * @param recyclerView: The recycler view of all the Palos.
+     * @param context: The context of the fragment
+     * @return Returns the list of Palos.
+     */
     private static JsonArrayRequest paloRequest(RecyclerView recyclerView, Context context){
         return new JsonArrayRequest(Request.Method.GET, SERVER_URL + "/feed", null, response -> {
             List<Palo> palos = new ArrayList<>();
@@ -69,6 +81,13 @@ public class FeedFragment extends Fragment {
             recyclerView.setAdapter(new FeedAdapter(context, palos));
         }, error -> Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show());
     }
+
+    /**
+     * This method is for setting different fields of the Palo.
+     * @param paloJSON: The JSONObject of the Palo.
+     * @return Returns the Palo and its different fields.
+     * @throws JSONException
+     */
     private static Palo extractPalo(JSONObject paloJSON) throws JSONException {
         Palo palo = new Palo();
         palo.setAuthor(extractUser(paloJSON.getJSONObject("author")));
@@ -78,6 +97,12 @@ public class FeedFragment extends Fragment {
         return palo;
     }
 
+    /**
+     * This method is for setting different fields of the song.
+     * @param songJSON: The JSONObject of the song.
+     * @return Returns the song and its different fields.
+     * @throws JSONException
+     */
     // Example --> {"song": "Freakin' Out On the Interstate", "artist":"Briston Maroney","album_cover": "https://i0.wp.com/altangeles.com/wp-content/uploads/2018/12/briston.jpg?fit=640%2C640&ssl=1"}
     private static Song extractSong(JSONObject songJSON) throws JSONException {
         Song song = new Song();
@@ -87,6 +112,12 @@ public class FeedFragment extends Fragment {
         return song;
     }
 
+    /**
+     * This method is for setting different fields of the user.
+     * @param userJSON: The JSONObject of the user.
+     * @return Returns the user and its different fields.
+     * @throws JSONException
+     */
     // Example --> {"username": "tiffmay", "profile_image": "fillimage link here"},
     private static User extractUser(JSONObject userJSON) throws JSONException{
         User user = new User();

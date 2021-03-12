@@ -11,7 +11,10 @@ import android.widget.TextView;
 
 import com.palo.palo.R;
 
-
+/**
+ * This fragment is for creating a post.
+ * This class is associated with fragment_create_palo.xml.
+ */
 public class CreatePaloFragment extends Fragment {
 
     public CreatePaloFragment() {}
