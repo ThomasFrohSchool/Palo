@@ -1,5 +1,8 @@
 package com.palo.palo.model;
 
+/**
+ * Model for song attachment.
+ */
 public class Song {
     private  String title;
     private String artist;
