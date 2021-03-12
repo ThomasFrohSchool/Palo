@@ -23,11 +23,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import aj.org.objectweb.asm.Type;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import top.jfunc.json.impl.JSONArray;
 import top.jfunc.json.impl.JSONObject;
 
 import org.springframework.web.bind.annotation.RequestParam;
 
+@Api(value = "Spotify Controller", description = "REST API's relating to connecting with the Spotify API")
 @RestController
 public class SpotifyController {
 
@@ -83,13 +87,15 @@ public class SpotifyController {
         }
     }
 
+    @ApiOperation(value = "Get a Spotify OAuth Token")
     @GetMapping(path = "/token")
     public String token() {
         return getToken();
     }
 
+    @ApiOperation(value = "Search for an Album, Artist, or Track")
     @GetMapping(path = "/search")
-    public String search(@RequestParam("q") String q) {
+    public String search(@ApiParam(value = "String that will be searched", required = true) @RequestParam("q") String q) {
         String authToken = getToken();
 
         StringBuilder query = new StringBuilder("https://api.spotify.com/v1/search?q=");
@@ -199,42 +205,6 @@ public class SpotifyController {
                 }
             }
 
-            /*
-            //JSONObject 
-            JSONObject albumItem;
-            JSONObject artistItem;
-            JSONObject trackItem;
-            String type;
-            String id;
-
-            StringBuilder toRet = new StringBuilder("");
-
-            */
-            /*
-            for(int i = 0; i<4;i++){
-                albumItem = new JSONObject(albumItems.get(i).toString());
-                artistItem = new JSONObject(artistItems.get(i).toString());
-                trackItem = new JSONObject(trackItems.get(i).toString());
-
-                type = albumItem.getString("type");
-                id = albumItem.getString("id");
-
-                toRet.append("Type: " + type + " ID: " + id + "\n");
-
-                type = artistItem.getString("type");
-                id = artistItem.getString("id");
-
-                toRet.append("Type: " + type + " ID: " + id + "\n");
-
-                type = trackItem.getString("type");
-                id = trackItem.getString("id");
-
-                toRet.append("Type: " + type + " ID: " + id + "\n");
-            }
-            */
-
-
-            //String fxnResponse = getAlbum(id);
 
 
             return (albumBuilder.toString() + "\n" + artistBuilder.toString()+ "\n" + trackBuilder.toString());
@@ -253,8 +223,8 @@ public class SpotifyController {
     }
 
 
-
-    private String getAlbum(String id){
+    @ApiOperation(value = "Get JSON response of an Album")
+    private String getAlbum(@ApiParam(value = "ID that will be used to find the album") String id){
         String authToken = getToken();
 
         StringBuilder query = new StringBuilder("https://api.spotify.com/v1/albums/");
