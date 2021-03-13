@@ -7,6 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ import aj.org.objectweb.asm.Type;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+
 import top.jfunc.json.impl.JSONArray;
 import top.jfunc.json.impl.JSONObject;
 
@@ -222,19 +224,55 @@ public class SpotifyController {
         return "didnt make it thru";
     }
 
+    @ApiOperation(value = "Get info about album by ID")
+    @GetMapping(path = "/getAlbum")
+    private String getAlbum(@ApiParam(value = "ID that will be used to find the album", required = true) @RequestParam("id") String id){
 
-    @ApiOperation(value = "Get JSON response of an Album")
-    private String getAlbum(@ApiParam(value = "ID that will be used to find the album") String id){
-        String authToken = getToken();
 
         StringBuilder query = new StringBuilder("https://api.spotify.com/v1/albums/");
 
         
         query.append(id);
-
+        query.append("?market=US");
         String url = query.toString();
-        URL obj;
+        
+        JSONObject myResponse = new JSONObject(getByURL(url));
 
+        JSONArray images = new JSONArray(myResponse.getString("images"));
+        JSONObject image = new JSONObject(images.getString(1));      //get the middle image, 300x300
+        String imageURL = image.getString("url");
+
+        JSONArray artists = new JSONArray(myResponse.getString("artists"));
+        
+        if(!(artists.size() > 0)){ //TODO Check for multiple artists
+            return "no artist";
+            
+            
+        }//else{
+            //multiple artists TODO
+       // }
+
+       JSONObject artist = new JSONObject(artists.getString(0));
+       String artistName = artist.getString("name");
+       String albumName = myResponse.getString("name");
+
+       JSONObject myObj = new JSONObject();
+       myObj.put("name", albumName);
+       myObj.put("artist", artistName);
+       myObj.put("url", imageURL);
+       myObj.put("id", id);
+        
+
+
+        return myObj.toString();
+        
+    }
+
+
+    private String getByURL(String url){
+        String authToken = getToken();
+        URL obj;
+        
         try {
             obj = new URL(url);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -259,10 +297,10 @@ public class SpotifyController {
             in.close();
 
             JSONObject myResponse = new JSONObject(response.toString());
+
+
+
             return myResponse.toString();
-
-
-
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -273,5 +311,7 @@ public class SpotifyController {
 
         return "didnt make it thru";
     }
+    
+        
     
 }
