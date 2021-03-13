@@ -52,12 +52,24 @@
       <artifactId>spring-boot-starter-data-jpa</artifactId>
     </dependency>
 
-  
     <dependency>
       <groupId>top.jfunc.json</groupId>
       <artifactId>json-jsonsmart</artifactId>
       <version>1.8.3</version>
     </dependency>
+
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-swagger2</artifactId>
+      <version>2.9.2</version>
+    </dependency>
+    
+    <dependency>
+        <groupId>io.springfox</groupId>
+        <artifactId>springfox-swagger-ui</artifactId>
+        <version>2.9.2</version>
+    </dependency>
+
   </dependencies>
 
   <build>

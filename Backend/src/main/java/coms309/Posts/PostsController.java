@@ -7,6 +7,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.ApiParam;
+
+@Api(value = "PostsController", description = "REST API containing endpoints for CRUDing posts")
 @RestController
 public class PostsController {
 
@@ -16,9 +23,14 @@ public class PostsController {
     @Autowired
     PostsTable postsTable;
 
-    //FOR POSTS
+    /**
+     * 
+     * @param post JSON object representation of a post
+     * @return Failure or success message
+     */
+    @ApiOperation(value = "Create a new post")
     @PostMapping(path = "/createPost")
-    String createPost(@RequestBody Posts post){
+    String createPost(@ApiParam(value="JSON post object",required=true) @RequestBody Posts post){
         if (post == null)
             return failure;
     postsTable.save(post);
