@@ -6,12 +6,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
+import java.util.List;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ApiParam;
+import coms309.Users.UserTable;
 
 @Api(value = "PostsController", description = "REST API containing endpoints for CRUDing posts")
 @RestController
@@ -22,6 +23,8 @@ public class PostsController {
 
     @Autowired
     PostsTable postsTable;
+    @Autowired
+    UserTable userTable;
 
     /**
      * 
@@ -33,7 +36,14 @@ public class PostsController {
     String createPost(@ApiParam(value="JSON post object",required=true) @RequestBody Posts post){
         if (post == null)
             return failure;
-    postsTable.save(post);
+        Posts toSave = new Posts(post.getDescription(),post.getType(),post.getSpot_link());
+        toSave.setUser(userTable.findById(post.gettempID()).get(0));
+        postsTable.save(toSave);
         return success;
+    }
+    @ApiOperation(value = "List of all posts by all users")
+    @GetMapping(path = "/posts")
+    List<Posts> getAllPosts(){
+        return postsTable.findAll();
     }
 }
