@@ -47,6 +47,8 @@ public class FeedFragment extends Fragment {
 
     public void onViewCreated(View view, Bundle savedInstanceState) {
         recyclerView = view.findViewById(R.id.songList);
+        recyclerView.setAdapter(new FeedAdapter(getActivity().getApplicationContext(), new ArrayList<>()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         extractSongs();
     }
 
@@ -65,7 +67,6 @@ public class FeedFragment extends Fragment {
                     e.printStackTrace();
                 }
             }
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
             recyclerView.setAdapter(new FeedAdapter(context, palos));
         }, error -> Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show());
     }
