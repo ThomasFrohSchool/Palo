@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ApiParam;
+import coms309.Users.User;
 import coms309.Users.UserTable;
 
 @Api(value = "PostsController", description = "REST API containing endpoints for CRUDing posts")
@@ -37,8 +38,11 @@ public class PostsController {
         if (post == null)
             return failure;
         Posts toSave = new Posts(post.getDescription(),post.getType(),post.getSpot_link());
-        toSave.setUser(userTable.findById(post.gettempID()).get(0));
+        User user = userTable.findById(post.gettempID()).get(0);
+        toSave.setUser(user);
+        user.addPosts(toSave);
         postsTable.save(toSave);
+        userTable.save(user);
         return success;
     }
     @ApiOperation(value = "List of all posts by all users")
