@@ -50,4 +50,9 @@ public class PostsController {
     List<Posts> getAllPosts(){
         return postsTable.findAll();
     }
+    @ApiOperation(value = "List posts for a specific user")
+    @GetMapping(path = "/posts/{userID}")
+    List<Posts> getUserPosts(@PathVariable("userID") int userID){
+        return userTable.findById(userID).get(0).getPosts();
+    }
 }
