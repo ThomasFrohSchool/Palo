@@ -321,6 +321,47 @@ public class SpotifyController {
         
     }
 
+    
+    @ApiOperation(value = "Get info about a Artist by ID")
+    @GetMapping(path = "/getArtist")
+    private String getArtist(@ApiParam(value = "ID that will be used to find the Artist", required = true) @RequestParam("id") String id){
+
+
+        StringBuilder query = new StringBuilder("https://api.spotify.com/v1/artists/");
+
+        
+        query.append(id);
+        String url = query.toString();
+        
+        JSONObject myResponse = new JSONObject(getByURL(url));
+
+        JSONArray images = new JSONArray(myResponse.getString("images"));
+        JSONObject image = new JSONObject(images.getString(1));      //get the middle image, 300x300
+        String imageURL = image.getString("url");
+
+
+       String artistName = myResponse.getString("name");
+
+       JSONObject linkObj = new JSONObject(myResponse.getString("external_urls"));
+       String link = linkObj.getString("spotify");
+
+       JSONObject myObj = new JSONObject();
+       myObj.put("artist", artistName);
+       myObj.put("url", imageURL);
+       myObj.put("link", link);
+       myObj.put("id", id);
+        
+
+
+        return myObj.toString();
+        
+    }
+
+
+
+
+
+
 
     private String getByURL(String url){
         String authToken = getToken();
