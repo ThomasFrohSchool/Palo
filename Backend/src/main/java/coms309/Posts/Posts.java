@@ -10,6 +10,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
@@ -32,8 +33,11 @@ public class Posts {
 	@JsonIgnore
 	private User user;
 
-	public Posts(int tempID, String description, int type, String spot_link){
-		this.tempID = tempID;
+	@Autowired
+    UserTable userTable;
+
+	public Posts(int user_id, String description, int type, String spot_link){
+		this.user = userTable.findById(user_id).get(0);
 		this.spot_link = spot_link;
 		this.description = description;
 		this.type = type;

@@ -37,12 +37,9 @@ public class PostsController {
     String createPost(@ApiParam(value="JSON post object",required=true) @RequestBody Posts post){
         if (post == null)
             return failure;
-        Posts toSave = new Posts(post.getDescription(),post.getType(),post.getSpot_link());
-        User user = userTable.findById(post.gettempID()).get(0);
-        toSave.setUser(user);
-        user.addPosts(toSave);
-        postsTable.save(toSave);
-        userTable.save(user);
+        post.getUser().addPosts(post);
+        postsTable.save(post);
+        userTable.save(post.getUser());
         return success;
     }
     @ApiOperation(value = "List of all posts by all users")
