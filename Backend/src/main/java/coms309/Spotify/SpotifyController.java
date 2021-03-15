@@ -221,19 +221,21 @@ public class SpotifyController {
 
 
             
-            
+
+            //StringBuilder bob = new StringBuilder("{")
+
             JSONObject myObj = new JSONObject();
-           // myObj.put("albums", albumArray); THESE DONT WORK AND IDK WHY AHHHHHHHH
-           // myObj.put("artists", artistArray);
-           // myObj.put("tracks", trackArray);
-            myObj.put("status", "Down so bad im depressed");
+            myObj.put("albums", albumArray);
+            myObj.put("artists", artistArray);
+            myObj.put("tracks", trackArray);
+            //myObj.put("status", "Down so bad im depressed");
 
 
             
             
 
 
-            return myObj.toString();
+            return "{\"albums\":" +  albumArray.toString() + ", \"artists\":" +  artistArray.toString() + ", \"tracks\":" +  trackArray.toString() + "}";
 
 
 
@@ -245,7 +247,7 @@ public class SpotifyController {
         }
 
 
-        return "didnt make it thru";
+        return "Didnt make it thru";
     }
 
 
@@ -309,7 +311,7 @@ public class SpotifyController {
        JSONObject myObj = new JSONObject();
        myObj.put("name", albumName);
        myObj.put("artist", artistName);
-       myObj.put("url", imageURL);
+       myObj.put("imageUrl", imageURL);
        myObj.put("link", link);
        myObj.put("id", id);
         
@@ -341,7 +343,7 @@ public class SpotifyController {
 
        JSONObject myObj = new JSONObject();
        myObj.put("artist", artistName);
-       myObj.put("url", imageURL);
+       myObj.put("imageUrl", imageURL);
        myObj.put("link", link);
        myObj.put("id", id);
         
@@ -361,7 +363,7 @@ public class SpotifyController {
         String url = query.toString();
         
         JSONObject myResponse = new JSONObject(getByURL(url));
-
+        String playback = myResponse.getString("preview_url");
         JSONObject album = new JSONObject(myResponse.getString("album"));
         JSONArray images = new JSONArray(album.getString("images"));
         JSONObject image = new JSONObject(images.getString(1));      //get the middle image, 300x300
@@ -383,11 +385,13 @@ public class SpotifyController {
 
        JSONObject linkObj = new JSONObject(myResponse.getString("external_urls"));
        String link = linkObj.getString("spotify");
-
+       
+    
        JSONObject myObj = new JSONObject();
        myObj.put("name", albumName);
+       myObj.put("playbackLink", playback);
        myObj.put("artist", artistName);
-       myObj.put("url", imageURL);
+       myObj.put("imageUrl", imageURL);
        myObj.put("link", link);
        myObj.put("id", id);
         
