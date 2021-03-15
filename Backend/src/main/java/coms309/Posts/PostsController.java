@@ -19,8 +19,8 @@ import coms309.Users.UserTable;
 @RestController
 public class PostsController {
 
-    private String success = "\"message\":\"success\"";
-    private String failure = "\"message\":\"failure\"";
+    private String success = "{\"message\":\"success\"}";
+    private String failure = "{\"message\":\"failure\"}";
 
     @Autowired
     PostsTable postsTable;
