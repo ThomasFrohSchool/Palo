@@ -16,12 +16,12 @@ test-code-job1:
   stage: test
   script:
     - echo "Check if the file was built?"
-    - ls /home/gitlab-runner/testBuild/
+    - ls /home/gitlab-runner/testBuild/PaloAPI-1.0.0.jar
     - echo "This is broken rn?"
 
 test-code-deploy:
   stage: deploy
   script:
     - echo "This will deploy the tested build"
-    - ls /home/gitlab-runner/testBuild/
+    - cp /home/gitlab-runner/testBuild/* /palo/
     - echo "This is broken rn?"
