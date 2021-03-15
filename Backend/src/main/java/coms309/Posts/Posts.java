@@ -68,6 +68,9 @@ public class Posts {
 	public int getType(){
 		return this.type;
 	}
+	public int getUser_id(){
+		return this.user.getId();
+	}
 	public void setDescription(String description){
 		this.description = description;
 	}
