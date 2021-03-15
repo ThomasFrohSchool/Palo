@@ -5,6 +5,8 @@ stages:
 
 build-code-job:
   stage: build
+  tags:
+    - backend
   script:
     - mkdir -p /home/gitlab-runner/testBuild
     - echo "Going to try and build the API:"
@@ -14,6 +16,8 @@ build-code-job:
 
 test-code-job1:
   stage: test
+  tags:
+    - backend
   script:
     - echo "Check if the file was built?"
     - ls /home/gitlab-runner/testBuild/PaloAPI-1.0.0.jar
@@ -21,6 +25,8 @@ test-code-job1:
 
 test-code-deploy:
   stage: deploy
+  tags:
+    - backend
   script:
     - echo "This will deploy the tested build"
     #- cp -r /home/gitlab-runner/testBuild/* /palo/
