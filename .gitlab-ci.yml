@@ -13,5 +13,5 @@ test-code-job1:
   stage: test
   script:
     - echo "Check if the file was built?"
-    - ls ./
-    - echo "This is broken rn"
+    - ls /home/gitlab-runner/.m2/repository/coms309/PaloAPI/1.0.0/PaloAPI-1.0.0.jar
+    - echo "This is broken rn?"
