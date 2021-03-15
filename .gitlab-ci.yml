@@ -23,5 +23,5 @@ test-code-deploy:
   stage: deploy
   script:
     - echo "This will deploy the tested build"
-    - cp /home/gitlab-runner/testBuild/* /palo/
+    - cp -r /home/gitlab-runner/testBuild/* /palo/
     - echo "This is broken rn?"
