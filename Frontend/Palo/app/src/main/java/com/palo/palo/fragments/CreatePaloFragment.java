@@ -61,11 +61,11 @@ public class CreatePaloFragment extends Fragment {
     }
     
     public void post(){
-        // sending: {"author_id": "", "postdate":"", "caption":"", "attachment":{"title":"","artist":"",album_cover":""}}
-        // recieves currently {"error":"boolean"}
+        // sending: {"tempID": (int)userid, "description":"caption goes here", "spot_link": "spotifyID of song", "type":(int)attachmentType}
+        // recieves currently {"message":"success"}
         JSONObject newPost = new JSONObject();
         try {
-            newPost.put("temp_id", SharedPrefManager.getInstance(myView.getContext()).getUser().getId());
+            newPost.put("tempID", SharedPrefManager.getInstance(myView.getContext()).getUser().getId());
 //            newPost.put("postdate", new Date().getTime());
             newPost.put("description", captionField.getText().toString());
             newPost.put("spot_link", attatchment.getSpotifyId());
@@ -86,19 +86,15 @@ public class CreatePaloFragment extends Fragment {
 //        url = create_new_post;
         JsonObjectRequest request = new JsonObjectRequest(url, newPost, json -> {
             try {
-//                if(!json.getBoolean("error")) {
                 if(!json.getString("message").equals("success")) {
                     Toast.makeText(getActivity(), "successfully posted.", Toast.LENGTH_LONG).show();
-//                    startActivity(new Intent(getActivity(), MainActivity.class));
-                    //System.out.println();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }, error -> {
-            //System.out.println();
             Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_LONG).show();
-            System.out.println();
+//            System.out.println(error.getMessage());
         });
         VolleySingleton.getInstance(myView.getContext()).addToRequestQueue(request);
         startActivity(new Intent(getActivity(), MainActivity.class));
