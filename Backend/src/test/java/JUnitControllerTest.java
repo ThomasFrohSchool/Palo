@@ -12,7 +12,7 @@ public class JUnitControllerTest {
     public void testWelcomeController() {
         //WelcomeController controller = new WelcomeController();
         //String result = controller.welcome();
-        Posts post = new Posts(51, "Big ups my dude!", "Spotify.link.ru.cn.k12.biz");
-        Assert.assertEquals(post.getownerID(), 51);
+        Posts post = new Posts(51, "String description", 0, "Spotiffy.string.ru.biz.k12.ia.us");
+        Assert.assertEquals(post.gettempID(), 51);
     }
 }
