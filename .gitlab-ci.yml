@@ -10,18 +10,18 @@ build-code-job:
     - echo "Going to try and build the API:"
     - cd ./Backend
     - mvn clean install
-    - cp -r ./target/* /home/gitlabe-runner/testBuild/
+    - cp -r ./target/* /home/gitlab-runner/testBuild/
 
 test-code-job1:
   stage: test
   script:
     - echo "Check if the file was built?"
-    - ls /home/gitlabe-runner/testBuild/
+    - ls /home/gitlab-runner/testBuild/
     - echo "This is broken rn?"
 
 test-code-deploy:
   stage: deploy
   script:
     - echo "This will deploy the tested build"
-    - ls /home/gitlabe-runner/testBuild/
+    - ls /home/gitlab-runner/testBuild/
     - echo "This is broken rn?"
