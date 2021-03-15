@@ -13,4 +13,5 @@ test-code-job1:
   stage: test
   script:
     - echo "Check if the file was built?"
-    - ls -l ./Backend/target/PaloAPI-1.0.0.jar
+    - ls ./
+    - echo "This is broken rn"
