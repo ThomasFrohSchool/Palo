@@ -17,6 +17,9 @@ import com.android.volley.toolbox.StringRequest;
 import com.palo.palo.AttachementSearchAdapter;
 
 import com.palo.palo.R;
+import com.palo.palo.model.Album;
+import com.palo.palo.model.Artist;
+import com.palo.palo.model.Attatchment;
 import com.palo.palo.model.Song;
 import com.palo.palo.volley.VolleySingleton;
 
@@ -69,10 +72,10 @@ public class CreatePaloSearchFragment extends Fragment {
                 response -> {
                     try {
                         JSONObject json = jsonifyResponse(response);
-                        ArrayList<Song> attachments = new ArrayList<Song>();
-                        addAttachments(attachments, json.getJSONArray("Albums"));
-                        addAttachments(attachments, json.getJSONArray("Artists"));
-                        addAttachments(attachments, json.getJSONArray("Tracks"));
+                        ArrayList<Attatchment> attachments = new ArrayList<Attatchment>();
+                        addAlbums(attachments, json.getJSONArray("Albums"));
+                        addArtist(attachments, json.getJSONArray("Artists"));
+                        addTracks(attachments, json.getJSONArray("Tracks"));
                         searchAdapter = new AttachementSearchAdapter(getActivity().getApplicationContext(), attachments);
                         searchRecyclerView.setAdapter(searchAdapter);
                     } catch (JSONException e) {
@@ -105,10 +108,38 @@ public class CreatePaloSearchFragment extends Fragment {
         return resultJSON;
     }
 
-    private void addAttachments(ArrayList<Song> attachments, JSONArray a) throws JSONException {
+    private void addTracks(ArrayList<Attatchment> attachments, JSONArray a) throws JSONException {
         for (int i =0; i <a.length(); i++)
             attachments.add(extractTrack(a.getJSONObject(i)));
     }
+    private void addAlbums(ArrayList<Attatchment> attachments, JSONArray a) throws JSONException {
+        for (int i =0; i <a.length(); i++)
+            attachments.add(extractAlbum(a.getJSONObject(i)));
+    }
+    private void addArtist(ArrayList<Attatchment> attachments, JSONArray a) throws JSONException {
+        for (int i =0; i <a.length(); i++)
+            attachments.add(extractArtist(a.getJSONObject(i)));
+    }
+    private static Album extractAlbum(JSONObject songJSON) throws JSONException {
+        Album album = new Album();
+        album.setTitle(songJSON.getString("Name"));
+        album.setArtist(songJSON.getString("ID"));
+        album.setSpotifyId(songJSON.getString("ID"));
+        album.setAlbumCover("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRO-RJoyWwvL5Q2zHo1UE0K03GisHZldnh5Bg&usqp=CAU");
+//        song.setAlbumCover(songJSON.getString("album_cover"));
+        return album;
+    }
+
+    private static Artist extractArtist(JSONObject songJSON) throws JSONException {
+        Artist artist = new Artist();
+        artist.setTitle(songJSON.getString("Name"));
+        artist.setArtist(songJSON.getString("ID"));
+        artist.setSpotifyId(songJSON.getString("ID"));
+        artist.setAlbumCover("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZ-oydmw-ZLBeZUeFVx_hiRcqUwzS-T0xE4w&usqp=CAU");
+//        song.setAlbumCover(songJSON.getString("album_cover"));
+        return artist;
+    }
+
     private static Song extractTrack(JSONObject songJSON) throws JSONException {
         Song song = new Song();
         song.setTitle(songJSON.getString("Name"));
@@ -119,7 +150,7 @@ public class CreatePaloSearchFragment extends Fragment {
         return song;
     }
     
-    public Song getSelectedSong(){
+    public Attatchment getSelectedSong(){
         return searchAdapter.getSelectedSong();
     }
 }

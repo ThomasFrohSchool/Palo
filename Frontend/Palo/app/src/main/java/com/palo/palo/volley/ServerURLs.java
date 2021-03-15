@@ -19,5 +19,5 @@ public class ServerURLs {
     public static final String REGISTER = ROOT + "register";
     
     public static final String SEARCH = ROOT + "search?q=";
-    public static final String CREATE_POST = ROOT + "createPost";
+    public static final String CREATE_POST = ROOT + "createPost/";
 }

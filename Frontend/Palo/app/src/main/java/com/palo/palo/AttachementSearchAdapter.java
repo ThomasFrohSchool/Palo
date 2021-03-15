@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.palo.palo.model.Attatchment;
 import com.palo.palo.model.Song;
 import com.squareup.picasso.Picasso;
 
@@ -20,11 +21,11 @@ import java.util.List;
 
 public class AttachementSearchAdapter extends RecyclerView.Adapter<AttachementSearchAdapter.ViewHolder> {
     LayoutInflater inflater;
-    List<Song> searchResults;
+    List<Attatchment> searchResults;
     int selectedIndex = -1;
     Context context;
 
-    public AttachementSearchAdapter(Context context, List<Song> searchResults){
+    public AttachementSearchAdapter(Context context, List<Attatchment> searchResults){
         this.inflater = LayoutInflater.from(context);
         this.searchResults = searchResults;
         this.context = context;
@@ -40,9 +41,11 @@ public class AttachementSearchAdapter extends RecyclerView.Adapter<AttachementSe
     @Override
     public void onBindViewHolder(@NonNull AttachementSearchAdapter.ViewHolder holder, int position) {
         // Attached Song stuff...
-        holder.songTitleTV.setText(searchResults.get(position).getTitle());
-        holder.songArtistTV.setText(searchResults.get(position).getArtist());
-        Picasso.get().load(searchResults.get(position).getAlbumCover()).into(holder.songCoverImage);
+//        if (searchResults.get(position).getType() == 2) {
+            holder.songTitleTV.setText(searchResults.get(position).getTitle());
+            holder.songArtistTV.setText(searchResults.get(position).getArtist());
+            Picasso.get().load(searchResults.get(position).getAlbumCover()).into(holder.songCoverImage);
+//        }
         if (position == selectedIndex)
             holder.card.setCardBackgroundColor(Color.parseColor("#ccf5ba"));
         else
@@ -63,7 +66,7 @@ public class AttachementSearchAdapter extends RecyclerView.Adapter<AttachementSe
         return searchResults.size();
     }
 
-    public Song getSelectedSong(){
+    public Attatchment getSelectedSong(){
         if (selectedIndex == -1) return null;
         return searchResults.get(selectedIndex);
     }
