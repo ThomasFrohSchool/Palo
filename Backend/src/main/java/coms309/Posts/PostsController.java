@@ -15,6 +15,9 @@ import io.swagger.annotations.ApiParam;
 import coms309.Users.User;
 import coms309.Users.UserTable;
 
+import java.time.format.DateTimeFormatter;  
+import java.time.LocalDateTime;  
+
 @Api(value = "PostsController", description = "REST API containing endpoints for CRUDing posts")
 @RestController
 public class PostsController {
@@ -33,10 +36,14 @@ public class PostsController {
      * @return Failure or success message
      */
     @ApiOperation(value = "Create a new post")
-    @PostMapping(path = "/createPost")
-    String createPost(@ApiParam(value="JSON post object",required=true) @RequestBody Posts post){
+    @PostMapping(path = "/createPost/{userID}")
+    String createPost(@PathVariable int userID, @ApiParam(value="JSON post object",required=true) @RequestBody Posts post){
         if (post == null)
             return failure;
+        post.setUser(userTable.findById(userID).get(0));
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+        LocalDateTime now = LocalDateTime.now();  
+        post.setCreateDate(dtf.format(now));
         post.getUser().addPosts(post);
         postsTable.save(post);
         userTable.save(post.getUser());
