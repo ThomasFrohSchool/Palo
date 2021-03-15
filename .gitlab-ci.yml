@@ -1,17 +1,27 @@
 stages:
   - build
   - test
+  - deploy
 
 build-code-job:
   stage: build
   script:
+    - mkdir -p /home/gitlab-runner/testBuild
     - echo "Going to try and build the API:"
     - cd ./Backend
     - mvn clean install
+    - cp -r ./target/* /home/gitlabe-runner/testBuild/
 
 test-code-job1:
   stage: test
   script:
     - echo "Check if the file was built?"
-    - ls /home/gitlab-runner/.m2/repository/coms309/PaloAPI/1.0.0/PaloAPI-1.0.0.jar
+    - ls /home/gitlabe-runner/testBuild/
+    - echo "This is broken rn?"
+
+test-code-deploy:
+  stage: deploy
+  script:
+    - echo "This will deploy the tested build"
+    - ls /home/gitlabe-runner/testBuild/
     - echo "This is broken rn?"
