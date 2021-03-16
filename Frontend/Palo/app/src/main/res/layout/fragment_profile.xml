@@ -51,74 +51,80 @@
 
     <TextView
         android:id="@+id/paloAmt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="80dp"
+        android:layout_width="35dp"
+        android:layout_height="21dp"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
         android:text="x"
-        app:layout_constraintStart_toEndOf="@+id/profileImage"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/Palos"
+        app:layout_constraintTop_toBottomOf="@+id/Palos" />
 
     <TextView
         android:id="@+id/Palos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginLeft="15dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="80dp"
         android:text="Palos"
-        app:layout_constraintStart_toEndOf="@+id/paloAmt"
+        app:layout_constraintStart_toEndOf="@+id/profileImage"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/followerAmt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="80dp"
+        android:layout_width="57dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
         android:text="x"
-        app:layout_constraintStart_toEndOf="@+id/Palos"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/Followers"
+        app:layout_constraintTop_toBottomOf="@+id/Followers" />
 
     <TextView
         android:id="@+id/Followers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginLeft="15dp"
+        android:layout_marginStart="65dp"
+        android:layout_marginLeft="65dp"
         android:layout_marginTop="80dp"
         android:text="Followers"
-        app:layout_constraintStart_toEndOf="@+id/followerAmt"
+        app:layout_constraintStart_toEndOf="@+id/Palos"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/followingAmt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="80dp"
+        android:layout_width="57dp"
+        android:layout_height="22dp"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
         android:text="x"
-        app:layout_constraintStart_toEndOf="@+id/Followers"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/Following"
+        app:layout_constraintTop_toBottomOf="@+id/Following" />
 
     <TextView
         android:id="@+id/Following"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginLeft="15dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginLeft="50dp"
         android:layout_marginTop="80dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:text="Following"
-        app:layout_constraintStart_toEndOf="@+id/followingAmt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/Followers"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/profileImage"
-        android:layout_width="95dp"
-        android:layout_height="85dp"
+        android:layout_width="80dp"
+        android:layout_height="71dp"
         app:layout_constraintBottom_toTopOf="@+id/UserPalos"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profileName" />
