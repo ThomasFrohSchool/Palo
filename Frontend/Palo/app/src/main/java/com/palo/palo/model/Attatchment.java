@@ -5,11 +5,15 @@ public class Attatchment {
     private String title;
     private String artist;
     private String albumCover;
-
+    private String spotifyLink;
 
     public Attatchment(){}
     public Attatchment(String spotifyId){
         this.spotifyId = spotifyId;
+    }
+    public Attatchment(String spotifyId, String spotifyLink){
+        this.spotifyId = spotifyId;
+        this.spotifyLink = spotifyLink;
     }
     public String getTitle() {
         return title;
@@ -41,6 +45,14 @@ public class Attatchment {
 
     public void setSpotifyId(String spotifyId) {
         this.spotifyId = spotifyId;
+    }
+
+    public String getSpotifyLink() {
+        return spotifyLink;
+    }
+
+    public void setSpotifyLink(String spotifyLink) {
+        this.spotifyLink = spotifyLink;
     }
 
     public int getType(){

@@ -5,15 +5,15 @@ public class Song extends Attatchment {
     private  String title;
     private String artist;
     private String albumCover;
-//    private String spotifyId;
+    private String playbackLink;
 
     public Song(){}
-    public Song(String title, String artist, String albumCover, String spotifyId){
-        super(spotifyId);
+    public Song(String title, String artist, String albumCover, String spotifyId, String spotifyLink, String playbackLink){
+        super(spotifyId, spotifyLink);
         this.title = title;
         this.artist = artist;
         this.albumCover = albumCover;
-//        this.spotifyId = spotifyId;
+        this.playbackLink = playbackLink;
     }
 
     public String getTitle() {
@@ -45,11 +45,11 @@ public class Song extends Attatchment {
         return 2;
     }
     
-//    public String getSpotifyId() {
-//        return spotifyId;
-//    }
-//
-//    public void setSpotifyId(String spotifyId) {
-//        this.spotifyId = spotifyId;
-//    }
+    public String getPlaybackLink() {
+        return playbackLink;
+    }
+
+    public void setPlaybackLink(String playbackLink) {
+        this.playbackLink = playbackLink;
+    }
 }

@@ -66,16 +66,15 @@ public class CreatePaloSearchFragment extends Fragment {
 
     private void getSearchResultsFromSpotify() {
         String url = SEARCH + searchET.getText().toString();
-//        url = SEARCH + "mango";
         StringRequest request = new StringRequest(Request.Method.GET,
                 url,
                 response -> {
                     try {
-                        JSONObject json = jsonifyResponse(response);
-                        ArrayList<Attatchment> attachments = new ArrayList<Attatchment>();
-                        addAlbums(attachments, json.getJSONArray("Albums"));
-                        addArtist(attachments, json.getJSONArray("Artists"));
-                        addTracks(attachments, json.getJSONArray("Tracks"));
+                        JSONObject json = new JSONObject(response);
+                        ArrayList<Attatchment> attachments = new ArrayList<>();
+                        addAlbums(attachments, json.getJSONArray("albums"));
+                        addArtist(attachments, json.getJSONArray("artists"));
+                        addTracks(attachments, json.getJSONArray("tracks"));
                         searchAdapter = new AttachementSearchAdapter(getActivity().getApplicationContext(), attachments);
                         searchRecyclerView.setAdapter(searchAdapter);
                     } catch (JSONException e) {
@@ -84,28 +83,6 @@ public class CreatePaloSearchFragment extends Fragment {
 
                 }, error -> error.printStackTrace());
         VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(request);
-    }
-
-    private JSONObject jsonifyResponse(String response){
-        String [] splitRes = response.split(" \n");
-        //TYPE => album=0, artist=1, song=2
-        JSONObject resultJSON = new JSONObject();
-        try {
-            for(int j = 0; j < splitRes.length; j++) {
-                String[] albums = splitRes[j].split(" #([0-9])+ : ");
-                JSONArray albumsJSON = new JSONArray();
-                for (int i = 1; i < albums.length; i++) {
-                    albums[i] = albums[i].replaceAll(" Name:", "\"Name\":").replaceAll(" ID:", ", \"ID\":");
-                    albums[i] = "{" + albums[i] + "}";
-
-                    albumsJSON.put(new JSONObject(albums[i]));
-                }
-                resultJSON.put( albums[0].substring(0, albums[0].length()-1), albumsJSON);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return resultJSON;
     }
 
     private void addTracks(ArrayList<Attatchment> attachments, JSONArray a) throws JSONException {
@@ -122,32 +99,31 @@ public class CreatePaloSearchFragment extends Fragment {
     }
     private static Album extractAlbum(JSONObject songJSON) throws JSONException {
         Album album = new Album();
-        album.setTitle(songJSON.getString("Name"));
-        album.setArtist(songJSON.getString("ID"));
-        album.setSpotifyId(songJSON.getString("ID"));
-        album.setAlbumCover("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRO-RJoyWwvL5Q2zHo1UE0K03GisHZldnh5Bg&usqp=CAU");
-//        song.setAlbumCover(songJSON.getString("album_cover"));
+        album.setTitle(songJSON.getString("name"));
+        album.setArtist(songJSON.getString("artist"));
+        album.setSpotifyId(songJSON.getString("id"));
+        album.setAlbumCover(songJSON.getString("imageUrl"));
+        album.setSpotifyLink(songJSON.getString("link"));
         return album;
     }
 
     private static Artist extractArtist(JSONObject songJSON) throws JSONException {
         Artist artist = new Artist();
-        artist.setTitle(songJSON.getString("Name"));
-        artist.setArtist(songJSON.getString("ID"));
-        artist.setSpotifyId(songJSON.getString("ID"));
-        artist.setAlbumCover("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZ-oydmw-ZLBeZUeFVx_hiRcqUwzS-T0xE4w&usqp=CAU");
-//        song.setAlbumCover(songJSON.getString("album_cover"));
+        artist.setTitle("");
+        artist.setArtist(songJSON.getString("artist"));
+        artist.setSpotifyId(songJSON.getString("id"));
+        artist.setAlbumCover(songJSON.getString("imageUrl"));
+        artist.setSpotifyLink(songJSON.getString("link"));
         return artist;
     }
 
     private static Song extractTrack(JSONObject songJSON) throws JSONException {
-        Song song = new Song();
-        song.setTitle(songJSON.getString("Name"));
-        song.setArtist(songJSON.getString("ID")); 
-        song.setSpotifyId(songJSON.getString("ID"));
-        song.setAlbumCover("https://pbs.twimg.com/profile_images/733324424754176000/97L20Vvz_400x400.jpg");
-//        song.setAlbumCover(songJSON.getString("album_cover"));
-        return song;
+        return new Song(songJSON.getString("name"),
+                songJSON.getString("artist"),
+                songJSON.getString("imageUrl"),
+                songJSON.getString("id"),
+                songJSON.getString("link"),
+                songJSON.getString("playbackLink"));
     }
     
     public Attatchment getSelectedSong(){

@@ -20,7 +20,6 @@ import com.palo.palo.R;
 import com.palo.palo.SharedPrefManager;
 import com.palo.palo.activities.*;
 import com.palo.palo.model.Attatchment;
-import com.palo.palo.model.Song;
 import com.palo.palo.volley.VolleySingleton;
 import com.squareup.picasso.Picasso;
 
@@ -60,24 +59,13 @@ public class CreatePaloFragment extends Fragment {
     }
     
     public void post(){
-        // sending: {"tempID": (int)userid, "description":"caption goes here", "spot_link": "spotifyID of song", "type":(int)attachmentType}
-        // recieves currently {"message":"success"}
+        // receives currently {"message":"success"}
         JSONObject newPost = new JSONObject();
         try {
 //            newPost.put("tempID", SharedPrefManager.getInstance(myView.getContext()).getUser().getId());
-//            newPost.put("postdate", new Date().getTime());
             newPost.put("description", captionField.getText().toString());
             newPost.put("spot_link", attatchment.getSpotifyId());
             newPost.put("type", attatchment.getType());
-
-
-//            JSONObject song = new JSONObject();
-//            song.put("title", ((TextView) myView.findViewById(R.id.songTitle)).getText().toString());
-//            song.put("artist", ((TextView) myView.findViewById(R.id.songArtist)).getText().toString());
-//            song.put("album_cover", ((TextView) myView.findViewById(R.id.coverImageURL)).getText().toString());
-//            newPost.put("attachment", song);
-//            System.out.println(newPost.toString());
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -100,13 +88,9 @@ public class CreatePaloFragment extends Fragment {
 
     public void setAttatchment(Attatchment a){
         this.attatchment = a;
-//        Toast.makeText(getActivity(), "what " + attatchment.getType(), Toast.LENGTH_LONG).show();
-
-//        if(attatchment.getType() == 2) {
-            ((TextView) myView.findViewById(R.id.songTitle)).setText(attatchment.getTitle());
-            ((TextView) myView.findViewById(R.id.songArtist)).setText(attatchment.getArtist());
-            Picasso.get().load(attatchment.getAlbumCover()).into((ImageView) myView.findViewById(R.id.coverImage));
-            ((TextView) myView.findViewById(R.id.coverImageURL)).setText(attatchment.getAlbumCover());
-//        }
+        ((TextView) myView.findViewById(R.id.songTitle)).setText(attatchment.getTitle());
+        ((TextView) myView.findViewById(R.id.songArtist)).setText(attatchment.getArtist());
+        Picasso.get().load(attatchment.getAlbumCover()).into((ImageView) myView.findViewById(R.id.coverImage));
+        ((TextView) myView.findViewById(R.id.coverImageURL)).setText(attatchment.getAlbumCover());
     }
 }
