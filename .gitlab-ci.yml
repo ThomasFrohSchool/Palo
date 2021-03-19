@@ -38,7 +38,7 @@ android-build:
   image: javiersantos/android-ci:latest
   stage: androidbuild
   before_script:
-    - export GRADLE_USER_HOME='pwd' /.gradle
+    - export GRADLE_USER_HOME='pwd'/.gradle
     - chmod +x ./Frontend/Palo/gradlew
   tags:
     - frontend
@@ -53,7 +53,7 @@ android-test:
   image: javiersantos/android-ci:latest
   stage: androidtest
   before_script:
-    - export GRADLE_USER='pwd' /.gradle
+    - export GRADLE_USER='pwd'/.gradle
       - chmod +x ./Frontend/Palo/gradlew
   tags:
     - frontend
