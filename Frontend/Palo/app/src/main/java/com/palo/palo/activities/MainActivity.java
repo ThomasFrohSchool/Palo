@@ -3,6 +3,7 @@ package com.palo.palo.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
@@ -30,6 +31,14 @@ import static com.spotify.sdk.android.authentication.LoginActivity.REQUEST_CODE;
  */
 public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottomNavBar;
+    final Fragment feedFrag = new FeedFragment();
+    final Fragment palolistFrag = new PaloListFragment();
+//    final Fragment createNewFrag = new CreatePaloFragment();
+    final Fragment searchFrag = new SearchFragment();
+    final Fragment profileFrag = new ProfileFragment();
+    final FragmentManager fm = getSupportFragmentManager();
+    Fragment active = feedFrag;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,37 +46,52 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         if(SharedPrefManager.getInstance(this).isLoggedIn()){
-            // user is logged in stuff
-            User user = SharedPrefManager.getInstance(this).getUser();
+            fm.beginTransaction().add(R.id.main_frame, feedFrag, "feedFrag").commit(); // will show feed on default
+            fm.beginTransaction().add(R.id.main_frame, palolistFrag, "palolistFrag").hide(palolistFrag).commit();
+//            fm.beginTransaction().add(R.id.main_frame, createNewFrag, "createNewFrag").hide(createNewFrag).commit();
+            fm.beginTransaction().add(R.id.main_frame, searchFrag, "searchFrag").hide(searchFrag).commit();
+            fm.beginTransaction().add(R.id.main_frame, profileFrag, "profileFrag").hide(profileFrag).commit();
 
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.main_frame, new FeedFragment());
-            ft.commit();
+
+//            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//            ft.replace(R.id.main_frame, new FeedFragment());
+//            ft.commit();
 
             // NavBar stuff
             bottomNavBar = findViewById(R.id.bottom_nav_bar);
             bottomNavBar.setOnNavigationItemSelectedListener(item -> {
                 int id = item.getItemId();
                 if (id == R.id.action_palolist){
-                        PaloListFragment paloListFragment = new PaloListFragment();
-                        openFragment(paloListFragment);
-                        return true;
+//                        PaloListFragment paloListFragment = new PaloListFragment();
+//                        openFragment(paloListFragment);
+                    fm.beginTransaction().hide(active).show(palolistFrag).commit();
+                    active = palolistFrag;
+                    return true;
                 } else if (id == R.id.action_create){
-                        CreatePaloFragment createPaloFragment = new CreatePaloFragment();
-                        openFragment(createPaloFragment);
-                        return true;
+//                        CreatePaloFragment createPaloFragment = new CreatePaloFragment();
+//                        openFragment(createPaloFragment);
+                    startActivity(new Intent(this, CreateNewPostActivity.class));
+//                    fm.beginTransaction().hide(active).show(createNewFrag).commit();
+//                    active = createNewFrag;
+                    return true;
                 } else if (id == R.id.action_home){
-                        FeedFragment feedFragment = new FeedFragment();
-                        openFragment(feedFragment);
-                        return true;
+//                        FeedFragment feedFragment = new FeedFragment();
+//                        openFragment(feedFragment);
+                    fm.beginTransaction().hide(active).show(feedFrag).commit();
+                    active = feedFrag;
+                    return true;
                 } else if (id == R.id.action_search){
-                        SearchFragment searchFragment = new SearchFragment();
-                        openFragment(searchFragment);
-                        return true;
+//                        SearchFragment searchFragment = new SearchFragment();
+//                        openFragment(searchFragment);
+                    fm.beginTransaction().hide(active).show(searchFrag).commit();
+                    active = searchFrag;
+                    return true;
                 } else if (id == R.id.action_profile){
-                        ProfileFragment profileFragment = new ProfileFragment();
-                        openFragment(profileFragment);
-                        return true;
+//                        ProfileFragment profileFragment = new ProfileFragment();
+//                        openFragment(profileFragment);
+                    fm.beginTransaction().hide(active).show(profileFrag).commit();
+                    active = profileFrag;
+                    return true;
                 }
                 return false;
             });

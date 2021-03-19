@@ -1,26 +1,19 @@
 package com.palo.palo.model;
 
-/**
- * Model for song attachment.
- */
-public class Song {
+public class Song extends Attatchment {
+    public static final int TYPE = 2;
     private  String title;
     private String artist;
     private String albumCover;
-    private String id;
+    private String playbackLink;
 
     public Song(){}
-    public Song(String title, String artist, String albumCover, String id){
+    public Song(String title, String artist, String albumCover, String spotifyId, String spotifyLink, String playbackLink){
+        super(spotifyId, spotifyLink);
         this.title = title;
         this.artist = artist;
         this.albumCover = albumCover;
-        this.id = id;
-    }
-
-    public Song(String title, String artist, String albumCover){
-        this.title = title;
-        this.artist = artist;
-        this.albumCover = albumCover;
+        this.playbackLink = playbackLink;
     }
 
     public String getTitle() {
@@ -29,14 +22,6 @@ public class Song {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getArtist() {
@@ -53,5 +38,18 @@ public class Song {
 
     public void setAlbumCover(String albumCover) {
         this.albumCover = albumCover;
+    }
+
+    @Override
+    public int getType() {
+        return 2;
+    }
+    
+    public String getPlaybackLink() {
+        return playbackLink;
+    }
+
+    public void setPlaybackLink(String playbackLink) {
+        this.playbackLink = playbackLink;
     }
 }
