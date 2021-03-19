@@ -67,9 +67,9 @@ public class UserController {
     @ApiOperation(value = "Check if a provided username and password is a valid user")
     @GetMapping(path = "/user/{userID}")
     User getUserById(@PathVariable("userID") int userID){
-        List<User> myuser = userTable.findById(userID);
-        if (myuser.size() == 0)
+        User myuser = userTable.findById(userID);
+        if (myuser == null)
             return null;
-        return myuser.get(0);
+        return myuser;
     }
 }

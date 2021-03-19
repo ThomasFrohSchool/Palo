@@ -41,13 +41,13 @@ public class JUnitControllerTest {
 
     @Test
 	public void findByIdTest() {
-		when(users.findById(1)).thenReturn((List<User>) new User("jDoe", "123456", "jDoe@gmail.com"));
+		when(users.findById(1)).thenReturn(new User("jDoe", "123456", "jDoe@gmail.com"));
 
-		List<User> acct = users.findById(1);
+		User acct = users.findById(1);
 
-		assertEquals("jDoe", acct.get(0).getId());
-		assertEquals("123456", acct.get(0).getPassword());
-		assertEquals("jDoe@gmail.com", acct.get(0).getEmail());
+		assertEquals("jDoe", acct.getId());
+		assertEquals("123456", acct.getPassword());
+		assertEquals("jDoe@gmail.com", acct.getEmail());
 	}
 
 

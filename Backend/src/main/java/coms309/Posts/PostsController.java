@@ -40,7 +40,7 @@ public class PostsController {
     String createPost(@PathVariable int userID, @ApiParam(value="JSON post object",required=true) @RequestBody Posts post){
         if (post == null)
             return failure;
-        post.setUser(userTable.findById(userID).get(0));
+        post.setUser(userTable.findById(userID));
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
         LocalDateTime now = LocalDateTime.now();  
         post.setCreateDate(dtf.format(now));
@@ -57,6 +57,6 @@ public class PostsController {
     @ApiOperation(value = "List posts for a specific user")
     @GetMapping(path = "/posts/{userID}")
     public List<Posts> getUserPosts(@PathVariable("userID") int userID){
-        return userTable.findById(userID).get(0).getPosts();
+        return userTable.findById(userID).getPosts();
     }
 }
