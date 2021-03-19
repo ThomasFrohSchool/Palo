@@ -41,7 +41,7 @@ android-build:
     - export GRADLE_USER_HOME='pwd' /.gradle
     - chmod +x ./Frontend/Palo/gradlew
   tags:
-    - android_tag
+    - frontend
   script:
     - cd Frontend/Palo
     - ./gradlew build
@@ -56,7 +56,7 @@ android-test:
     - export GRADLE_USER='pwd' /.gradle
       - chmod +x ./Frontend/Palo/gradlew
   tags:
-    - android_tag
+    - frontend
   script:
     - cd Frontend/Palo
     - ./gradlew test
