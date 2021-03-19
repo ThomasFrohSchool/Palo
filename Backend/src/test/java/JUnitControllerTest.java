@@ -1,8 +1,6 @@
 package coms309.test;
 
 import coms309.Posts.*;
-import org.junit.jupiter.api.Test;  
-import org.junit.Assert;
 import org.springframework.boot.test.context.SpringBootTest;  
 
 import static org.junit.Assert.assertEquals;
@@ -23,11 +21,26 @@ import org.mockito.MockitoAnnotations;
 @SpringBootTest  
 public class JUnitControllerTest {
 
+    @InjectMocks
+	UserController userEndpoints;
+
+    @Mock
+	UserTable users;
+
+    @Before
+	public void init() {
+		MockitoAnnotations.initMocks(this);
+	}
+
     @Test
-    public void testWelcomeController() {
-        //WelcomeController controller = new WelcomeController();
-        //String result = controller.welcome();
-        Posts post = new Posts("String description", 0, "Spotiffy.string.ru.biz.k12.ia.us");
-        Assert.assertEquals(post.getDescription(), "String description");
-    }
+	public void getAccountByIdTest() {
+		when(repo.getAccountByID(1)).thenReturn(new Account(1, "jDoe", "123456", "jDoe@gmail.com"));
+
+		Account acct = acctService.getAccountByID(1);
+
+		assertEquals("jDoe", acct.getUserID());
+		assertEquals("123456", acct.getPassword());
+		assertEquals("jDoe@gmail.com", acct.getEmail());
+	}
+
 }
