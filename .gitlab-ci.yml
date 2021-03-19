@@ -2,6 +2,8 @@ stages:
   - build
   - test
   - deploy
+  - androidbuild
+  - androidtest
 
 build-code-job:
   stage: build
