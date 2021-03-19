@@ -10,6 +10,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
@@ -25,20 +26,13 @@ public class Posts {
 	private String description;
 	private int type;
 	private int likes;
-	private int tempID;
+	private String createDate;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	@JsonIgnore
 	private User user;
 
-	public Posts(int tempID, String description, int type, String spot_link){
-		this.tempID = tempID;
-		this.spot_link = spot_link;
-		this.description = description;
-		this.type = type;
-		this.likes = 0;
-	}
 
 	public Posts(String description, int type, String spot_link){
 		this.spot_link = spot_link;
@@ -62,11 +56,14 @@ public class Posts {
 	public User getUser(){
 		return this.user;
 	}
-	public int gettempID(){
-		return this.tempID;
-	}
 	public int getType(){
 		return this.type;
+	}
+	public int getUser_id(){
+		return this.user.getId();
+	}
+	public String getCreateDate(){
+		return this.createDate;
 	}
 	public void setDescription(String description){
 		this.description = description;
@@ -80,10 +77,10 @@ public class Posts {
 	public void setUser(User user){
 		this.user = user;
 	}
-	public void settempID(int tempID){
-		this.tempID = tempID;
-	}
 	public void setType(int type){
 		this.type = type;
+	}
+	public void setCreateDate(String thedate){
+		this.createDate = thedate;
 	}
 }
