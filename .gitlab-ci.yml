@@ -54,7 +54,7 @@ android-test:
   stage: androidtest
   before_script:
     - export GRADLE_USER='pwd'/.gradle
-      - chmod +x ./Frontend/Palo/gradlew
+    - chmod +x ./Frontend/Palo/gradlew
   tags:
     - frontend
   script:
