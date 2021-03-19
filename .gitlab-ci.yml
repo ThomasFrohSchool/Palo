@@ -31,3 +31,30 @@ test-code-deploy:
     - echo "This will deploy the tested build"
     #- cp -r /home/gitlab-runner/testBuild/* /palo/
     - echo "This is broken rn?"
+
+android-build:
+  image: javiersantos/android-ci:latest
+  stage: androidbuild
+  before_script:
+    - export GRADLE_USER_HOME='pwd' /.gradle
+    - chmod +x ./Frontend/Palo/gradlew
+  tags:
+    - android_tag
+  script:
+    - cd Frontend/Palo
+    - ./gradlew build
+  artifacts:
+    paths:
+      - Android_test/app/build/outputs/
+
+android-test:
+  image: javiersantos/android-ci:latest
+  stage: androidtest
+  before_script:
+    - export GRADLE_USER='pwd' /.gradle
+      - chmod +x ./Frontend/Palo/gradlew
+  tags:
+    - android_tag
+  script:
+    - cd Frontend/Palo
+    - ./gradlew test
