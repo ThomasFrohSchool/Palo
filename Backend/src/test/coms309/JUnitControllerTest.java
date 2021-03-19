@@ -1,6 +1,7 @@
 package coms309.test;
 
 import coms309.Posts.*;
+import coms309.Users.*;
 import coms309.Users.UserController;
 import coms309.Users.UserTable;
 
@@ -39,12 +40,12 @@ public class JUnitControllerTest {
 	}
 
     @Test
-	public void getAccountByIdTest() {
-		when(repo.getAccountByID(1)).thenReturn(new Account(1, "jDoe", "123456", "jDoe@gmail.com"));
+	public void findByIdTest() {
+		when(users.findById(1)).thenReturn(new User("jDoe", "123456", "jDoe@gmail.com"));
 
-		Account acct = acctService.getAccountByID(1);
+		User acct = users.findById(1);
 
-		assertEquals("jDoe", acct.getUserID());
+		assertEquals("jDoe", acct.getId());
 		assertEquals("123456", acct.getPassword());
 		assertEquals("jDoe@gmail.com", acct.getEmail());
 	}
