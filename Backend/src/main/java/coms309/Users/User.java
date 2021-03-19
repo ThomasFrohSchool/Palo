@@ -7,17 +7,24 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
+import java.util.List;
+
+import coms309.Posts.Posts;
 
 @Entity
-class User {
+public class User {
 
 	@Id
-    	@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private String username;
 	private String password;
 	private String email;
 
+	@OneToMany
+	private List<Posts> posts;
+	
 	public User(String username, String password, String email){
 		this.username = username;
 		this.password = password;
@@ -44,6 +51,9 @@ class User {
 	public String getEmail(){
 		return this.email;
 	}
+	public List<Posts> getPosts(){
+		return this.posts;
+	}
 	public void setEmail(String email){
 		this.email = email;
 	}
@@ -55,5 +65,11 @@ class User {
 	}
 	public void setId(int id){
 		this.id = id;
+	}
+	public void setPosts(List<Posts> posts){
+		this.posts = posts;
+	}
+	public void addPosts(Posts post){
+		this.posts.add(post);
 	}
 }

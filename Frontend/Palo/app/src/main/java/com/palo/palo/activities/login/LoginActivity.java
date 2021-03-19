@@ -26,7 +26,12 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This activity class is used for the login functionality.
+ * This class is associated with the activity_login.xml file.
+ */
 public class LoginActivity extends AppCompatActivity {
+
     EditText emailField;
     EditText passwordField;
     Button register;
@@ -55,6 +60,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     // todo - should probably create a login class and move this there
+
+    /**
+     * This method is for login functionality when the login button is pressed.
+     * Sends a post request to the backend and gets information back for if an existing account with
+     * the given parameters works.
+     */
     private void login(){
         String email = emailField.getText().toString();
         String password = passwordField.getText().toString();
@@ -93,6 +104,12 @@ public class LoginActivity extends AppCompatActivity {
         VolleySingleton.getInstance(this).addToRequestQueue(request);
     }
 
+    /**
+     * This method is for checking if the login fields are empty or not.
+     * @param email: Given email
+     * @param password: Given password
+     * @return Returns if any of the login fields are empty
+     */
     private boolean hasEmptyCredentials(String email, String password){
         if(email.isEmpty()){
             emailField.setError("Enter email.");

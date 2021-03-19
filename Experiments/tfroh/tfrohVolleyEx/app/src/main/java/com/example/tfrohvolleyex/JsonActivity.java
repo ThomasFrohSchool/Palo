@@ -14,10 +14,13 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.tfrohvolleyex.app.AppController;
 import com.example.tfrohvolleyex.net_utils.Const;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -37,6 +40,7 @@ public class JsonActivity extends AppCompatActivity {
         setContentView(R.layout.activity_json);
 
         btnOb = findViewById(R.id.jsonInReq);
+        btnAr = findViewById(R.id.jsonArrInReq);
         jsonResponse = findViewById(R.id.msgResponse);
 
         p = new ProgressDialog(this);
@@ -48,6 +52,12 @@ public class JsonActivity extends AppCompatActivity {
                 makeJsonObjectReq();
             }
         });
+        btnAr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                makeJsonArrayRequest();
+            }
+        });
     }
 
     private void makeJsonObjectReq() {
@@ -56,7 +66,14 @@ public class JsonActivity extends AppCompatActivity {
                 Const.URL_JSON_OBJECT, null,
                 response -> {
                     Log.d(TAG, response.toString());
-                    jsonResponse.setText(response.toString());
+                    String firstName = null;
+                    try {
+                        firstName = response.getString("name");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        p.hide();
+                    }
+                    jsonResponse.setText(firstName);
                     p.hide();
                 }, error -> {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
@@ -82,5 +99,32 @@ public class JsonActivity extends AppCompatActivity {
         };*/
 
         AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
+    }
+
+    private void makeJsonArrayRequest() {
+        p.show();
+
+        JsonObjectRequest arr = new JsonObjectRequest(Request.Method.GET, Const.URL_JSON_ARRAY, null,
+                response -> {
+                    try {
+                        JSONArray jsonArray = response.getJSONArray("array");
+
+                        for(int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject person = jsonArray.getJSONObject(i);
+                            String firstName = person.getString("first");
+                            String lastName = person.getString("last");
+                            int age = person.getInt("age");
+                            jsonResponse.append(firstName + " " + lastName + " is " + age + " years old.\n");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    p.hide();
+                }, error -> {
+                    error.printStackTrace();
+                    p.hide();
+                });
+
+        AppController.getInstance().addToRequestQueue(arr, tag_json_array);
     }
 }

@@ -30,7 +30,10 @@ import java.util.Date;
 
 import static com.palo.palo.volley.ServerURLs.CREATE_POST;
 
-
+/**
+ * This fragment is for creating a post.
+ * This class is associated with fragment_create_palo.xml.
+ */
 public class CreatePaloFragment extends Fragment {
     EditText captionField;
     View myView;
