@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
@@ -64,12 +65,38 @@ public class UserController {
             return null;
         return "{ \"error\":\"false\","+success+",\"user\":"+myuser.get(0)+"}";
     }
-    @ApiOperation(value = "Check if a provided username and password is a valid user")
+    @ApiOperation(value = "Get user with associated ID")
     @GetMapping(path = "/user/{userID}")
     User getUserById(@PathVariable("userID") int userID){
         User myuser = userTable.findById(userID);
         if (myuser == null)
             return null;
         return myuser;
+    }
+
+    @ApiOperation(value = "Add user1ID as a follower of user2ID")
+    @GetMapping(path = "/add/{user1ID}/{user2ID}")
+    String addFollower(@PathVariable("user1ID") int user1ID, @PathVariable("user2ID") int user2ID){
+        User user1 = userTable.findById(user1ID);
+        User user2 = userTable.findById(user2ID);
+        if (user1 == null || user2 == null)
+            return null;
+        user1.addFollowing(user2);
+        user2.addFollowers(user1);
+        userTable.save(user1);
+        userTable.save(user2);
+        return "{ \"error\":\"false\","+success+"}";
+    }
+
+    @ApiOperation(value = "Add user1ID as a follower of user2ID")
+    @GetMapping(path = "/searchUsername")
+    List<User> searchUsername(@ApiParam(value = "Name that will be searched", required = true) @RequestParam("name") String name){
+        if(name == null){
+            return null;
+        }
+        List<User> results = userTable.findByUsername(name);
+        if (results.size() == 0)
+            return null;
+        return results;
     }
 }

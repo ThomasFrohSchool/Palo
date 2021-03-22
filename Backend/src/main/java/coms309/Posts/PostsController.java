@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
 import java.util.List;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -58,5 +60,24 @@ public class PostsController {
     @GetMapping(path = "/posts/{userID}")
     public List<Posts> getUserPosts(@PathVariable("userID") int userID){
         return userTable.findById(userID).getPosts();
+    }
+    
+    @ApiOperation(value = "Get posts of a users following list")
+    @GetMapping(path = "/feed/{userID}")
+    public List<Posts> getFeedPosts(@PathVariable("userID") int userID){
+        User user = userTable.findById(userID);
+        if(user == null){
+            return null;
+        }
+        List<Integer>following = user.getFollowing();
+        List<Posts> p = new ArrayList<Posts>();
+        for(Integer i : following){
+            User f = userTable.findById(i);
+            for(Posts ps : f.getPosts()){
+                p.add(ps);
+            }
+        }
+
+        return p;
     }
 }

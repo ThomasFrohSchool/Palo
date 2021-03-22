@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.OneToMany;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import coms309.Posts.Posts;
@@ -25,6 +27,12 @@ public class User {
 	@OneToMany
 	private List<Posts> posts;
 	
+	@OneToMany
+	private List<User> followers;
+
+	@OneToMany
+	private List<User> following;
+
 	public User(String username, String password, String email){
 		this.username = username;
 		this.password = password;
@@ -54,6 +62,20 @@ public class User {
 	public List<Posts> getPosts(){
 		return this.posts;
 	}
+	public List<Integer> getFollowers(){
+		List<Integer> followerIDs = new ArrayList<Integer>();
+		for(int i=0;i<this.followers.size();i++){
+			followerIDs.add(this.followers.get(i).getId());
+		}
+		return followerIDs;
+	}
+	public List<Integer> getFollowing(){
+		List<Integer> followingIDs = new ArrayList<Integer>();
+		for(int i=0;i<this.following.size();i++){
+			followingIDs.add(this.following.get(i).getId());
+		}
+		return followingIDs;
+	}
 	public void setEmail(String email){
 		this.email = email;
 	}
@@ -71,5 +93,17 @@ public class User {
 	}
 	public void addPosts(Posts post){
 		this.posts.add(post);
+	}
+	public void setFollowers(List<User> followers){
+		this.followers = followers;
+	}
+	public void setFollowing(List<User> following){
+		this.following = following;
+	}
+	public void addFollowers(User follower){
+		this.followers.add(follower);
+	}
+	public void addFollowing(User following){
+		this.following.add(following);
 	}
 }
