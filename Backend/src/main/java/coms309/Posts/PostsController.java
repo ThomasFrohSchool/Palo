@@ -17,7 +17,9 @@ import io.swagger.annotations.ApiParam;
 import coms309.Users.User;
 import coms309.Users.UserTable;
 
-import java.time.format.DateTimeFormatter;  
+import java.time.format.DateTimeFormatter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;  
 
 @Api(value = "PostsController", description = "REST API containing endpoints for CRUDing posts")
@@ -77,7 +79,15 @@ public class PostsController {
                 p.add(ps);
             }
         }
-
+        SimpleDateFormat formatter1=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        p.sort((e1, e2) -> {
+            try {
+                return formatter1.parse(e1.getCreateDate()).compareTo(formatter1.parse(e2.getCreateDate()));
+            } catch (ParseException e) {
+                // TODO Auto-generated catch block
+                return 1;
+            }
+        });
         return p;
     }
 }

@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OneToMany;
 
@@ -27,10 +28,10 @@ public class User {
 	@OneToMany
 	private List<Posts> posts;
 	
-	@OneToMany
+	@ManyToMany
 	private List<User> followers;
 
-	@OneToMany
+	@ManyToMany
 	private List<User> following;
 
 	public User(String username, String password, String email){
