@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,11 +17,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.palo.palo.FeedAdapter;
 import com.palo.palo.R;
 import com.palo.palo.SharedPrefManager;
-import com.palo.palo.model.User;
-import com.palo.palo.volley.VolleySingleton;
-import com.palo.palo.FeedAdapter;
 import com.palo.palo.model.Palo;
 import com.palo.palo.model.Song;
 import com.palo.palo.model.User;
@@ -108,7 +105,7 @@ public class ProfileFragment extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                }, error -> error.printStackTrace());
+                }, Throwable::printStackTrace);
         //p.hide();
         VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(j);
     }
@@ -135,7 +132,7 @@ public class ProfileFragment extends Fragment {
                     }
                     recyclerView.setLayoutManager(new LinearLayoutManager(context));
                     recyclerView.setAdapter(new FeedAdapter(context, palos));
-                }, error -> error.printStackTrace());
+                }, Throwable::printStackTrace);
     }
 
     private static Palo extractPalo(JSONObject paloJSON) throws JSONException {
