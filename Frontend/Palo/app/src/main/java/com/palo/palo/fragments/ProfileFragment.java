@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -94,13 +95,13 @@ public class ProfileFragment extends Fragment {
 
     private void getProfile() {
         //p.show();
-        System.out.println(url + "/profile?q=" + user.getUsername());
+        //System.out.println(url + "/profile?q=" + user.getUsername());
         JsonObjectRequest j = new JsonObjectRequest(Request.Method.GET, url + "/profile?q=" + user.getUsername(), null,
                 response -> {
                     try {
                         String imgLink = response.getString("profileImage");
                         Picasso.get().load(imgLink).into(profileImage);
-                        paloAmt.setText(response.getString("palos"));
+                        //paloAmt.setText(response.getString("palos"));
                         followerAmt.setText(response.getString("followers"));
                         followingAmt.setText(response.getString("following"));
                         System.out.println(response);
@@ -109,21 +110,24 @@ public class ProfileFragment extends Fragment {
                     }
                 }, error -> error.printStackTrace());
         //p.hide();
-        //VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(j);
+        VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(j);
     }
 
     private void extractPalos() {
-        JsonArrayRequest request = getUserPalos(r, getActivity().getApplicationContext());
+        JsonArrayRequest request = getUserPalos(r, getActivity().getApplicationContext(), paloAmt);
         VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(request);
     }
 
-    private static JsonArrayRequest getUserPalos(RecyclerView recyclerView, Context context) {
+    private static JsonArrayRequest getUserPalos(RecyclerView recyclerView, Context context, TextView amt) {
+        System.out.println(url + "/Palo?q=" + user.getUsername());
         return new JsonArrayRequest(Request.Method.GET, url + "/Palo?q=" + user.getUsername(), null,
                 response -> {
                     List<Palo> palos = new ArrayList<>();
                     for(int i = 0; i < response.length(); i++) {
                         try {
                             palos.add(extractPalo(response.getJSONObject(i)));
+                            String len = String.valueOf(response.length());
+                            amt.setText(len);
                         }
                         catch (JSONException e){
                             e.printStackTrace();
