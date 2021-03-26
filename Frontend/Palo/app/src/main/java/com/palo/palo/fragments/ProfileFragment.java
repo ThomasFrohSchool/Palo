@@ -32,7 +32,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * This fragment is for the users profile page and its functionality.
+ * This class is associated with the fragment_profile.xml.
+ */
 public class ProfileFragment extends Fragment {
     //temporary url
     private static String url = "https://440b43ef-556f-4d7d-a95d-081ca321b8f9.mock.pstmn.io";

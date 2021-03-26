@@ -1,5 +1,8 @@
 package com.palo.palo.volley;
 
+/**
+ * ServerURLs contains paths to server. This contains the server's root address and all the paths to the routes to the server.
+ */
 public class ServerURLs {
     //server address
 //    private static final String ROOT = "https://29f8a8f6-4b69-4628-be72-4b7c59cfe36b.mock.pstmn.io/";
@@ -17,4 +20,7 @@ public class ServerURLs {
        RESPONSE: { "error": "false", "message": "Login Successful", "user": { "username": "TESTuser", "email": "asdf@test.com", "id": 4 } }
     */
     public static final String REGISTER = ROOT + "register";
+    
+    public static final String SEARCH = ROOT + "search?q=";
+    public static final String CREATE_POST = ROOT + "createPost/";
 }

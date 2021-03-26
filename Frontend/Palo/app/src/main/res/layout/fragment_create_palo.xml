@@ -7,18 +7,99 @@
     android:layout_height="match_parent"
     tools:context=".fragments.CreatePaloFragment">
 
-    <TextView
-        android:id="@+id/create_palo_header"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/new_post_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Create Palo will go here..."
-        android:textSize="40sp"
-        android:gravity="center_horizontal|center_vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        android:layout_gravity="top"
+        tools:context=".fragments.CreatePaloFragment">
+
+
+
+        <EditText
+            android:id="@+id/caption_create_new_post"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:background="#F3F3F3"
+            android:gravity="top|start"
+            android:hint="Add a short description..."
+            android:inputType="textMultiLine"
+            android:maxLines="6"
+            android:minLines="3"
+            android:scrollbars="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/attached_song_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Attachment:"
+            android:textStyle="bold"
+            android:gravity="top|start"
+            android:layout_marginVertical="4dp"
+            app:layout_constraintTop_toBottomOf="@+id/caption_create_new_post"
+             />
+
+        <include layout="@layout/basic_song_layout"
+            android:id="@+id/new_post_attached_song"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/attached_song_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/search_bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#F3F3F3"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            app:layout_constraintTop_toBottomOf="@id/new_post_attached_song"
+            android:visibility="gone">
+            <TextView
+                android:id="@+id/search_song_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Search for attachment:"
+                android:textStyle="bold"
+                android:gravity="top|start"
+                android:layout_marginVertical="4dp"
+                app:layout_constraintTop_toTopOf="parent"/>
+            <EditText
+                android:id="@+id/attached_song_search_bar_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Search Spotify...."
+                android:layout_marginRight="45dp"
+                android:layout_marginEnd="45dp"
+                android:drawableLeft="@drawable/ic_action_search"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/search_song_title" />
+            <ImageButton
+                android:id="@+id/attached_song_search_bar_button"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_search"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/search_song_title"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/search_bar_layout"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>
