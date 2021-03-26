@@ -28,6 +28,7 @@ public class JUnitControllerTest {
 
     @InjectMocks
 	UserController userEndpoints;
+	@InjectMocks
     PostsController postsController;
 
     @Mock
@@ -35,7 +36,7 @@ public class JUnitControllerTest {
 
     @Before
 	public void init() {
-		MockitoAnnotations.initMocks(this);
+		MockitoAnnotations.openMocks(this);
 	}
 
     @Test
