@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,22 +22,23 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
 
     LayoutInflater inflater;
     List<Palo> palos;
+    private OnFeedListener onFeedListener;
 
     /**
      * Constructor for FeedApapter. Sets list of post or "palos".
-     * @param context
      * @param palos
      */
-    public FeedAdapter(Context context, List<Palo> palos){
+    public FeedAdapter(Context context, List<Palo> palos, OnFeedListener onFeedListener){
         this.inflater = LayoutInflater.from(context);
         this.palos = palos;
+        this.onFeedListener = onFeedListener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.basic_palo_layout,parent,false);
-        return new ViewHolder(view);
+        return new ViewHolder(view, onFeedListener);
     }
 
     @Override
@@ -49,9 +49,9 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         Picasso.get().load(palos.get(position).getProfileImage()).into(holder.authorProfileImage);
 
         // Attached Song stuff...
-        holder.songTitleTV.setText(palos.get(position).getAttachedSong().getTitle());
-        holder.songArtistTV.setText(palos.get(position).getAttachedSong().getArtist());
-        Picasso.get().load(palos.get(position).getAttachedSong().getAlbumCover()).into(holder.songCoverImage);
+        holder.songTitleTV.setText(palos.get(position).getAttatchment().getTitle());
+        holder.songArtistTV.setText(palos.get(position).getAttatchment().getArtist());
+        Picasso.get().load(palos.get(position).getAttatchment().getAlbumCover()).into(holder.songCoverImage);
     }
 
 
@@ -63,7 +63,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
     /**
      * ViewHolder for FeedAdapter. Set posts info for each item in Feed Adapter.
      */
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         //views for palo
         TextView authorUserNameTV, postdateTV, captionTV;
         ImageView authorProfileImage;
@@ -75,7 +75,9 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         TextView songTitleTV, songArtistTV;
         ImageView songCoverImage;
 
-        public ViewHolder(@NonNull View itemView) {
+        OnFeedListener onFeedListener;
+
+        public ViewHolder(@NonNull View itemView, OnFeedListener onFeedListener) {
             super(itemView);
             authorUserNameTV = itemView.findViewById(R.id.paloAuthorUserName);
             postdateTV = itemView.findViewById(R.id.paloDate);
@@ -87,9 +89,17 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
             songTitleTV = itemView.findViewById(R.id.songTitle);
             songArtistTV = itemView.findViewById(R.id.songArtist);
             songCoverImage = itemView.findViewById(R.id.coverImage);
-            itemView.setOnClickListener(v -> Toast.makeText(v.getContext(), "POST was clicked!", Toast.LENGTH_SHORT).show());
-//            commentTV.setOnClickListener(v -> Toast.makeText(v.getContext(), "Comment was clicked! this will eventually allow you to make a comment...", Toast.LENGTH_SHORT).show());
-//            likeTV.setOnClickListener(v -> Toast.makeText(v.getContext(), "LIKE was clicked! this will eventually allow you to like this palo...", Toast.LENGTH_SHORT).show());
+            this.onFeedListener = onFeedListener;
+            itemView.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View v) {
+            onFeedListener.onPaloClick(getAdapterPosition());
+        }
+    }
+
+    public interface OnFeedListener{
+        public void onPaloClick(int position);
     }
 }
