@@ -9,7 +9,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.ApiParam;
 
+@Api(value = "UserController", description = "REST API containing endpoints for CRUDing users")
 @RestController
 public class UserController {
 
@@ -19,13 +25,23 @@ public class UserController {
     @Autowired
     UserTable userTable;
 
+    /**
+     * 
+     * @return Returns a JSON list containing all registered users
+     */
+    @ApiOperation(value = "Get list of all users")
     @GetMapping(path = "/users")
     List<User> getAllUsers(){
         return userTable.findAll();
     }
-
+    /**
+     * 
+     * @param user JSON object representation of a user to be registered
+     * @return JSON response body containing information about the status and user
+     */
+    @ApiOperation(value = "Create and register a new user")
     @PostMapping(path = "/register")
-    String createUser(@RequestBody User user){
+    String createUser(@ApiParam(value="JSON user object",required=true) @RequestBody User user){
         if (user == null)
             return "{ \"error\":\"true\","+failure+",\"user\":"+user+"}";
         try {
@@ -35,13 +51,25 @@ public class UserController {
         }
         return "{ \"error\":\"false\","+success+",\"user\":"+user+"}";
     }
-
+    /**
+     * 
+     * @param request JSON user object conatining just the username and password of a user
+     * @return JSON response body containing information about the status and user
+     */
+    @ApiOperation(value = "Check if a provided username and password is a valid user")
     @PostMapping(path = "/login")
-    String login(@RequestBody User request){
+    String login(@ApiParam(value="JSON user object",required=true) @RequestBody User request){
         List<User> myuser = userTable.findByUsername(request.getUsername());
         if (myuser.size() == 0 || !(myuser.get(0).getPassword().equals(request.getPassword())))
             return null;
         return "{ \"error\":\"false\","+success+",\"user\":"+myuser.get(0)+"}";
     }
-
+    @ApiOperation(value = "Check if a provided username and password is a valid user")
+    @GetMapping(path = "/user/{userID}")
+    User getUserById(@PathVariable("userID") int userID){
+        List<User> myuser = userTable.findById(userID);
+        if (myuser.size() == 0)
+            return null;
+        return myuser.get(0);
+    }
 }

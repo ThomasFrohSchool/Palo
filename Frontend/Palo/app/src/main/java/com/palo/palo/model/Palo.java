@@ -1,5 +1,8 @@
 package com.palo.palo.model;
 
+/**
+ * Model for posts.
+ */
 public class Palo {
     private User author;
     private String postDate, caption;

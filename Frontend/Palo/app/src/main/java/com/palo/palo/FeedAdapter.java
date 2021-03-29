@@ -16,12 +16,19 @@ import java.util.List;
 import com.palo.palo.model.Palo;
 import com.squareup.picasso.Picasso;
 
-
+/**
+ * Adapter for feed fragement's recyclerview.
+ */
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
 
     LayoutInflater inflater;
     List<Palo> palos;
 
+    /**
+     * Constructor for FeedApapter. Sets list of post or "palos".
+     * @param context
+     * @param palos
+     */
     public FeedAdapter(Context context, List<Palo> palos){
         this.inflater = LayoutInflater.from(context);
         this.palos = palos;
@@ -53,6 +60,9 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         return palos.size();
     }
 
+    /**
+     * ViewHolder for FeedAdapter. Set posts info for each item in Feed Adapter.
+     */
     public class ViewHolder extends RecyclerView.ViewHolder{
         //views for palo
         TextView authorUserNameTV, postdateTV, captionTV;

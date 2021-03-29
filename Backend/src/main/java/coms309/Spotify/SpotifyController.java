@@ -7,6 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,11 +24,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import aj.org.objectweb.asm.Type;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+
 import top.jfunc.json.impl.JSONArray;
 import top.jfunc.json.impl.JSONObject;
 
 import org.springframework.web.bind.annotation.RequestParam;
 
+@Api(value = "Spotify Controller", description = "REST API's relating to connecting with the Spotify API")
 @RestController
 public class SpotifyController {
 
@@ -83,13 +89,15 @@ public class SpotifyController {
         }
     }
 
+    @ApiOperation(value = "Get a Spotify OAuth Token")
     @GetMapping(path = "/token")
     public String token() {
         return getToken();
     }
 
+    @ApiOperation(value = "Search for an Album, Artist, or Track")
     @GetMapping(path = "/search")
-    public String search(@RequestParam("q") String q) {
+    public String search(@ApiParam(value = "String that will be searched", required = true) @RequestParam("q") String q) {
         String authToken = getToken();
 
         StringBuilder query = new StringBuilder("https://api.spotify.com/v1/search?q=");
@@ -135,49 +143,99 @@ public class SpotifyController {
             JSONObject artists = new JSONObject(myResponse.getString("artists"));
             JSONObject tracks = new JSONObject(myResponse.getString("tracks"));
 
-            JSONArray albumItems = new JSONArray(albums.getString("items"));
-            JSONArray artistItems = new JSONArray(artists.getString("items"));
-            JSONArray trackItems = new JSONArray(tracks.getString("items"));
+            JSONArray albumItems = null;   //array of items
+            JSONArray artistItems = null;
+            JSONArray trackItems = null;
 
-            /*
-            //JSONObject 
-            JSONObject albumItem;
+            JSONObject albumItem; //individual item
             JSONObject artistItem;
             JSONObject trackItem;
-            String type;
+
+           //StringBuilder albumBuilder = new StringBuilder("Albums: ");
+            //StringBuilder artistBuilder = new StringBuilder("Artists: ");
+            //StringBuilder trackBuilder = new StringBuilder("Tracks: ");
+
+
             String id;
 
-            StringBuilder toRet = new StringBuilder("");
+            JSONArray albumArray = new JSONArray();
+            JSONArray artistArray = new JSONArray();
+            JSONArray trackArray = new JSONArray();
 
-            */
-            /*
-            for(int i = 0; i<4;i++){
-                albumItem = new JSONObject(albumItems.get(i).toString());
-                artistItem = new JSONObject(artistItems.get(i).toString());
-                trackItem = new JSONObject(trackItems.get(i).toString());
+            for(int i = 0; i<4; i++){
+                for(int k = 0; k<4; k++){
+                    if(i ==0){ //albums
+                        if(k == 0){
+                            albumItems = new JSONArray(albums.getString("items"));
+                        }
 
-                type = albumItem.getString("type");
-                id = albumItem.getString("id");
+                        if(albumItems.size() > k){
+                            albumItem = new JSONObject(albumItems.get(k).toString());
 
-                toRet.append("Type: " + type + " ID: " + id + "\n");
+                            id = albumItem.getString("id");
+    
 
-                type = artistItem.getString("type");
-                id = artistItem.getString("id");
+                            albumArray.put(album(id));
 
-                toRet.append("Type: " + type + " ID: " + id + "\n");
+                            
+                            //albumBuilder.append("#" + k + " :  Name: \"" + name + "\"  ID: \"" + id+ "\"  ");
+                        }
 
-                type = trackItem.getString("type");
-                id = trackItem.getString("id");
 
-                toRet.append("Type: " + type + " ID: " + id + "\n");
+                    }else if(i == 1){//artists
+                        
+                        if(k == 0){
+                            artistItems = new JSONArray(artists.getString("items"));
+                        }
+                        if(artistItems.size() > k){
+                            artistItem = new JSONObject(artistItems.get(k).toString());
+
+
+                            id = artistItem.getString("id");
+
+                            artistArray.put(artist(id));
+
+                            //artistBuilder.append("#" + k + " :  Name: \"" + name + "\"  ID: \"" + id+ "\"  ");
+                        }
+
+
+                    }else if(i == 2){//tracks
+                        if(k == 0){
+                            trackItems = new JSONArray(tracks.getString("items"));
+                        }
+                        if(trackItems.size() > k){
+                            trackItem = new JSONObject(trackItems.get(k).toString());
+
+                            
+                            id = trackItem.getString("id");
+
+                            
+                            trackArray.put(track(id));
+                            //trackBuilder.append("#" + k + " :  Name: \"" + name + "\"  ID: \"" + id+ "\"  ");
+    
+                        }
+
+                    }
+                }
             }
-            */
 
 
-            //String fxnResponse = getAlbum(id);
+            
+
+            //StringBuilder bob = new StringBuilder("{")
+
+            JSONObject myObj = new JSONObject();
+            myObj.put("albums", albumArray);
+            myObj.put("artists", artistArray);
+            myObj.put("tracks", trackArray);
+            //myObj.put("status", "Down so bad im depressed");
 
 
-            return myResponse.toString();
+            
+            
+
+
+            return "{\"albums\":" +  albumArray.toString() + ", \"artists\":" +  artistArray.toString() + ", \"tracks\":" +  trackArray.toString() + "}";
 
 
 
@@ -189,22 +247,164 @@ public class SpotifyController {
         }
 
 
-        return "didnt make it thru";
+        return "Didnt make it thru";
     }
 
 
 
-    private String getAlbum(String id){
-        String authToken = getToken();
+
+    @ApiOperation(value = "Get info about an Album by ID")
+    @GetMapping(path = "/getAlbum")
+    private String getAlbum(@ApiParam(value = "ID that will be used to find the Album", required = true) @RequestParam("id") String id){
+        return album(id).toString();
+    }
+
+    
+
+
+    @ApiOperation(value = "Get info about a Track by ID")
+    @GetMapping(path = "/getTrack")
+    private String getTrack(@ApiParam(value = "ID that will be used to find the Track", required = true) @RequestParam("id") String id){
+        return track(id).toString();
+    }
+
+    
+    @ApiOperation(value = "Get info about a Artist by ID")
+    @GetMapping(path = "/getArtist")
+    private String getArtist(@ApiParam(value = "ID that will be used to find the Artist", required = true) @RequestParam("id") String id){
+        return artist(id).toString();
+    }
+
+
+    private JSONObject album(String id){
 
         StringBuilder query = new StringBuilder("https://api.spotify.com/v1/albums/");
 
         
         query.append(id);
-
+        query.append("?market=US");
         String url = query.toString();
-        URL obj;
+        
+        JSONObject myResponse = new JSONObject(getByURL(url));
 
+        JSONArray images = new JSONArray(myResponse.getString("images"));
+        JSONObject image = new JSONObject(images.getString(1));      //get the middle image, 300x300
+        String imageURL = image.getString("url");
+
+        JSONArray artists = new JSONArray(myResponse.getString("artists"));
+        
+        if(!(artists.size() > 0)){ //TODO Check for multiple artists
+            return null;
+            
+            
+        }//else{
+            //multiple artists TODO
+       // }
+
+       JSONObject artist = new JSONObject(artists.getString(0));
+       String artistName = artist.getString("name");
+       String albumName = myResponse.getString("name");
+
+       JSONObject linkObj = new JSONObject(myResponse.getString("external_urls"));
+       String link = linkObj.getString("spotify");
+
+       JSONObject myObj = new JSONObject();
+       myObj.put("name", albumName);
+       myObj.put("artist", artistName);
+       myObj.put("imageUrl", imageURL);
+       myObj.put("link", link);
+       myObj.put("id", id);
+        
+
+
+        return myObj;
+    }
+
+    private JSONObject artist(String id){
+        
+
+        StringBuilder query = new StringBuilder("https://api.spotify.com/v1/artists/");
+
+        
+        query.append(id);
+        String url = query.toString();
+        
+        JSONObject myResponse = new JSONObject(getByURL(url));
+
+        JSONArray images = new JSONArray(myResponse.getString("images"));
+        JSONObject image = new JSONObject(images.getString(1));      //get the middle image, 300x300
+        String imageURL = image.getString("url");
+
+
+       String artistName = myResponse.getString("name");
+
+       JSONObject linkObj = new JSONObject(myResponse.getString("external_urls"));
+       String link = linkObj.getString("spotify");
+
+       JSONObject myObj = new JSONObject();
+       myObj.put("artist", artistName);
+       myObj.put("imageUrl", imageURL);
+       myObj.put("link", link);
+       myObj.put("id", id);
+        
+
+
+        return myObj;
+    }
+
+    private JSONObject track(String id){
+        
+
+        StringBuilder query = new StringBuilder("https://api.spotify.com/v1/tracks/");
+
+        
+        query.append(id);
+        query.append("?market=US");
+        String url = query.toString();
+        
+        JSONObject myResponse = new JSONObject(getByURL(url));
+        String playback = myResponse.getString("preview_url");
+        JSONObject album = new JSONObject(myResponse.getString("album"));
+        JSONArray images = new JSONArray(album.getString("images"));
+        JSONObject image = new JSONObject(images.getString(1));      //get the middle image, 300x300
+        String imageURL = image.getString("url");
+
+        JSONArray artists = new JSONArray(myResponse.getString("artists"));
+        
+        if(!(artists.size() > 0)){ //TODO Check for multiple artists
+            return null;
+            
+            
+        }//else{
+            //multiple artists TODO
+       // }
+
+       JSONObject artist = new JSONObject(artists.getString(0));
+       String artistName = artist.getString("name");
+       String albumName = myResponse.getString("name");
+
+       JSONObject linkObj = new JSONObject(myResponse.getString("external_urls"));
+       String link = linkObj.getString("spotify");
+       
+    
+       JSONObject myObj = new JSONObject();
+       myObj.put("name", albumName);
+       myObj.put("playbackLink", playback);
+       myObj.put("artist", artistName);
+       myObj.put("imageUrl", imageURL);
+       myObj.put("link", link);
+       myObj.put("id", id);
+        
+
+
+        return myObj;
+    }
+
+
+    private String getByURL(String url){
+        String authToken = getToken();
+        URL obj;
+        
         try {
             obj = new URL(url);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -229,10 +429,10 @@ public class SpotifyController {
             in.close();
 
             JSONObject myResponse = new JSONObject(response.toString());
+
+
+
             return myResponse.toString();
-
-
-
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -243,5 +443,7 @@ public class SpotifyController {
 
         return "didnt make it thru";
     }
+    
+        
     
 }
