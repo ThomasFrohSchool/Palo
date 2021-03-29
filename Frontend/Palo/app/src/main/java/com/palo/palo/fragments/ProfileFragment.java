@@ -65,17 +65,12 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        //TextView headerET = view.findViewById(R.id.profile_header);
         user = SharedPrefManager.getInstance(getActivity().getApplicationContext()).getUser();
-        //headerET.setText(user.getUsername());
         profileImage = view.findViewById(R.id.profileImage);
         profileName = view.findViewById(R.id.profileName);
         paloAmt = view.findViewById(R.id.paloAmt);
-        //palos = view.findViewById(R.id.Palos);
         followerAmt = view.findViewById(R.id.followerAmt);
-        //followers = view.findViewById(R.id.Followers);
         followingAmt = view.findViewById(R.id.followingAmt);
-        //following = view.findViewById(R.id.Following);
         r = view.findViewById(R.id.userPalos);
         //p = new ProgressDialog(getActivity().getApplicationContext());
         //p.setMessage("Loading...");
@@ -89,22 +84,18 @@ public class ProfileFragment extends Fragment {
 
         profileName.setText(user.getUsername());
         getProfile();
-        //getUserPalos();
         extractPalos();
     }
 
     private void getProfile() {
         //p.show();
-        //System.out.println(url + "/profile?q=" + user.getUsername());
         JsonObjectRequest j = new JsonObjectRequest(Request.Method.GET, url + "/profile?q=" + user.getUsername(), null,
                 response -> {
                     try {
                         String imgLink = response.getString("profileImage");
                         Picasso.get().load(imgLink).into(profileImage);
-                        //paloAmt.setText(response.getString("palos"));
                         followerAmt.setText(response.getString("followers"));
                         followingAmt.setText(response.getString("following"));
-                        System.out.println(response);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -119,7 +110,6 @@ public class ProfileFragment extends Fragment {
     }
 
     private static JsonArrayRequest getUserPalos(RecyclerView recyclerView, Context context, TextView amt) {
-        System.out.println(url + "/Palo?q=" + user.getUsername());
         return new JsonArrayRequest(Request.Method.GET, url + "/Palo?q=" + user.getUsername(), null,
                 response -> {
                     List<Palo> palos = new ArrayList<>();
