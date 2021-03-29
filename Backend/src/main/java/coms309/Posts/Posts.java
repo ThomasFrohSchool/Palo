@@ -1,21 +1,15 @@
 package coms309.Posts;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 import coms309.Users.User;
-import coms309.Users.UserTable;
 
 @Entity
 public class Posts {
@@ -62,6 +56,9 @@ public class Posts {
 	public int getUser_id(){
 		return this.user.getId();
 	}
+	public int getLikes(){
+		return this.likes;
+	}
 	public String getCreateDate(){
 		return this.createDate;
 	}
@@ -82,5 +79,8 @@ public class Posts {
 	}
 	public void setCreateDate(String thedate){
 		this.createDate = thedate;
+	}
+	public void setLikes(int likes){
+		this.likes = likes;
 	}
 }
