@@ -6,7 +6,9 @@ import coms309.Users.User;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 
@@ -21,10 +23,10 @@ public class DM {
     private int to_id;
     private String message;
 
-	//@ManyToMany
-	//@JoinColumn(name = "user_id")
-	private User user;
-
+	@OneToMany
+	@JoinColumn(name = "user_id")
+	private User from_user;
+	private User to_user;
 
 	public DM(String message, int from_id, int to_id){
 		this.to_id = to_id;
@@ -32,32 +34,35 @@ public class DM {
 		this.message = message;
 	}
 
-	public DM){
+	public DM(){
 	}
 
 	public int getId(){
 		return this.id;
 	}
-	public User getUser(){
-		return this.user;
+	public User getToUser(){
+		return this.to_user;
 	}
-	public int getType(){
-		return this.type;
-	}
-	public int getUser_id(){
-		return this.user.getId();
+	public User getFromUser(){
+		return this.from_user;
 	}
 	public String getCreateDate(){
 		return this.createDate;
 	}
-	public void setDescription(String description){
-		this.description = description;
+	public String getMessage(){
+		return this.message;
 	}
 	public void setId(int id){
 		this.id = id;
 	}
-	public void setUser(User user){
-		this.user = user;
+	public void setToUser(User user){
+		this.to_user = user;
+	}
+	public void setFromUser(User user){
+		this.from_user = user;
+	}
+	public void setMessage(String message){
+		this.message = message;
 	}
 	public void setCreateDate(String thedate){
 		this.createDate = thedate;
