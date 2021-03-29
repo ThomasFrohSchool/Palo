@@ -13,6 +13,7 @@ public class User implements Parcelable {
     private String profileImage;
 
     public User(){}
+
     public User(int id, String username, String email){
         this.id = id;
         this.username = username;
@@ -24,6 +25,11 @@ public class User implements Parcelable {
         username = parcel.readString();
         email = parcel.readString();
         profileImage = parcel.readString();
+    }
+    public User(int id){
+        this.id = id;
+        this.username = "TEMP_USER";
+        this.profileImage = "https://img.apmcdn.org/4f25ecdbbd7af5fed833153302515a94c990de11/square/7aacc5-20130508-favorite-album-covers.jpg";
     }
 
     public int getId() {

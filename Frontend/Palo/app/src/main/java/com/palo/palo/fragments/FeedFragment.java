@@ -17,7 +17,10 @@ import com.android.volley.Request;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.palo.palo.FeedAdapter;
 import com.palo.palo.R;
+import com.palo.palo.SharedPrefManager;
 import com.palo.palo.activities.ExtendedPostActivity;
+import com.palo.palo.model.Album;
+import com.palo.palo.model.Artist;
 import com.palo.palo.model.Palo;
 import com.palo.palo.model.Song;
 import com.palo.palo.model.User;
@@ -29,12 +32,15 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.palo.palo.volley.ServerURLs.FEED;
+
 /**
  * This fragment is for the feed and its functionalities.
  * This class is associated with fragment_feed.xml.
  */
 public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener {
     RecyclerView recyclerView;
+    View myView;
     private static String SERVER_URL = "https://6e8134ce-7a91-4a1d-8c23-f06c12c6fcfd.mock.pstmn.io";
     List<Palo> palos;
     public FeedFragment() { }
@@ -50,6 +56,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
     }
 
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        myView = view;
         recyclerView = view.findViewById(R.id.songList);
         recyclerView.setAdapter(new FeedAdapter(getActivity().getApplicationContext(), new ArrayList<>(), this));
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
@@ -60,22 +67,17 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
      * This method is for extracting the song from a Palo.
      */
     private void extractSongs() {
-        JsonArrayRequest request = paloRequest(recyclerView, getActivity().getApplicationContext());
+        JsonArrayRequest request = feedRequest(recyclerView, getActivity().getApplicationContext());
         VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(request);
     }
 
-    /**
-     *
-     * @param recyclerView: The recycler view of all the Palos.
-     * @param context: The context of the fragment
-     * @return Returns the list of Palos.
-     */
-    private  JsonArrayRequest paloRequest(RecyclerView recyclerView, Context context){
-        return new JsonArrayRequest(Request.Method.GET, SERVER_URL + "/feed", null, response -> {
-            palos = new ArrayList<>();
+    private  JsonArrayRequest feedRequest(RecyclerView recyclerView, Context context){
+        return new JsonArrayRequest(Request.Method.GET, FEED + SharedPrefManager.getInstance(myView.getContext()).getUser().getId(), null, response -> {
+           palos = new ArrayList<>();
             for (int i = 0; i < response.length(); i++) {
                 try {
-                    palos.add(extractPalo(response.getJSONObject(i)));
+
+                    palos.add(extractPalo(response.getJSONObject(i), context));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -90,12 +92,28 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
      * @return Returns the Palo and its different fields.
      * @throws JSONException
      */
-    private static Palo extractPalo(JSONObject paloJSON) throws JSONException {
+    private static Palo extractPalo(JSONObject paloJSON, Context context) throws JSONException {
         Palo palo = new Palo();
-        palo.setAuthor(extractUser(paloJSON.getJSONObject("author")));
-        palo.setPostDate(paloJSON.getString("postdate"));
-        palo.setCaption(paloJSON.getString("caption"));
-        palo.setAttatchment(extractSong(paloJSON.getJSONObject("song")));
+        palo.setAuthor(new User(paloJSON.getInt("user_id")));
+//        JsonObjectRequest userRequest = userRequest(paloJSON.getInt("user_id"), palo, context);
+//        VolleySingleton.getInstance(context).addToRequestQueue(userRequest);
+        palo.setPostDate(paloJSON.getString("createDate"));
+        palo.setCaption(paloJSON.getString("description"));
+        int type = paloJSON.getInt("type");
+        switch (type){
+            case 0:
+                palo.setAttatchment(new Album(paloJSON.getString("spot_link")));
+                break;
+            case 1:
+                palo.setAttatchment(new Artist(paloJSON.getString("spot_link")));
+
+                break;
+            case 2:
+                palo.setAttatchment(new Song(paloJSON.getString("spot_link")));
+                break;
+            default: System.out.println("error");
+        }
+//        palo.setAttachedSong(extractSong(paloJSON.getJSONObject("song")));
         return palo;
     }
 
@@ -131,7 +149,6 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
     @Override
     public void onPaloClick(int position) {
         System.out.println("post clicked..." + palos.get(position).getCaption());
-
         Palo p = palos.get(position);
         Intent intent =  new Intent(getContext(), ExtendedPostActivity.class);
         intent.putExtra("selected_post", palos.get(position));

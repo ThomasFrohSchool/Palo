@@ -26,6 +26,9 @@ public class Song extends Attatchment {
         albumCover = parcel.readString();
         setSpotifyLink(parcel.readString());
     }
+    public Song(String spot_link){
+        super(spot_link);
+    }
 
     public String getTitle() {
         return title;

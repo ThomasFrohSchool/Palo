@@ -13,6 +13,9 @@ public class Attatchment implements Parcelable {
     public Attatchment(){}
     public Attatchment(String spotifyId){
         this.spotifyId = spotifyId;
+        title = "test_title";
+        artist = "fake_artist";
+        albumCover = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiUa1gUnZi98GtcAT8-VePbLkB7Mt1LR9OOQ&usqp=CAU";
     }
     public Attatchment(String spotifyId, String spotifyLink){
         this.spotifyId = spotifyId;
