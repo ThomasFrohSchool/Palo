@@ -22,7 +22,7 @@ public class Posts {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	private String spot_link;
+	private String spot_id;
 	private String description;
 	private int type;
 	private int likes;
@@ -34,8 +34,8 @@ public class Posts {
 	private User user;
 
 
-	public Posts(String description, int type, String spot_link){
-		this.spot_link = spot_link;
+	public Posts(String description, int type, String spot_id){
+		this.spot_id = spot_id;
 		this.description = description;
 		this.type = type;
 		this.likes = 0;
@@ -50,8 +50,8 @@ public class Posts {
 	public String getDescription(){
 		return this.description;
 	}
-	public String getSpot_link(){
-		return this.spot_link;
+	public String getSpot_id(){
+		return this.spot_id;
 	}
 	public User getUser(){
 		return this.user;
@@ -68,8 +68,8 @@ public class Posts {
 	public void setDescription(String description){
 		this.description = description;
 	}
-	public void setSpot_link(String spot_link){
-		this.spot_link = spot_link;
+	public void setSpot_id(String spot_id){
+		this.spot_id = spot_id;
 	}
 	public void setId(int id){
 		this.id = id;
