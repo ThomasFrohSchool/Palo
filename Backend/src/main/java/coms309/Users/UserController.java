@@ -85,6 +85,20 @@ public class UserController {
         userTable.save(user2);
         return "{ \"error\":\"false\","+success+"}";
     }
+    @ApiOperation(value = "Remove user1ID as a follower of user2ID")
+    @GetMapping(path = "/remove/{user1ID}/{user2ID}")
+    String removeFollower(@PathVariable("user1ID") int user1ID, @PathVariable("user2ID") int user2ID){
+        User user1 = userTable.findById(user1ID);
+        User user2 = userTable.findById(user2ID);
+        if (user1 == null || user2 == null)
+            return null;
+        user1.removeFollowing(user2);
+        user2.removeFollowers(user1);
+        userTable.save(user1);
+        userTable.save(user2);
+        return "{ \"error\":\"false\","+success+"}";
+    }
+
 
     @ApiOperation(value = "Add user1ID as a follower of user2ID")
     @GetMapping(path = "/searchUsername")

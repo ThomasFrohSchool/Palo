@@ -101,6 +101,12 @@ public class User {
 	public void addFollowers(User follower){
 		this.followers.add(follower);
 	}
+	public void removeFollowers(User follower){
+		this.followers.remove(follower);
+	}
+	public void removeFollowing(User follower){
+		this.following.remove(follower);
+	}
 	public void addFollowing(User following){
 		this.following.add(following);
 	}
