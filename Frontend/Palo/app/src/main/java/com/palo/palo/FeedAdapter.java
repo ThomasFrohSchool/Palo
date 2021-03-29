@@ -28,7 +28,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
      * Constructor for FeedApapter. Sets list of post or "palos".
      * @param palos
      */
-    public FeedAdapter(Context context, List<Palo> palos, OnFeedListener onFeedListener){
+    public FeedAdapter(Context context, List<Palo> palos, OnFeedListener onFeedListener) {
         this.inflater = LayoutInflater.from(context);
         this.palos = palos;
         this.onFeedListener = onFeedListener;
@@ -37,7 +37,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.basic_palo_layout,parent,false);
+        View view = inflater.inflate(R.layout.basic_palo_layout, parent, false);
         return new ViewHolder(view, onFeedListener);
     }
 
@@ -49,21 +49,30 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         Picasso.get().load(palos.get(position).getProfileImage()).into(holder.authorProfileImage);
 
         // Attached Song stuff...
-        holder.songTitleTV.setText(palos.get(position).getAttatchment().getTitle());
-        holder.songArtistTV.setText(palos.get(position).getAttatchment().getArtist());
-        Picasso.get().load(palos.get(position).getAttatchment().getAlbumCover()).into(holder.songCoverImage);
+        holder.songTitleTV.setText(palos.get(position).getAttachment().getTitle());
+        holder.songArtistTV.setText(palos.get(position).getAttachment().getArtist());
+        Picasso.get().load(palos.get(position).getAttachment().getAlbumCover()).into(holder.songCoverImage);
     }
-
 
     @Override
     public int getItemCount() {
         return palos.size();
     }
+    
+    public void swapDataSet(List<Palo> newPalos){
+        this.palos = newPalos;
+        notifyDataSetChanged();
+    }
+
+    public void updatePalo(int position, Palo palo){
+        this.palos.set(position, palo);
+        notifyItemChanged(position);
+    }
 
     /**
      * ViewHolder for FeedAdapter. Set posts info for each item in Feed Adapter.
      */
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         //views for palo
         TextView authorUserNameTV, postdateTV, captionTV;
         ImageView authorProfileImage;
@@ -99,7 +108,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         }
     }
 
-    public interface OnFeedListener{
+    public interface OnFeedListener {
         public void onPaloClick(int position);
     }
 }

@@ -3,7 +3,7 @@ package com.palo.palo.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Song extends Attatchment {
+public class Song extends Attachment {
     public static final int TYPE = 2;
     private  String title;
     private String artist;

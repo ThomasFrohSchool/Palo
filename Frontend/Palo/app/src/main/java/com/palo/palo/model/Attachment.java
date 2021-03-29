@@ -3,26 +3,26 @@ package com.palo.palo.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Attatchment implements Parcelable {
+public class Attachment implements Parcelable {
     private String spotifyId;
     private String title;
     private String artist;
     private String albumCover;
     private String spotifyLink;
 
-    public Attatchment(){}
-    public Attatchment(String spotifyId){
+    public Attachment(){}
+    public Attachment(String spotifyId){
         this.spotifyId = spotifyId;
         title = "test_title";
         artist = "fake_artist";
         albumCover = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiUa1gUnZi98GtcAT8-VePbLkB7Mt1LR9OOQ&usqp=CAU";
     }
-    public Attatchment(String spotifyId, String spotifyLink){
+    public Attachment(String spotifyId, String spotifyLink){
         this.spotifyId = spotifyId;
         this.spotifyLink = spotifyLink;
     }
     
-    public Attatchment(Parcel parcel){
+    public Attachment(Parcel parcel){
         spotifyId = parcel.readString();
         title = parcel.readString();
         artist = parcel.readString();
@@ -87,16 +87,16 @@ public class Attatchment implements Parcelable {
         dest.writeString(spotifyLink);
     }
 
-    public static final Parcelable.Creator<Attatchment> CREATOR = new Parcelable.Creator<Attatchment>() {
+    public static final Parcelable.Creator<Attachment> CREATOR = new Parcelable.Creator<Attachment>() {
 
         @Override
-        public Attatchment createFromParcel(Parcel parcel) {
-            return new Attatchment(parcel);
+        public Attachment createFromParcel(Parcel parcel) {
+            return new Attachment(parcel);
         }
 
         @Override
-        public Attatchment[] newArray(int size) {
-            return new Attatchment[0];
+        public Attachment[] newArray(int size) {
+            return new Attachment[0];
         }
     };
 }

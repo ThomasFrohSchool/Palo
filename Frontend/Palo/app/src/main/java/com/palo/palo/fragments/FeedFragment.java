@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.palo.palo.FeedAdapter;
 import com.palo.palo.R;
 import com.palo.palo.SharedPrefManager;
@@ -33,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.palo.palo.volley.ServerURLs.FEED;
+import static com.palo.palo.volley.ServerURLs.USER_BY_ID;
 
 /**
  * This fragment is for the feed and its functionalities.
@@ -40,6 +42,7 @@ import static com.palo.palo.volley.ServerURLs.FEED;
  */
 public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener {
     RecyclerView recyclerView;
+    FeedAdapter feedAdapter;
     View myView;
     private static String SERVER_URL = "https://6e8134ce-7a91-4a1d-8c23-f06c12c6fcfd.mock.pstmn.io";
     List<Palo> palos;
@@ -58,7 +61,8 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
     public void onViewCreated(View view, Bundle savedInstanceState) {
         myView = view;
         recyclerView = view.findViewById(R.id.songList);
-        recyclerView.setAdapter(new FeedAdapter(getActivity().getApplicationContext(), new ArrayList<>(), this));
+        feedAdapter = new FeedAdapter(getActivity().getApplicationContext(), new ArrayList<>(), this);
+        recyclerView.setAdapter(feedAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         extractSongs();
     }
@@ -76,13 +80,15 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
            palos = new ArrayList<>();
             for (int i = 0; i < response.length(); i++) {
                 try {
-
-                    palos.add(extractPalo(response.getJSONObject(i), context));
+                    Palo palo = extractPalo(response.getJSONObject(i), context);
+                    userRequest(i, palo.getAuthor().getId(), context);
+                    palos.add(palo);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
-            recyclerView.setAdapter(new FeedAdapter(context, palos, this));
+            feedAdapter.swapDataSet(palos);
+//            recyclerView.setAdapter(new FeedAdapter(context, palos, this));
         }, error -> Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
@@ -102,19 +108,33 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
         int type = paloJSON.getInt("type");
         switch (type){
             case 0:
-                palo.setAttatchment(new Album(paloJSON.getString("spot_link")));
+                palo.setAttachment(new Album(paloJSON.getString("spot_link")));
                 break;
             case 1:
-                palo.setAttatchment(new Artist(paloJSON.getString("spot_link")));
+                palo.setAttachment(new Artist(paloJSON.getString("spot_link")));
 
                 break;
             case 2:
-                palo.setAttatchment(new Song(paloJSON.getString("spot_link")));
+                palo.setAttachment(new Song(paloJSON.getString("spot_link")));
                 break;
             default: System.out.println("error");
         }
 //        palo.setAttachedSong(extractSong(paloJSON.getJSONObject("song")));
         return palo;
+    }
+
+    private void userRequest(int palo_index, int userId, Context context){
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,USER_BY_ID + userId, null, response -> {
+            try {
+                palos.get(palo_index).setAuthorUsername(response.getString("username"));
+                feedAdapter.updatePalo(palo_index, palos.get(palo_index));
+                // TODO set profile image here...
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }, error -> Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show());
+        VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(request);
     }
 
     /**

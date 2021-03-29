@@ -2,7 +2,7 @@ package com.palo.palo.model;
 
 import android.os.Parcel;
 
-public class Album extends Attatchment{
+public class Album extends Attachment {
     String albumCover;
     String artist;
     String title;

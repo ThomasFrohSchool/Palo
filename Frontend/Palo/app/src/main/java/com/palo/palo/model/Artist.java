@@ -2,7 +2,7 @@ package com.palo.palo.model;
 
 import android.os.Parcel;
 
-public class Artist extends Attatchment{
+public class Artist extends Attachment {
 
     public Artist(){}
     public Artist(String spotifyId){

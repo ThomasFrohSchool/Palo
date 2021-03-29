@@ -9,7 +9,7 @@ import android.os.Parcelable;
 public class Palo implements Parcelable {
     private User author;
     private String postDate, caption;
-    private Attatchment attatchment;
+    private Attachment attachment;
 
     public Palo(){}
 
@@ -17,7 +17,7 @@ public class Palo implements Parcelable {
         author = parcel.readParcelable(User.class.getClassLoader());
         caption = parcel.readString();
         postDate = parcel.readString();
-        attatchment = parcel.readParcelable(Attatchment.class.getClassLoader());
+        attachment = parcel.readParcelable(Attachment.class.getClassLoader());
     }
 
     public User getAuthor() {
@@ -26,6 +26,10 @@ public class Palo implements Parcelable {
 
     public void setAuthor(User author) {
         this.author = author;
+    }
+    
+    public void setAuthorUsername(String username) {
+        this.author.setUsername(username);
     }
 
     public String getPostDate() {
@@ -44,12 +48,12 @@ public class Palo implements Parcelable {
         this.caption = caption;
     }
 
-    public Attatchment getAttatchment() {
-        return attatchment;
+    public Attachment getAttachment() {
+        return attachment;
     }
 
-    public void setAttatchment(Attatchment attatchment) {
-        this.attatchment = attatchment;
+    public void setAttachment(Attachment attachment) {
+        this.attachment = attachment;
     }
 
     public String getProfileImage() {
@@ -69,7 +73,7 @@ public class Palo implements Parcelable {
         dest.writeParcelable(author, flags);
         dest.writeString(caption);
         dest.writeString(postDate);
-        dest.writeParcelable(attatchment, flags);
+        dest.writeParcelable(attachment, flags);
     }
 
     public static final Parcelable.Creator<Palo> CREATOR = new Parcelable.Creator<Palo>() {

@@ -19,7 +19,7 @@ import com.palo.palo.AttachementSearchAdapter;
 import com.palo.palo.R;
 import com.palo.palo.model.Album;
 import com.palo.palo.model.Artist;
-import com.palo.palo.model.Attatchment;
+import com.palo.palo.model.Attachment;
 import com.palo.palo.model.Song;
 import com.palo.palo.volley.VolleySingleton;
 
@@ -71,7 +71,7 @@ public class CreatePaloSearchFragment extends Fragment {
                 response -> {
                     try {
                         JSONObject json = new JSONObject(response);
-                        ArrayList<Attatchment> attachments = new ArrayList<>();
+                        ArrayList<Attachment> attachments = new ArrayList<>();
                         addAlbums(attachments, json.getJSONArray("albums"));
                         addArtist(attachments, json.getJSONArray("artists"));
                         addTracks(attachments, json.getJSONArray("tracks"));
@@ -85,15 +85,15 @@ public class CreatePaloSearchFragment extends Fragment {
         VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(request);
     }
 
-    private void addTracks(ArrayList<Attatchment> attachments, JSONArray a) throws JSONException {
+    private void addTracks(ArrayList<Attachment> attachments, JSONArray a) throws JSONException {
         for (int i =0; i <a.length(); i++)
             attachments.add(extractTrack(a.getJSONObject(i)));
     }
-    private void addAlbums(ArrayList<Attatchment> attachments, JSONArray a) throws JSONException {
+    private void addAlbums(ArrayList<Attachment> attachments, JSONArray a) throws JSONException {
         for (int i =0; i <a.length(); i++)
             attachments.add(extractAlbum(a.getJSONObject(i)));
     }
-    private void addArtist(ArrayList<Attatchment> attachments, JSONArray a) throws JSONException {
+    private void addArtist(ArrayList<Attachment> attachments, JSONArray a) throws JSONException {
         for (int i =0; i <a.length(); i++)
             attachments.add(extractArtist(a.getJSONObject(i)));
     }
@@ -126,7 +126,7 @@ public class CreatePaloSearchFragment extends Fragment {
                 songJSON.getString("playbackLink"));
     }
     
-    public Attatchment getSelectedSong(){
+    public Attachment getSelectedSong(){
         return searchAdapter.getSelectedSong();
     }
 }

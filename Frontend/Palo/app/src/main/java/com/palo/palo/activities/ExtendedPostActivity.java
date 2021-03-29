@@ -29,9 +29,9 @@ public class ExtendedPostActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.paloDate)).setText(palo.getPostDate()); // TODO display date in a nicer way
         ((TextView) findViewById(R.id.paloCaption)).setText(palo.getCaption());
 
-        ((TextView) findViewById(R.id.songTitle)).setText(palo.getAttatchment().getTitle());
-        ((TextView) findViewById(R.id.songArtist)).setText(palo.getAttatchment().getArtist());
-        Picasso.get().load(palo.getAttatchment().getAlbumCover()).into((ImageView) findViewById(R.id.coverImage));
+        ((TextView) findViewById(R.id.songTitle)).setText(palo.getAttachment().getTitle());
+        ((TextView) findViewById(R.id.songArtist)).setText(palo.getAttachment().getArtist());
+        Picasso.get().load(palo.getAttachment().getAlbumCover()).into((ImageView) findViewById(R.id.coverImage));
 
     }
 }
