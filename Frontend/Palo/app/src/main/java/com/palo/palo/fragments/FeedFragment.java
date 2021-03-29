@@ -33,6 +33,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.palo.palo.volley.ServerURLs.ATTACHMENT;
 import static com.palo.palo.volley.ServerURLs.FEED;
 import static com.palo.palo.volley.ServerURLs.USER_BY_ID;
 
@@ -82,6 +83,8 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
                 try {
                     Palo palo = extractPalo(response.getJSONObject(i), context);
                     userRequest(i, palo.getAuthor().getId(), context);
+                    if (palo.getAttachment().getSpotifyId() != null)
+                        attachmentRequest(i, palo.getAttachment().getType(), palo.getAttachment().getSpotifyId(), context);
                     palos.add(palo);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -106,13 +109,13 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
         palo.setPostDate(paloJSON.getString("createDate"));
         palo.setCaption(paloJSON.getString("description"));
         int type = paloJSON.getInt("type");
+        System.out.println("spot link/id?" + paloJSON.getString("spot_link"));
         switch (type){
             case 0:
                 palo.setAttachment(new Album(paloJSON.getString("spot_link")));
                 break;
             case 1:
                 palo.setAttachment(new Artist(paloJSON.getString("spot_link")));
-
                 break;
             case 2:
                 palo.setAttachment(new Song(paloJSON.getString("spot_link")));
@@ -121,6 +124,19 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
         }
 //        palo.setAttachedSong(extractSong(paloJSON.getJSONObject("song")));
         return palo;
+    }
+
+    private void attachmentRequest(int palo_index, int type, String spotify_link, Context context){
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,ATTACHMENT(type) + spotify_link, null, response -> {
+            try {
+                String name = (type == 1) ? "" : response.getString("name");
+                palos.get(palo_index).updateAttachment(name, response.getString("artist"), response.getString("imageUrl"), response.getString("link"));
+                feedAdapter.updatePalo(palo_index, palos.get(palo_index));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }, error -> System.out.println(error.getMessage()));
+        VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(request);
     }
 
     private void userRequest(int palo_index, int userId, Context context){
@@ -133,17 +149,16 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
                 e.printStackTrace();
             }
 
-        }, error -> Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show());
+        }, error -> System.out.println(error.getMessage()));
         VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(request);
     }
-
+    
     /**
      * This method is for setting different fields of the song.
      * @param songJSON: The JSONObject of the song.
      * @return Returns the song and its different fields.
      * @throws JSONException
      */
-    // Example --> {"song": "Freakin' Out On the Interstate", "artist":"Briston Maroney","album_cover": "https://i0.wp.com/altangeles.com/wp-content/uploads/2018/12/briston.jpg?fit=640%2C640&ssl=1"}
     private static Song extractSong(JSONObject songJSON) throws JSONException {
         Song song = new Song();
         song.setTitle(songJSON.getString("song"));
@@ -158,7 +173,6 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
      * @return Returns the user and its different fields.
      * @throws JSONException
      */
-    // Example --> {"username": "tiffmay", "profile_image": "fillimage link here"},
     private static User extractUser(JSONObject userJSON) throws JSONException{
         User user = new User();
         user.setUsername(userJSON.getString("username"));

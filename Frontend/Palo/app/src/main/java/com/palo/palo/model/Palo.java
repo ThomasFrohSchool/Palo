@@ -64,6 +64,13 @@ public class Palo implements Parcelable {
         return this.author.getUsername();
     }
 
+    public void updateAttachment(String name, String artist, String albumCover, String link ){
+        attachment.setTitle(name);
+        attachment.setArtist(artist);
+        attachment.setAlbumCover(albumCover);
+        attachment.setSpotifyLink(link);
+    }
+    
     @Override
     public int describeContents() {
         return hashCode();
