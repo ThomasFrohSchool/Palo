@@ -11,7 +11,10 @@ import android.widget.TextView;
 
 import com.palo.palo.R;
 
-
+/**
+ * This fragment is for the different PaloLists a user would follow or create.
+ * This class is associated with fragment_palo_list.xml.
+ */
 public class PaloListFragment extends Fragment {
 
     public PaloListFragment() {}

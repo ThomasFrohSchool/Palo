@@ -26,6 +26,10 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This activity is for the register functionality.
+ * This is associated with the activity_register.xml.
+ */
 public class RegisterActivity extends AppCompatActivity {
     EditText usernameRegField;
     EditText emailRegField;
@@ -52,6 +56,11 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     // todo - should probably create a register class and move this there
+
+    /**
+     * This method is used when the register button is pressed.
+     * Sends a post request to the backend to create new fields for the user with the given fields.
+     */
     private void register() {
         String username = usernameRegField.getText().toString().trim();
         String email = emailRegField.getText().toString().trim();
@@ -90,6 +99,13 @@ public class RegisterActivity extends AppCompatActivity {
         VolleySingleton.getInstance(this).addToRequestQueue(request);
     }
 
+    /**
+     * This method is for checking if any of the register fields are empty.
+     * @param username: Given username
+     * @param email: Given email
+     * @param password: Given password
+     * @return Returns if any of the register fields are empty
+     */
     private boolean hasEmptyCredentials(String username, String email, String password){
         if(username.isEmpty()){
             usernameRegField.setError("Enter username.");

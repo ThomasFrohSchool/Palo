@@ -24,7 +24,9 @@ import com.android.volley.toolbox.StringRequest;
 import com.palo.palo.R;
 import com.palo.palo.volley.VolleySingleton;
 
-
+/**
+ * Fragment to allow user to search songs, albums, artist, etc. from Spotify.
+ */
 public class SearchFragment extends Fragment {
     private EditText song;
     private TextView req;
@@ -63,6 +65,10 @@ public class SearchFragment extends Fragment {
         b.setOnClickListener(v -> makeStringSongRequest());
     }
 
+    /**
+     * Makes JSONObjectRequest to SERVER/search?q=[TEXT], where TEXT is a string to what the user is searching.
+     * Adds request to VolleySingleton request queue. Server responds with a json string containing a list of albums, osngs, and artist from Spotify.
+     */
     private void makeJsonSongRequest() {
         //p.show();
         JsonObjectRequest jsonSongRequest = new JsonObjectRequest(Request.Method.GET,
@@ -76,6 +82,10 @@ public class SearchFragment extends Fragment {
         VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(jsonSongRequest);
     }
 
+    /**
+     * Makes StringRequest to SERVER/search?q=[TEXT], where TEXT is a string to what the user is searching.
+     * Adds request to VolleySingleton request queue. Server responds with a string containing a list of albums, osngs, and artist from Spotify.
+     */
     private void makeStringSongRequest() {
         //p.show();
         StringRequest stringRequest = new StringRequest(Request.Method.GET,

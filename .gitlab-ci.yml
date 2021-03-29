@@ -1,0 +1,62 @@
+stages:
+  - build
+  - test
+  - deploy
+  - androidbuild
+  - androidtest
+
+build-code-job:
+  stage: build
+  tags:
+    - backend
+  script:
+    - mkdir -p /home/gitlab-runner/testBuild
+    - echo "Going to try and build the API:"
+    - cd ./Backend
+    - mvn clean install
+    - cp -r ./target/* /home/gitlab-runner/testBuild/
+
+test-code-job1:
+  stage: test
+  tags:
+    - backend
+  script:
+    - echo "Check if the file was built?"
+    - ls /home/gitlab-runner/testBuild/PaloAPI-1.0.0.jar
+    - echo "This is broken rn?"
+
+test-code-deploy:
+  stage: deploy
+  tags:
+    - backend
+  script:
+    - echo "This will deploy the tested build"
+    #- cp -r /home/gitlab-runner/testBuild/* /palo/
+    - echo "This is broken rn?"
+
+android-build:
+  image: javiersantos/android-ci:latest
+  stage: androidbuild
+  before_script:
+    - export GRADLE_USER_HOME='pwd'/.gradle
+    - chmod +x ./Frontend/Palo/gradlew
+  tags:
+    - frontend
+  script:
+    - cd Frontend/Palo
+    - ./gradlew build
+  artifacts:
+    paths:
+      - Android_test/app/build/outputs/
+
+android-test:
+  image: javiersantos/android-ci:latest
+  stage: androidtest
+  before_script:
+    - export GRADLE_USER='pwd'/.gradle
+    - chmod +x ./Frontend/Palo/gradlew
+  tags:
+    - frontend
+  script:
+    - cd Frontend/Palo
+    - ./gradlew test
