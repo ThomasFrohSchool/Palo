@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Entity;
@@ -24,7 +25,7 @@ public class DM {
     private String message;
 
 	@OneToMany
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "from_id")
 	private User from_user;
 	private User to_user;
 
