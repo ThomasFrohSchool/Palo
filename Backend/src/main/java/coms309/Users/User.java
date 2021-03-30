@@ -21,6 +21,7 @@ public class User {
 	private String username;
 	private String password;
 	private String email;
+	private String profile;
 
 	@OneToMany
 	private List<Posts> posts;
@@ -54,6 +55,9 @@ public class User {
 	public List<Posts> getPosts(){
 		return this.posts;
 	}
+	public String getProfile(){
+		return this.profile;
+	}
 	public void setEmail(String email){
 		this.email = email;
 	}
@@ -68,6 +72,9 @@ public class User {
 	}
 	public void setPosts(List<Posts> posts){
 		this.posts = posts;
+	}
+	public void setProfile(String img){
+		this.profile = img;
 	}
 	public void addPosts(Posts post){
 		this.posts.add(post);
