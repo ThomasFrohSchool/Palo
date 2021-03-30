@@ -24,7 +24,7 @@ public class DM {
     private int to_id;
     private String message;
 
-	@OneToMany
+	@ManyToMany
 	@JoinColumn(name = "from_id")
 	private User from_user;
 	private User to_user;
