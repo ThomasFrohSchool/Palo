@@ -24,10 +24,10 @@ public class DM {
     private int to_id;
     private String message;
 
+
 	@OneToMany
-	@JoinColumn(name = "from_id")
-	private User from_user;
 	private User to_user;
+	private User from_user;
 
 	public DM(String message, int from_id, int to_id){
 		this.to_id = to_id;
