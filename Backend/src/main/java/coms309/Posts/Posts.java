@@ -1,10 +1,13 @@
 package coms309.Posts;
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -27,6 +30,8 @@ public class Posts {
 	@JsonIgnore
 	private User user;
 
+	@OneToMany
+	private List<Comments> comments;
 
 	public Posts(String description, int type, String spot_id){
 		this.spot_id = spot_id;
@@ -62,6 +67,9 @@ public class Posts {
 	public String getCreateDate(){
 		return this.createDate;
 	}
+	public List<Comments> getComments(){
+		return this.comments;
+	}
 	public void setDescription(String description){
 		this.description = description;
 	}
@@ -82,5 +90,8 @@ public class Posts {
 	}
 	public void setLikes(int likes){
 		this.likes = likes;
+	}
+	public void setComments (List<Comments> comments){
+		this.comments = comments;
 	}
 }
