@@ -1,28 +1,25 @@
 package coms309.Posts;
-import javax.persistence.CascadeType;
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 import coms309.Users.User;
-import coms309.Users.UserTable;
 
 @Entity
 public class Posts {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	private String spot_link;
+	private String spot_id;
 	private String description;
 	private int type;
 	private int likes;
@@ -33,9 +30,11 @@ public class Posts {
 	@JsonIgnore
 	private User user;
 
+	@OneToMany
+	private List<Comments> comments;
 
-	public Posts(String description, int type, String spot_link){
-		this.spot_link = spot_link;
+	public Posts(String description, int type, String spot_id){
+		this.spot_id = spot_id;
 		this.description = description;
 		this.type = type;
 		this.likes = 0;
@@ -50,8 +49,8 @@ public class Posts {
 	public String getDescription(){
 		return this.description;
 	}
-	public String getSpot_link(){
-		return this.spot_link;
+	public String getSpot_id(){
+		return this.spot_id;
 	}
 	public User getUser(){
 		return this.user;
@@ -62,14 +61,23 @@ public class Posts {
 	public int getUser_id(){
 		return this.user.getId();
 	}
+	public int getLikes(){
+		return this.likes;
+	}
 	public String getCreateDate(){
 		return this.createDate;
+	}
+	public void addComment(Comments comment){
+		this.comments.add(comment);
+	}
+	public List<Comments> getComments(){
+		return this.comments;
 	}
 	public void setDescription(String description){
 		this.description = description;
 	}
-	public void setSpot_link(String spot_link){
-		this.spot_link = spot_link;
+	public void setSpot_id(String spot_id){
+		this.spot_id = spot_id;
 	}
 	public void setId(int id){
 		this.id = id;
@@ -82,5 +90,11 @@ public class Posts {
 	}
 	public void setCreateDate(String thedate){
 		this.createDate = thedate;
+	}
+	public void setLikes(int likes){
+		this.likes = likes;
+	}
+	public void setComments (List<Comments> comments){
+		this.comments = comments;
 	}
 }

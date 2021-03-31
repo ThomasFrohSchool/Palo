@@ -8,11 +8,8 @@ import coms309.Users.UserTable;
 import org.springframework.boot.test.context.SpringBootTest;  
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -59,7 +56,7 @@ public class JUnitControllerTest {
 
 		assertEquals("test description", posts.get(0).getDescription());
 		assertEquals("0", posts.get(0).getType());
-		assertEquals("https://open.spotify.com/track/5d8sUjf50rOL5fyjEqXIHb?si=4veOfQULRDu0S6tZArFtSQ", posts.get(0).getSpot_link());
+		assertEquals("https://open.spotify.com/track/5d8sUjf50rOL5fyjEqXIHb?si=4veOfQULRDu0S6tZArFtSQ", posts.get(0).getSpot_id());
 	}
 
 }
