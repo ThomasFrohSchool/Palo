@@ -8,9 +8,6 @@ import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-
-import coms309.Users.User;
-
 @Entity
 public class Comments {
     @Id
@@ -18,12 +15,12 @@ public class Comments {
 	private int id;
 	private String body;
 	private String createDate;
-	private int userID;
+	private int user_id;
 
-	@ManyToOne
-	@JoinColumn(name = "user_id")
-	@JsonIgnore
-	private User user;
+	//@ManyToOne
+	//@JoinColumn(name = "user_id")
+	//@JsonIgnore
+	//private User user;
 
     @ManyToOne
 	@JoinColumn(name = "posts_id")
@@ -31,9 +28,9 @@ public class Comments {
 	private Posts post;
 
 
-	public Comments(String body, int userID){
+	public Comments(String body, int user_id){
 		this.body = body;
-		this.userID = userID;
+		this.user_id = user_id;
 	}
 
 	public Comments(){
@@ -45,11 +42,9 @@ public class Comments {
 	public String getBody(){
 		return this.body;
 	}
-	public User getUser(){
-		return this.user;
-	}
+
 	public int getUser_id(){
-		return this.userID;
+		return this.user_id;
 	}
     public int getPosts_id(){
 		return this.post.getId();
@@ -63,12 +58,10 @@ public class Comments {
 	public void setId(int id){
 		this.id = id;
 	}
-	public void setUser_id(int userID){
-		this.userID = userID;
+	public void setUser_id(int user_id){
+		this.user_id = user_id;
 	}
-	public void setUser(User user){
-		this.user = user;
-	}
+
     public void setPosts(Posts post){
 		this.post = post;
 	}

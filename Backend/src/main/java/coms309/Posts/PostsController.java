@@ -106,8 +106,6 @@ public class PostsController {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
         LocalDateTime now = LocalDateTime.now(); 
         comment.setCreateDate(dtf.format(now));
-        User user = userTable.findById(comment.getUser_id());
-        comment.setUser(user);
         Posts post = postsTable.findById(postID);
         post.addComment(comment);
         commentsTable.save(comment);
