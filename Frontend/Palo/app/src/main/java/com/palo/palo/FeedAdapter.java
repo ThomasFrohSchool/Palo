@@ -52,6 +52,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         holder.songTitleTV.setText(palos.get(position).getAttachment().getTitle());
         holder.songArtistTV.setText(palos.get(position).getAttachment().getArtist());
         Picasso.get().load(palos.get(position).getAttachment().getAlbumCover()).into(holder.songCoverImage);
+
+        holder.toggleLikeHeart(palos.get(position).getIsLiked());
     }
 
     @Override
@@ -72,7 +74,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
     /**
      * ViewHolder for FeedAdapter. Set posts info for each item in Feed Adapter.
      */
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         //views for palo
         TextView authorUserNameTV, postdateTV, captionTV;
         ImageView authorProfileImage;
@@ -99,16 +101,24 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
             songArtistTV = itemView.findViewById(R.id.songArtist);
             songCoverImage = itemView.findViewById(R.id.coverImage);
             this.onFeedListener = onFeedListener;
-            itemView.setOnClickListener(this);
+            itemView.setOnClickListener(v -> onFeedListener.onPaloClick(getAdapterPosition()));
+            likeTV.setOnClickListener(v -> likeClicked(getAdapterPosition()));
+        }
+        public void likeClicked(int pos){
+            toggleLikeHeart(palos.get(pos).toggleIsLiked());
+            onFeedListener.onLikeClicked(pos);
+            notifyItemChanged(pos);
         }
 
-        @Override
-        public void onClick(View v) {
-            onFeedListener.onPaloClick(getAdapterPosition());
+        public void toggleLikeHeart(boolean isLiked){
+            if(isLiked) likeTV.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_heart_full,0,0,0);
+            else likeTV.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_heart_empty,0,0,0);
+
         }
     }
 
     public interface OnFeedListener {
         public void onPaloClick(int position);
+        public void onLikeClicked(int position);
     }
 }

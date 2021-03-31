@@ -150,7 +150,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,ATTACHMENT(type) + spotify_link, null, response -> {
             try {
                 String name = (type == 1) ? "" : response.getString("name");
-                palos.get(palo_index).updateAttachment(name, response.getString("artist"), response.getString("imageUrl"), response.getString("link"));
+                palos.get(palo_index).updateAttachment(name, response.getString("artist"), response.getString("imageUrl"), response.getString("id"));
                 feedAdapter.updatePalo(palo_index, palos.get(palo_index));
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -172,33 +172,6 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
         }, error -> System.out.println(error.getMessage()));
         VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(request);
     }
-    
-    /**
-     * This method is for setting different fields of the song.
-     * @param songJSON: The JSONObject of the song.
-     * @return Returns the song and its different fields.
-     * @throws JSONException
-     */
-    private static Song extractSong(JSONObject songJSON) throws JSONException {
-        Song song = new Song();
-        song.setTitle(songJSON.getString("song"));
-        song.setArtist(songJSON.getString("artist"));
-        song.setAlbumCover(songJSON.getString("album_cover"));
-        return song;
-    }
-
-    /**
-     * This method is for setting different fields of the user.
-     * @param userJSON: The JSONObject of the user.
-     * @return Returns the user and its different fields.
-     * @throws JSONException
-     */
-    private static User extractUser(JSONObject userJSON) throws JSONException{
-        User user = new User();
-        user.setUsername(userJSON.getString("username"));
-        user.setProfileImage(userJSON.getString("profile_image"));
-        return user;
-    }
 
     @Override
     public void onPaloClick(int position) {
@@ -207,5 +180,11 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
         Intent intent =  new Intent(getContext(), ExtendedPostActivity.class);
         intent.putExtra("selected_post", palos.get(position));
         startActivity(intent);
+    }
+
+    @Override
+    public void onLikeClicked(int position) {
+        System.out.println("post like clicked..." + palos.get(position).getCaption());
+
     }
 }

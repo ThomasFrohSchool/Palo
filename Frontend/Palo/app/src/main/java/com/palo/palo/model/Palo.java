@@ -10,14 +10,18 @@ public class Palo implements Parcelable {
     private User author;
     private String postDate, caption;
     private Attachment attachment;
+    private Boolean isLiked;
 
-    public Palo(){}
+    public Palo(){
+        isLiked = false; //todo remove this
+    }
 
     public Palo(Parcel parcel){
         author = parcel.readParcelable(User.class.getClassLoader());
         caption = parcel.readString();
         postDate = parcel.readString();
         attachment = parcel.readParcelable(Attachment.class.getClassLoader());
+        isLiked = parcel.readBoolean();
     }
 
     public User getAuthor() {
@@ -56,6 +60,19 @@ public class Palo implements Parcelable {
         this.attachment = attachment;
     }
 
+    public void setIsLiked(boolean isLiked) {
+        this.isLiked = isLiked;
+    }
+
+    public boolean getIsLiked() {
+        return this.isLiked;
+    }
+    
+    public boolean toggleIsLiked(){
+        this.isLiked = ! this.isLiked;
+        return isLiked;
+    }
+
     public String getProfileImage() {
         return this.author.getProfileImage();
     }
@@ -64,11 +81,11 @@ public class Palo implements Parcelable {
         return this.author.getUsername();
     }
 
-    public void updateAttachment(String name, String artist, String albumCover, String link ){
+    public void updateAttachment(String name, String artist, String albumCover, String id ){
         attachment.setTitle(name);
         attachment.setArtist(artist);
         attachment.setAlbumCover(albumCover);
-        attachment.setSpotifyLink(link);
+        attachment.setSpotifyId(id);
     }
     
     @Override
@@ -81,6 +98,7 @@ public class Palo implements Parcelable {
         dest.writeString(caption);
         dest.writeString(postDate);
         dest.writeParcelable(attachment, flags);
+        dest.writeBoolean(isLiked);
     }
 
     public static final Parcelable.Creator<Palo> CREATOR = new Parcelable.Creator<Palo>() {
