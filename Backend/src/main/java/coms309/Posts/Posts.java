@@ -67,6 +67,9 @@ public class Posts {
 	public String getCreateDate(){
 		return this.createDate;
 	}
+	public void addComment(Comments comment){
+		this.comments.add(comment);
+	}
 	public List<Comments> getComments(){
 		return this.comments;
 	}

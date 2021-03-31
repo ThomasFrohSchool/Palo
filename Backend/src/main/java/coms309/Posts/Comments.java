@@ -18,6 +18,7 @@ public class Comments {
 	private int id;
 	private String body;
 	private String createDate;
+	private int userID;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id")
@@ -30,8 +31,9 @@ public class Comments {
 	private Posts post;
 
 
-	public Comments(String body){
+	public Comments(String body, int userID){
 		this.body = body;
+		this.userID = userID;
 	}
 
 	public Comments(){
@@ -46,11 +48,8 @@ public class Comments {
 	public User getUser(){
 		return this.user;
 	}
-    public Posts getPosts(){
-		return this.post;
-	}
 	public int getUser_id(){
-		return this.user.getId();
+		return this.userID;
 	}
     public int getPosts_id(){
 		return this.post.getId();
@@ -63,6 +62,9 @@ public class Comments {
 	}
 	public void setId(int id){
 		this.id = id;
+	}
+	public void setUser_id(int userID){
+		this.userID = userID;
 	}
 	public void setUser(User user){
 		this.user = user;

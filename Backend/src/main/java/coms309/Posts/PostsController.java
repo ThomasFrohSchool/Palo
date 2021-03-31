@@ -104,11 +104,14 @@ public class PostsController {
             return failure;
         comment.setPosts(postsTable.findById(postID));
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
-        LocalDateTime now = LocalDateTime.now();  
+        LocalDateTime now = LocalDateTime.now(); 
         comment.setCreateDate(dtf.format(now));
-        comment.getUser().addComment(comment);
+        User user = userTable.findById(comment.getUser_id());
+        comment.setUser(user);
+        Posts post = postsTable.findById(postID);
+        post.addComment(comment);
         commentsTable.save(comment);
-        postsTable.save(comment.getPosts());
+        postsTable.save(postsTable.findById(comment.getPosts_id()));
         return success;
     }
 
