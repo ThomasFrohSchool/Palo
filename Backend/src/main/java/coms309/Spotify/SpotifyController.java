@@ -100,7 +100,7 @@ public class SpotifyController {
             }
         }
 
-        query.append("&type=artist%2Calbum%2Ctrack&market=US&limit=3");
+        query.append("&type=artist%2Calbum%2Ctrack&market=US&limit=10");
 
         String url = query.toString();
         URL obj;
@@ -154,7 +154,7 @@ public class SpotifyController {
             JSONArray trackArray = new JSONArray();
 
             for(int i = 0; i<4; i++){
-                for(int k = 0; k<4; k++){
+                for(int k = 0; k<11; k++){
                     if(i ==0){ //albums
                         if(k == 0){
                             albumItems = new JSONArray(albums.getString("items"));
@@ -323,18 +323,22 @@ public class SpotifyController {
         JSONObject myResponse = new JSONObject(getByURL(url));
 
         JSONArray images = new JSONArray(myResponse.getString("images"));
-        JSONObject image = new JSONObject(images.getString(1));      //get the middle image, 300x300
-        String imageURL = image.getString("url");
 
+        JSONObject myObj = new JSONObject();
+        if(images.size() > 0){
+            JSONObject image = new JSONObject(images.getString(1));      //get the middle image, 300x300
+            String imageURL = image.getString("url");
+            myObj.put("imageUrl", imageURL);
+        }else{
+            myObj.put("imageUrl", null);
+        }
 
        String artistName = myResponse.getString("name");
 
        JSONObject linkObj = new JSONObject(myResponse.getString("external_urls"));
        String link = linkObj.getString("spotify");
 
-       JSONObject myObj = new JSONObject();
        myObj.put("artist", artistName);
-       myObj.put("imageUrl", imageURL);
        myObj.put("link", link);
        myObj.put("id", id);
         
@@ -358,6 +362,8 @@ public class SpotifyController {
         JSONObject album = new JSONObject(myResponse.getString("album"));
         JSONArray images = new JSONArray(album.getString("images"));
         JSONObject image = new JSONObject(images.getString(1));      //get the middle image, 300x300
+
+        
         String imageURL = image.getString("url");
 
         JSONArray artists = new JSONArray(myResponse.getString("artists"));
@@ -377,8 +383,9 @@ public class SpotifyController {
        JSONObject linkObj = new JSONObject(myResponse.getString("external_urls"));
        String link = linkObj.getString("spotify");
        
-    
        JSONObject myObj = new JSONObject();
+    
+
        myObj.put("name", albumName);
        myObj.put("playbackLink", playback);
        myObj.put("artist", artistName);

@@ -10,6 +10,7 @@ import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
+import coms309.Posts.Comments;
 import coms309.Posts.Posts;
 
 @Entity
@@ -24,6 +25,9 @@ public class User {
 
 	@OneToMany
 	private List<Posts> posts;
+
+	@OneToMany
+	private List<Comments> comments;
 	
 	@ManyToMany
 	private List<User> followers;
@@ -60,6 +64,9 @@ public class User {
 	public List<Posts> getPosts(){
 		return this.posts;
 	}
+	public List<Comments> getComments(){
+		return this.comments;
+	}
 	public List<Integer> getFollowers(){
 		List<Integer> followerIDs = new ArrayList<Integer>();
 		for(int i=0;i<this.followers.size();i++){
@@ -91,6 +98,9 @@ public class User {
 	}
 	public void addPosts(Posts post){
 		this.posts.add(post);
+	}
+	public void addComment(Comments comment){
+		this.comments.add(comment);
 	}
 	public void setFollowers(List<User> followers){
 		this.followers = followers;
