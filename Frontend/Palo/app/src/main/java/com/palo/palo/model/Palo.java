@@ -21,7 +21,6 @@ public class Palo implements Parcelable {
         caption = parcel.readString();
         postDate = parcel.readString();
         attachment = parcel.readParcelable(Attachment.class.getClassLoader());
-        isLiked = parcel.readBoolean();
     }
 
     public User getAuthor() {
@@ -98,7 +97,6 @@ public class Palo implements Parcelable {
         dest.writeString(caption);
         dest.writeString(postDate);
         dest.writeParcelable(attachment, flags);
-        dest.writeBoolean(isLiked);
     }
 
     public static final Parcelable.Creator<Palo> CREATOR = new Parcelable.Creator<Palo>() {
