@@ -24,13 +24,16 @@ public class UploadController {
     public String saveProfile(@PathVariable int userID, @RequestParam("image") MultipartFile multipartFile) throws IOException {
         User user = userTable.findById(userID);
         String fileName = (multipartFile.getOriginalFilename());
-        //user.setProfile(fileName);
+        user.setProfile(fileName);
          
-        //User savedUser = userTable.save(user);
+        User savedUser = userTable.save(user);
  
-        //String uploadDir = "pics/" + savedUser.getId();
- 
-        //uploadUtil.saveFile(uploadDir, fileName, multipartFile);
+        String uploadDir = "/palo/pics/" + savedUser.getId();
+        try {
+            uploadUtil.saveFile(uploadDir, fileName, multipartFile);
+        } catch (Exception e) {
+            return e.toString();
+        }
          
         return fileName;
     }
