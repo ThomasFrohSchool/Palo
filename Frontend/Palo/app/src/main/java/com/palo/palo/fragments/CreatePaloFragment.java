@@ -65,7 +65,7 @@ public class CreatePaloFragment extends Fragment {
         try {
 //            newPost.put("tempID", SharedPrefManager.getInstance(myView.getContext()).getUser().getId());
             newPost.put("description", captionField.getText().toString());
-            newPost.put("spot_link", attachment.getSpotifyId());
+            newPost.put("spot_id", attachment.getSpotifyId());
             newPost.put("type", attachment.getType());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -80,7 +80,6 @@ public class CreatePaloFragment extends Fragment {
                 e.printStackTrace();
             }
         }, error -> {
-            Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_LONG).show();
             System.out.println(error.getMessage());
         });
         VolleySingleton.getInstance(myView.getContext()).addToRequestQueue(request);

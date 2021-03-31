@@ -28,9 +28,9 @@ public class ServerURLs {
 
     public static String ATTACHMENT(int type){
         switch (type){
-            case 0: return ROOT + "getAlbum/";
-            case 1: return ROOT + "getArtist/";
-            case 2: return ROOT + "getTrack/";
+            case 0: return ROOT + "getAlbum?id=";
+            case 1: return ROOT + "getArtist?id=";
+            case 2: return ROOT + "getTrack?id=";
             default: return "";
         }
     }

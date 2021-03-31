@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -44,6 +46,8 @@ import static com.palo.palo.volley.ServerURLs.USER_BY_ID;
 public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener {
     RecyclerView recyclerView;
     FeedAdapter feedAdapter;
+    TextView emptyFeedMessage;
+    Button refreshFeed;
     View myView;
     private static String SERVER_URL = "https://6e8134ce-7a91-4a1d-8c23-f06c12c6fcfd.mock.pstmn.io";
     List<Palo> palos;
@@ -62,9 +66,19 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
     public void onViewCreated(View view, Bundle savedInstanceState) {
         myView = view;
         recyclerView = view.findViewById(R.id.songList);
+        emptyFeedMessage = view.findViewById(R.id.emptyFeedMessage);
+        refreshFeed = view.findViewById(R.id.refreshFeedButton);
+        refreshFeed.setOnClickListener(v -> refreshFeed());
         feedAdapter = new FeedAdapter(getActivity().getApplicationContext(), new ArrayList<>(), this);
         recyclerView.setAdapter(feedAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
+        extractSongs();
+    }
+
+    private void refreshFeed(){
+        recyclerView.setVisibility(View.VISIBLE);
+        emptyFeedMessage.setVisibility(View.INVISIBLE);
+        refreshFeed.setVisibility(View.INVISIBLE);
         extractSongs();
     }
 
@@ -78,19 +92,27 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
 
     private  JsonArrayRequest feedRequest(RecyclerView recyclerView, Context context){
         return new JsonArrayRequest(Request.Method.GET, FEED + SharedPrefManager.getInstance(myView.getContext()).getUser().getId(), null, response -> {
-           palos = new ArrayList<>();
-            for (int i = 0; i < response.length(); i++) {
-                try {
-                    Palo palo = extractPalo(response.getJSONObject(i), context);
-                    userRequest(i, palo.getAuthor().getId(), context);
-                    if (palo.getAttachment().getSpotifyId() != null)
-                        attachmentRequest(i, palo.getAttachment().getType(), palo.getAttachment().getSpotifyId(), context);
-                    palos.add(palo);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+            if (response.length() == 0 ){
+                recyclerView.setVisibility(View.INVISIBLE);
+               emptyFeedMessage.setVisibility(View.VISIBLE);
+                refreshFeed.setVisibility(View.VISIBLE);
+
+            } else {
+                recyclerView.setVisibility(View.VISIBLE);
+                palos = new ArrayList<>();
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        Palo palo = extractPalo(response.getJSONObject(i), context);
+                        userRequest(i, palo.getAuthor().getId(), context);
+                        if (palo.getAttachment().getSpotifyId() != null)
+                            attachmentRequest(i, palo.getAttachment().getType(), palo.getAttachment().getSpotifyId(), context);
+                        palos.add(palo);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
+                feedAdapter.swapDataSet(palos);
             }
-            feedAdapter.swapDataSet(palos);
 //            recyclerView.setAdapter(new FeedAdapter(context, palos, this));
         }, error -> Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show());
     }
@@ -109,20 +131,18 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
         palo.setPostDate(paloJSON.getString("createDate"));
         palo.setCaption(paloJSON.getString("description"));
         int type = paloJSON.getInt("type");
-        System.out.println("spot link/id?" + paloJSON.getString("spot_link"));
         switch (type){
             case 0:
-                palo.setAttachment(new Album(paloJSON.getString("spot_link")));
+                palo.setAttachment(new Album(paloJSON.getString("spot_id")));
                 break;
             case 1:
-                palo.setAttachment(new Artist(paloJSON.getString("spot_link")));
+                palo.setAttachment(new Artist(paloJSON.getString("spot_id")));
                 break;
             case 2:
-                palo.setAttachment(new Song(paloJSON.getString("spot_link")));
+                palo.setAttachment(new Song(paloJSON.getString("spot_id")));
                 break;
             default: System.out.println("error");
         }
-//        palo.setAttachedSong(extractSong(paloJSON.getJSONObject("song")));
         return palo;
     }
 
