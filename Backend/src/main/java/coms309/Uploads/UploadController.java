@@ -23,12 +23,12 @@ public class UploadController {
     @PostMapping("/profile/save/{userID}")
     public String saveProfile(@PathVariable int userID, @RequestParam("image") MultipartFile multipartFile) throws IOException {
         User user = userTable.findById(userID);
-        String fileName = (multipartFile.getOriginalFilename());
+        String fileName = String.valueOf(user.getId());
         user.setProfile(fileName);
          
         User savedUser = userTable.save(user);
  
-        String uploadDir = "/palo/pics/" + savedUser.getId();
+        String uploadDir = "/var/www/html/pics/" + savedUser.getId();
         try {
             uploadUtil.saveFile(uploadDir, fileName, multipartFile);
         } catch (Exception e) {
