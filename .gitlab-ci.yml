@@ -13,7 +13,7 @@ build-code-job:
     - mkdir -p /home/gitlab-runner/testBuild
     - echo "Going to try and build the API:"
     - cd ./Backend
-    - mvn clean install
+    - mvn clean install -DskipTests
     - cp -r ./target/* /home/gitlab-runner/testBuild/
 
 test-code-job1:
