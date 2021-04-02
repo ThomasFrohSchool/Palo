@@ -100,7 +100,7 @@ public class SpotifyController {
             }
         }
 
-        query.append("&type=artist%2Calbum%2Ctrack&market=US&limit=10");
+        query.append("&type=artist%2Calbum%2Ctrack&market=US&limit=5");
 
         String url = query.toString();
         URL obj;
@@ -154,7 +154,7 @@ public class SpotifyController {
             JSONArray trackArray = new JSONArray();
 
             for(int i = 0; i<4; i++){
-                for(int k = 0; k<11; k++){
+                for(int k = 0; k<6; k++){
                     if(i ==0){ //albums
                         if(k == 0){
                             albumItems = new JSONArray(albums.getString("items"));
