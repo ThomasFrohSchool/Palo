@@ -14,11 +14,11 @@ import java.util.List;
 
 
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
+import java.util.ArrayList;
 
 @SpringBootTest  
 public class JUnitControllerTest {
@@ -42,21 +42,9 @@ public class JUnitControllerTest {
 
 		User acct = users.findById(1);
 
-		assertEquals("jDoe", acct.getId());
+		assertEquals("jDoe", acct.getUsername());
 		assertEquals("123456", acct.getPassword());
 		assertEquals("jDoe@gmail.com", acct.getEmail());
-	}
-
-
-    @Test
-	public void getUserPostTest() {
-		when(postsController.getUserPosts(1)).thenReturn((List<Posts>) new Posts("test description", 0, "https://open.spotify.com/track/5d8sUjf50rOL5fyjEqXIHb?si=4veOfQULRDu0S6tZArFtSQ"));
-
-		List<Posts> posts = postsController.getUserPosts(1);
-
-		assertEquals("test description", posts.get(0).getDescription());
-		assertEquals("0", posts.get(0).getType());
-		assertEquals("https://open.spotify.com/track/5d8sUjf50rOL5fyjEqXIHb?si=4veOfQULRDu0S6tZArFtSQ", posts.get(0).getSpot_id());
 	}
 
 }
