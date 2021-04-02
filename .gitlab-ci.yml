@@ -34,7 +34,7 @@ test-code-deploy:
   script:
     - echo "This will deploy the tested build"
     - cp -r /home/gitlab-runner/testBuild/* /palo/
-    - /home/gitlab-runner/restart
+    - sudo systemctl restart palo
 
 android-build:
   image: javiersantos/android-ci:latest
