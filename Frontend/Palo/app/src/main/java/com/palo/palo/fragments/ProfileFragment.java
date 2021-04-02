@@ -39,6 +39,7 @@ import java.util.List;
 public class ProfileFragment extends Fragment {
     //temporary url
     private static String url = "https://440b43ef-556f-4d7d-a95d-081ca321b8f9.mock.pstmn.io";
+    private static String picUrl = "http://coms-309-021.cs.iastate.edu/pics/";
     private TextView profileName;
     private ImageView profileImage;
     private TextView paloAmt;
@@ -48,7 +49,7 @@ public class ProfileFragment extends Fragment {
     private TextView followingAmt;
     //private TextView following;
     private static User user;
-    private ProgressDialog p;
+    //private ProgressDialog p;
     private RecyclerView r;
 
     public ProfileFragment() {}
@@ -92,8 +93,8 @@ public class ProfileFragment extends Fragment {
         JsonObjectRequest j = new JsonObjectRequest(Request.Method.GET, url + "/profile?q=" + user.getUsername(), null,
                 response -> {
                     try {
-                        String imgLink = response.getString("profileImage");
-                        Picasso.get().load(imgLink).into(profileImage);
+                        //String imgLink = response.getString("profileImage");
+                        Picasso.get().load(picUrl + user.getId() + "/" + user.getId()).into(profileImage);
                         followerAmt.setText(response.getString("followers"));
                         followingAmt.setText(response.getString("following"));
                     } catch (JSONException e) {
@@ -148,9 +149,9 @@ public class ProfileFragment extends Fragment {
 
     // Example --> {"username": "tiffmay", "profile_image": "fillimage link here"},
     private static User extractUser(JSONObject userJSON) throws JSONException{
-        User user = new User();
+        //User user = new User();
         user.setUsername(userJSON.getString("username"));
-        user.setProfileImage(userJSON.getString("profile_image"));
+        user.setProfileImage(picUrl + user.getId() + "/" + user.getId());
         return user;
     }
 }
