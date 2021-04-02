@@ -1,10 +1,16 @@
 package com.palo.palo.model;
 
-public class Artist extends Attatchment{
+import android.os.Parcel;
+
+public class Artist extends Attachment {
 
     public Artist(){}
     public Artist(String spotifyId){
         super(spotifyId);
+    }
+
+    public Artist(Parcel parcel){
+        //TODO
     }
     
     @Override
