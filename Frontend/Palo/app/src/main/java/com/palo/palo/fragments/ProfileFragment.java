@@ -25,12 +25,16 @@ import com.palo.palo.model.Song;
 import com.palo.palo.model.User;
 import com.palo.palo.volley.VolleySingleton;
 import com.squareup.picasso.Picasso;
+import com.palo.palo.volley.ServerURLs.*;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.palo.palo.volley.ServerURLs.USER;
 
 /**
  * This fragment is for the users profile page and its functionality.
@@ -90,13 +94,13 @@ public class ProfileFragment extends Fragment {
 
     private void getProfile() {
         //p.show();
-        JsonObjectRequest j = new JsonObjectRequest(Request.Method.GET, url + "/profile?q=" + user.getUsername(), null,
+        JsonObjectRequest j = new JsonObjectRequest(Request.Method.GET, USER + user.getId(), null,
                 response -> {
                     try {
                         //String imgLink = response.getString("profileImage");
                         Picasso.get().load(picUrl + user.getId() + "/" + user.getId()).into(profileImage);
-                        followerAmt.setText(response.getString("followers"));
-                        followingAmt.setText(response.getString("following"));
+                        followerAmt.setText(String.valueOf(response.getJSONArray("followers").length()));
+                        followingAmt.setText(String.valueOf(response.getJSONArray("following").length()));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
