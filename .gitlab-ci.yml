@@ -21,9 +21,9 @@ test-code-job1:
   tags:
     - backend
   script:
-    - echo "Check if the file was built?"
-    - ls /home/gitlab-runner/testBuild/PaloAPI-1.0.0.jar
-    - echo "This is broken rn?"
+    - echo "Running JUnit Mockito test :-)"
+    - cd ./Backend
+    - mvn test
 
 test-code-deploy:
   stage: deploy
