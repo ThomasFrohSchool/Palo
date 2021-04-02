@@ -43,6 +43,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Map;
 
+import static com.palo.palo.volley.ServerURLs.PICS;
 import static com.palo.palo.volley.ServerURLs.SEARCH;
 import static com.palo.palo.volley.ServerURLs.USERS;
 
@@ -187,7 +188,7 @@ public class SearchFragment extends Fragment {
     private static User extractUser(JSONObject userJson) throws JSONException {
         User user = new User();
         user.setUsername(userJson.getString("username"));
-        //user.setProfileImage(userJson.getString());
+        user.setProfileImage(PICS + userJson.getInt("id") + "/" + userJson.getInt("id"));
 
         return user;
     }
