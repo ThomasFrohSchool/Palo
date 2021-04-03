@@ -36,4 +36,5 @@ public class ServerURLs {
     }
 
     public static final String GET_COMMENTS = ROOT + "posts/getcomments/";
+    public static final String CREATE_COMMENT = ROOT + "createComment/";
 }
