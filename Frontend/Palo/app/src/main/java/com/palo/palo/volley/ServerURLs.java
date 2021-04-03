@@ -34,4 +34,6 @@ public class ServerURLs {
             default: return "";
         }
     }
+
+    public static final String GET_COMMENTS = ROOT + "posts/getcomments/";
 }

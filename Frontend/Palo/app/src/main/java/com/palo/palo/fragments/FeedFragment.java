@@ -125,6 +125,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
      */
     private static Palo extractPalo(JSONObject paloJSON, Context context) throws JSONException {
         Palo palo = new Palo();
+        palo.setId(paloJSON.getInt("id"));
         palo.setAuthor(new User(paloJSON.getInt("user_id")));
 //        JsonObjectRequest userRequest = userRequest(paloJSON.getInt("user_id"), palo, context);
 //        VolleySingleton.getInstance(context).addToRequestQueue(userRequest);

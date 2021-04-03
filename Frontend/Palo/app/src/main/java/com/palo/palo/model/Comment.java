@@ -1,21 +1,23 @@
 package com.palo.palo.model;
 
 public class Comment {
-    private String author;
+    private User author;
+    private int author_id;
     private String postDate;
     private String caption;
     
     public Comment(){}
-    public Comment(String author, String postDate, String caption){
-        this.author = author;
+    public Comment(int author_id, String postDate, String caption){
+        this.author_id = author_id;
         this.postDate = postDate;
         this.caption = caption;
+        this.author = new User(author_id);
     }
-    public String getAuthor() {
+    public User getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(User author) {
         this.author = author;
     }
 

@@ -38,7 +38,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Comment c = comments.get(position);
-        holder.authorUserNameTV.setText(c.getAuthor());
+        holder.authorUserNameTV.setText("" + c.getAuthor().getId());
         holder.postdateTV.setText(c.getPostDate());
         holder.captionTV.setText(c.getCaption());
 //        Picasso.get().load(c.getAuthor()).into(holder.authorProfileImage);
@@ -47,6 +47,11 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     @Override
     public int getItemCount() {
         return comments.size();
+    }
+
+    public void swapDataSet(List<Comment> newComments){
+        this.comments = newComments;
+        notifyDataSetChanged();
     }
 
 
