@@ -94,7 +94,7 @@ public class SearchFragment extends Fragment {
         p.setMessage("Loading...");
         p.setCancelable(false);
 
-        bSpotify.setOnClickListener(v -> makeStringSongRequest());
+        bSpotify.setOnClickListener(v -> makeStringSongRequest(SEARCH + song.getText().toString()));
         bUsers.setOnClickListener(v -> makeUsersRequest());
     }
 
