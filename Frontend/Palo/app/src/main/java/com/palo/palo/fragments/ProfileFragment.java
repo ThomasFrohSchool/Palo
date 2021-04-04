@@ -27,12 +27,16 @@ import com.palo.palo.model.Song;
 import com.palo.palo.model.User;
 import com.palo.palo.volley.VolleySingleton;
 import com.squareup.picasso.Picasso;
+import com.palo.palo.volley.ServerURLs.*;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.palo.palo.volley.ServerURLs.USER;
 
 /**
  * This fragment is for the users profile page and its functionality.
@@ -41,6 +45,7 @@ import java.util.List;
 public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListener {
     //temporary url
     private static String url = "https://440b43ef-556f-4d7d-a95d-081ca321b8f9.mock.pstmn.io";
+    private static String picUrl = "http://coms-309-021.cs.iastate.edu/pics/";
     private TextView profileName;
     private ImageView profileImage;
     private TextView paloAmt;
@@ -50,7 +55,7 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
     private TextView followingAmt;
     //private TextView following;
     private static User user;
-    private ProgressDialog p;
+    //private ProgressDialog p;
     private RecyclerView r;
     FeedAdapter postAdapter;
     List<Palo> palos;
@@ -96,13 +101,13 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
 
     private void getProfile() {
         //p.show();
-        JsonObjectRequest j = new JsonObjectRequest(Request.Method.GET, url + "/profile?q=" + user.getUsername(), null,
+        JsonObjectRequest j = new JsonObjectRequest(Request.Method.GET, USER + user.getId(), null,
                 response -> {
                     try {
-                        String imgLink = response.getString("profileImage");
-                        Picasso.get().load(imgLink).into(profileImage);
-                        followerAmt.setText(response.getString("followers"));
-                        followingAmt.setText(response.getString("following"));
+                        //String imgLink = response.getString("profileImage");
+                        Picasso.get().load(picUrl + user.getId() + "/" + user.getId()).into(profileImage);
+                        followerAmt.setText(String.valueOf(response.getJSONArray("followers").length()));
+                        followingAmt.setText(String.valueOf(response.getJSONArray("following").length()));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -154,9 +159,9 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
 
     // Example --> {"username": "tiffmay", "profile_image": "fillimage link here"},
     private static User extractUser(JSONObject userJSON) throws JSONException{
-        User user = new User();
+        //User user = new User();
         user.setUsername(userJSON.getString("username"));
-        user.setProfileImage(userJSON.getString("profile_image"));
+        user.setProfileImage(picUrl + user.getId() + "/" + user.getId());
         return user;
     }
 
