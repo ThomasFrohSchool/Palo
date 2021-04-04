@@ -65,6 +65,7 @@ public class SearchFragment extends Fragment {
     private String STRINGTAG = SearchFragment.class.getSimpleName();
     private String tag_json_obj = "jobj_req", tag_json_array = "jarray_req";
     private String tag_string_req = "string_req";
+    private String str;
 
     public SearchFragment() {}
 
@@ -138,7 +139,7 @@ public class SearchFragment extends Fragment {
      * Makes StringRequest to SERVER/search?q=[TEXT], where TEXT is a string to what the user is searching.
      * Adds request to VolleySingleton request queue. Server responds with a string containing a list of albums, osngs, and artist from Spotify.
      */
-    private void makeStringSongRequest() {
+    public String makeStringSongRequest(String hurl) {
         //p.show();
         StringRequest stringRequest = new StringRequest(Request.Method.GET,
                 SEARCH + song.getText().toString(),
@@ -160,6 +161,7 @@ public class SearchFragment extends Fragment {
                 }, error -> error.printStackTrace());
         //p.hide();
         VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(stringRequest);
+        return str;
     }
 
     private void addUsers(ArrayList<User> users, JSONArray a) throws JSONException {
