@@ -145,6 +145,7 @@ public class SearchFragment extends Fragment {
                 SEARCH + song.getText().toString(),
                 response -> {
                     Log.d(STRINGTAG, response);
+                    Log.d(STRINGTAG, str);
                     try {
                         JSONObject o = new JSONObject(response);
                         ArrayList<Attachment> al = new ArrayList<>();
