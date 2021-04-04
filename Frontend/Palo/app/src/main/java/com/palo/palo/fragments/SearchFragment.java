@@ -31,7 +31,7 @@ import com.palo.palo.R;
 import com.palo.palo.UserSearchAdapter;
 import com.palo.palo.model.Album;
 import com.palo.palo.model.Artist;
-import com.palo.palo.model.Attatchment;
+import com.palo.palo.model.Attachment;
 import com.palo.palo.model.Song;
 import com.palo.palo.model.User;
 import com.palo.palo.volley.VolleySingleton;
@@ -146,7 +146,7 @@ public class SearchFragment extends Fragment {
                     Log.d(STRINGTAG, response);
                     try {
                         JSONObject o = new JSONObject(response);
-                        ArrayList<Attatchment> al = new ArrayList<>();
+                        ArrayList<Attachment> al = new ArrayList<>();
                         addAlbums(al, o.getJSONArray("albums"));
                         addArtist(al, o.getJSONArray("artists"));
                         addTracks(al, o.getJSONArray("tracks"));
@@ -172,15 +172,15 @@ public class SearchFragment extends Fragment {
         }
     }
 
-    private void addTracks(ArrayList<Attatchment> attachments, JSONArray a) throws JSONException {
+    private void addTracks(ArrayList<Attachment> attachments, JSONArray a) throws JSONException {
         for (int i =0; i <a.length(); i++)
             attachments.add(extractTrack(a.getJSONObject(i)));
     }
-    private void addAlbums(ArrayList<Attatchment> attachments, JSONArray a) throws JSONException {
+    private void addAlbums(ArrayList<Attachment> attachments, JSONArray a) throws JSONException {
         for (int i =0; i <a.length(); i++)
             attachments.add(extractAlbum(a.getJSONObject(i)));
     }
-    private void addArtist(ArrayList<Attatchment> attachments, JSONArray a) throws JSONException {
+    private void addArtist(ArrayList<Attachment> attachments, JSONArray a) throws JSONException {
         for (int i =0; i <a.length(); i++)
             attachments.add(extractArtist(a.getJSONObject(i)));
     }

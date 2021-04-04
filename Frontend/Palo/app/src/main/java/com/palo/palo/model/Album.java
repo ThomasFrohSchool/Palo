@@ -1,6 +1,8 @@
 package com.palo.palo.model;
 
-public class Album extends Attatchment{
+import android.os.Parcel;
+
+public class Album extends Attachment {
     String albumCover;
     String artist;
     String title;
@@ -9,6 +11,10 @@ public class Album extends Attatchment{
     public Album(String spotifyId){
         super(spotifyId);
     }
+    public Album(Parcel parcel){
+        //TODO
+    }
+
     public String getTitle() {
         return title;
     }
