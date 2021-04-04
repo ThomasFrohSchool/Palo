@@ -109,7 +109,7 @@ public class SpotifyController {
             }
         }
 
-        query.append("&type=artist%2Calbum%2Ctrack&market=US&limit=10");
+        query.append("&type=artist%2Calbum%2Ctrack&market=US&limit=5");
 
         String url = query.toString();
         URL obj;
