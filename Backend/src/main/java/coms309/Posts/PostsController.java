@@ -82,6 +82,9 @@ public class PostsController {
                 p.add(ps);
             }
         }
+        for(Posts ps : user.getPosts()){
+            p.add(ps);
+        }
         SimpleDateFormat formatter1=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         p.sort((e1, e2) -> {
             try {
