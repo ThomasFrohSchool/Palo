@@ -95,7 +95,7 @@ public class SearchFragment extends Fragment {
         p.setCancelable(false);
 
         bSpotify.setOnClickListener(v -> makeStringSongRequest(SEARCH + song.getText().toString()));
-        bUsers.setOnClickListener(v -> makeUsersRequest());
+        bUsers.setOnClickListener(v -> makeUsersRequest(song.getText().toString()));
     }
 
     /**
@@ -115,13 +115,13 @@ public class SearchFragment extends Fragment {
         VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(jsonSongRequest);
     }
 
-    private void makeUsersRequest() {
+    public void makeUsersRequest(String s) {
+        ArrayList<User> users = new ArrayList<>();
         JsonArrayRequest arr = new JsonArrayRequest(USERS,
                 response -> {
                     Log.d(JSONTAG, response.toString());
-                    ArrayList<User> users = new ArrayList<>();
                     try {
-                        addUsers(users, response);
+                        addUsers(users, response, s);
                         r.setAdapter(new UserSearchAdapter(getActivity().getApplicationContext(), new ArrayList<>()));
                         userAdapter = new UserSearchAdapter(getActivity().getApplicationContext(), users);
                         r.setAdapter(userAdapter);
@@ -142,10 +142,10 @@ public class SearchFragment extends Fragment {
     public String makeStringSongRequest(String hurl) {
         //p.show();
         StringRequest stringRequest = new StringRequest(Request.Method.GET,
-                SEARCH + song.getText().toString(),
+                hurl,
                 response -> {
+                    str = response;
                     Log.d(STRINGTAG, response);
-                    Log.d(STRINGTAG, str);
                     try {
                         JSONObject o = new JSONObject(response);
                         ArrayList<Attachment> al = new ArrayList<>();
@@ -155,6 +155,7 @@ public class SearchFragment extends Fragment {
                         r.setAdapter(new AttachementSearchAdapter(getActivity().getApplicationContext(), new ArrayList<>()));
                         spotifyAdapter = new AttachementSearchAdapter(getActivity().getApplicationContext(), al);
                         r.setAdapter(spotifyAdapter);
+                        Log.d(STRINGTAG, str);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -165,8 +166,8 @@ public class SearchFragment extends Fragment {
         return str;
     }
 
-    private void addUsers(ArrayList<User> users, JSONArray a) throws JSONException {
-        String s = song.getText().toString();
+    private void addUsers(ArrayList<User> users, JSONArray a, String s) throws JSONException {
+        //String s = song.getText().toString();
         for(int i = 0; i < a.length(); i++) {
             JSONObject o = a.getJSONObject(i);
             if(s.equalsIgnoreCase(o.getString("username"))) {
