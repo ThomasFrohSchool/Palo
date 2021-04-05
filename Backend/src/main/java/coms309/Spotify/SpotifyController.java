@@ -267,7 +267,7 @@ public class SpotifyController {
     }
 
 
-    private JSONObject album(String id){
+    public JSONObject album(String id){
 
         StringBuilder query = new StringBuilder("https://api.spotify.com/v1/albums/");
 
