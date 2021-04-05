@@ -15,14 +15,14 @@
             android:src="@drawable/ic_launcher_background"/>
 
         <EditText
-            android:id="@+id/attached_song_search_bar_edit_text"
+            android:id="@+id/addCommentBody"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="10"
             android:hint="Add a comment...." />
 
         <TextView
-            android:id="@+id/attached_song_search_bar_button"
+            android:id="@+id/postCommentButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
