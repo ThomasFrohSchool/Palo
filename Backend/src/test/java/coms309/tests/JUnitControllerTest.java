@@ -12,6 +12,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -46,6 +49,20 @@ public class JUnitControllerTest {
 		assertEquals("jDoe", acct.getUsername());
 		assertEquals("123456", acct.getPassword());
 		assertEquals("jDoe@gmail.com", acct.getEmail());
+	}
+	@Test
+	public void getFollowersTest() {
+		when(users.findById(1)).thenReturn(new User("jDoe", "123456", "jDoe@gmail.com"));
+		when(users.findById(2)).thenReturn(new User("tSmoke", "654321", "tSmokes@gmail.com"));
+
+		User acct = users.findById(1);
+		acct.setFollowers(new ArrayList<User>());
+		User follower = users.findById(2);
+		follower.setId(2);
+		acct.addFollowers(follower);
+		List<Integer> i = new ArrayList<Integer>();
+		i.add(2);
+		assertEquals(i, acct.getFollowers());
 	}
 
 	@Test
