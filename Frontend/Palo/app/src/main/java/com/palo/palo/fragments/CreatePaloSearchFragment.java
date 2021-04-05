@@ -115,8 +115,8 @@ public class CreatePaloSearchFragment extends Fragment {
 
     private static Artist extractArtist(JSONObject songJSON) throws JSONException {
         Artist artist = new Artist();
-        artist.setTitle("");
-        artist.setArtist(songJSON.getString("artist"));
+        artist.setTitle(songJSON.getString("artist"));
+        artist.setArtist("");
         artist.setSpotifyId(songJSON.getString("id"));
         artist.setAlbumCover(songJSON.getString("imageUrl"));
         artist.setSpotifyLink(songJSON.getString("link"));
