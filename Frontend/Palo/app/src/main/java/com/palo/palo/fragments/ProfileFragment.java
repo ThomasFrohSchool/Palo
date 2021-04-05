@@ -59,6 +59,7 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
     private RecyclerView r;
     FeedAdapter postAdapter;
     List<Palo> palos;
+    private String str;
 
     public ProfileFragment() {}
 
@@ -92,19 +93,20 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
         });
 
         profileName.setText(user.getUsername());
-        getProfile();
+        getProfile(USER + user.getId());
         postAdapter = new FeedAdapter(getActivity().getApplicationContext(), new ArrayList<>(), this);
         r.setAdapter(postAdapter);
         r.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         extractPalos();
     }
 
-    private void getProfile() {
+    public String getProfile(String s) {
         //p.show();
-        JsonObjectRequest j = new JsonObjectRequest(Request.Method.GET, USER + user.getId(), null,
+        JsonObjectRequest j = new JsonObjectRequest(Request.Method.GET, s, null,
                 response -> {
                     try {
                         //String imgLink = response.getString("profileImage");
+                        str = response.getString("username");
                         Picasso.get().load(picUrl + user.getId() + "/" + user.getId()).into(profileImage);
                         followerAmt.setText(String.valueOf(response.getJSONArray("followers").length()));
                         followingAmt.setText(String.valueOf(response.getJSONArray("following").length()));
@@ -114,6 +116,7 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
                 }, Throwable::printStackTrace);
         //p.hide();
         VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(j);
+        return str;
     }
 
     private void extractPalos() {
@@ -121,7 +124,7 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
         VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(request);
     }
 
-    private  JsonArrayRequest getUserPalos(RecyclerView recyclerView, Context context, TextView amt) {
+    private JsonArrayRequest getUserPalos(RecyclerView recyclerView, Context context, TextView amt) {
         return new JsonArrayRequest(Request.Method.GET, url + "/Palo?q=" + user.getUsername(), null,
                 response -> {
                     palos = new ArrayList<>();
