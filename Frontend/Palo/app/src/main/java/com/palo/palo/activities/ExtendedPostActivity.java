@@ -4,7 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -119,6 +122,7 @@ public class ExtendedPostActivity extends AppCompatActivity {
                     Toast.makeText(this, "successfully posted.", Toast.LENGTH_LONG).show();
                     System.out.println("Made new comment successfully");
                     newCommentBody.setText("");
+                    //dismissKeyboard(this);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -133,5 +137,12 @@ public class ExtendedPostActivity extends AppCompatActivity {
         return new Comment(commentJSON.getInt("user_id"),
                            commentJSON.getString("createDate"),
                            commentJSON.getString("body"));
+    }
+
+    public void dismissKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (null != activity.getCurrentFocus())
+            imm.hideSoftInputFromWindow(activity.getCurrentFocus()
+                    .getApplicationWindowToken(), 0);
     }
 }
