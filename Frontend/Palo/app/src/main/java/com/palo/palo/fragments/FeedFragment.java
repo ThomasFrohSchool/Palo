@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,11 +45,14 @@ import static com.palo.palo.volley.ServerURLs.USER_BY_ID;
  * This class is associated with fragment_feed.xml.
  */
 public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener {
+    private final String FEED_STR_TAG = FeedFragment.class.getSimpleName();
     RecyclerView recyclerView;
     FeedAdapter feedAdapter;
     TextView emptyFeedMessage;
     Button refreshFeed;
     View myView;
+    String feedVolleyResponse;
+
     private static String SERVER_URL = "https://6e8134ce-7a91-4a1d-8c23-f06c12c6fcfd.mock.pstmn.io";
     List<Palo> palos;
     public FeedFragment() { }
@@ -72,32 +76,36 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
         feedAdapter = new FeedAdapter(getActivity().getApplicationContext(), new ArrayList<>(), this);
         recyclerView.setAdapter(feedAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-        extractSongs();
+        extractSongs(SharedPrefManager.getInstance(myView.getContext()).getUser().getId());
     }
 
     private void refreshFeed(){
         recyclerView.setVisibility(View.VISIBLE);
         emptyFeedMessage.setVisibility(View.INVISIBLE);
         refreshFeed.setVisibility(View.INVISIBLE);
-        extractSongs();
+        extractSongs(SharedPrefManager.getInstance(myView.getContext()).getUser().getId());
     }
 
     /**
      * This method is for extracting the song from a Palo.
      */
-    private void extractSongs() {
-        JsonArrayRequest request = feedRequest(recyclerView, getActivity().getApplicationContext());
+    public String extractSongs(int currentUserId) {
+        JsonArrayRequest request = feedRequest(recyclerView, getActivity().getApplicationContext(), currentUserId);
         VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(request);
+        return feedVolleyResponse;
     }
 
-    private  JsonArrayRequest feedRequest(RecyclerView recyclerView, Context context){
-        return new JsonArrayRequest(Request.Method.GET, FEED + SharedPrefManager.getInstance(myView.getContext()).getUser().getId(), null, response -> {
+    private  JsonArrayRequest feedRequest(RecyclerView recyclerView, Context context, int currentUserId){
+        return new JsonArrayRequest(Request.Method.GET, FEED + currentUserId, null, response -> {
             if (response.length() == 0 ){
                 recyclerView.setVisibility(View.INVISIBLE);
                emptyFeedMessage.setVisibility(View.VISIBLE);
                 refreshFeed.setVisibility(View.VISIBLE);
-
+                feedVolleyResponse = response.toString();
+                Log.d(FEED_STR_TAG, response.toString());
             } else {
+                feedVolleyResponse = response.toString();
+                Log.d(FEED_STR_TAG, response.toString());
                 recyclerView.setVisibility(View.VISIBLE);
                 palos = new ArrayList<>();
                 for (int i = 0; i < response.length(); i++) {
