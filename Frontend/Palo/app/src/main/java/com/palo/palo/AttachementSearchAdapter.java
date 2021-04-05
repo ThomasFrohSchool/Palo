@@ -65,6 +65,11 @@ public class AttachementSearchAdapter extends RecyclerView.Adapter<AttachementSe
         return searchResults.size();
     }
 
+    public void swapDataSet(List<Attachment> newAttachments){
+        this.searchResults = newAttachments;
+        notifyDataSetChanged();
+    }
+
     public Attachment getSelectedSong(){
         if (selectedIndex == -1) return null;
         return searchResults.get(selectedIndex);

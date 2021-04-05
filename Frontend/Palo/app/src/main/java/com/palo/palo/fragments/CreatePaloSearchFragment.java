@@ -42,6 +42,7 @@ public class CreatePaloSearchFragment extends Fragment {
     private EditText searchET;
     private ImageButton searchButton;
     AttachementSearchAdapter searchAdapter;
+    ArrayList<Attachment> attachments;
 
     public CreatePaloSearchFragment() {}
 
@@ -64,7 +65,8 @@ public class CreatePaloSearchFragment extends Fragment {
         searchButton.setOnClickListener(v -> getSearchResultsFromSpotify());
         searchRecyclerView = view.findViewById(R.id.create_new_post_search_recycler_view);
         searchRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-        searchRecyclerView.setAdapter(new AttachementSearchAdapter(getActivity().getApplicationContext(), new ArrayList<>()));
+        searchAdapter = new AttachementSearchAdapter(getActivity().getApplicationContext(), new ArrayList<>());
+        searchRecyclerView.setAdapter(searchAdapter);
     }
 
     private void getSearchResultsFromSpotify() {
@@ -73,14 +75,14 @@ public class CreatePaloSearchFragment extends Fragment {
                 url,
                 response -> {
                     try {
+                        System.out.println(response);
                         JSONObject json = new JSONObject(response);
-                        ArrayList<Attachment> attachments = new ArrayList<>();
+                        attachments = new ArrayList<>();
                         addAlbums(attachments, json.getJSONArray("albums"));
                         addArtist(attachments, json.getJSONArray("artists"));
                         addTracks(attachments, json.getJSONArray("tracks"));
                         dismissKeyboard(getActivity());
-                        searchAdapter = new AttachementSearchAdapter(getActivity().getApplicationContext(), attachments);
-                        searchRecyclerView.setAdapter(searchAdapter);
+                        searchAdapter.swapDataSet(attachments);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
