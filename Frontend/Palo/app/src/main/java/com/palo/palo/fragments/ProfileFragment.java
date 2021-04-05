@@ -36,6 +36,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.palo.palo.volley.ServerURLs.PICS;
 import static com.palo.palo.volley.ServerURLs.USER;
 
 /**
@@ -45,7 +46,6 @@ import static com.palo.palo.volley.ServerURLs.USER;
 public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListener {
     //temporary url
     private static String url = "https://440b43ef-556f-4d7d-a95d-081ca321b8f9.mock.pstmn.io";
-    private static String picUrl = "http://coms-309-021.cs.iastate.edu/pics/";
     private TextView profileName;
     private ImageView profileImage;
     private TextView paloAmt;
@@ -107,7 +107,7 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
                     try {
                         //String imgLink = response.getString("profileImage");
                         str = response.getString("username");
-                        Picasso.get().load(picUrl + user.getId() + "/" + user.getId()).into(profileImage);
+                        Picasso.get().load(PICS + user.getId() + "/" + user.getId()).into(profileImage);
                         followerAmt.setText(String.valueOf(response.getJSONArray("followers").length()));
                         followingAmt.setText(String.valueOf(response.getJSONArray("following").length()));
                     } catch (JSONException e) {
@@ -164,7 +164,7 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
     private static User extractUser(JSONObject userJSON) throws JSONException{
         //User user = new User();
         user.setUsername(userJSON.getString("username"));
-        user.setProfileImage(picUrl + user.getId() + "/" + user.getId());
+        user.setProfileImage(PICS + user.getId() + "/" + user.getId());
         return user;
     }
 
