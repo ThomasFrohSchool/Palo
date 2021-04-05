@@ -1,5 +1,7 @@
 package com.palo.palo.fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -75,6 +78,7 @@ public class CreatePaloSearchFragment extends Fragment {
                         addAlbums(attachments, json.getJSONArray("albums"));
                         addArtist(attachments, json.getJSONArray("artists"));
                         addTracks(attachments, json.getJSONArray("tracks"));
+                        dismissKeyboard(getActivity());
                         searchAdapter = new AttachementSearchAdapter(getActivity().getApplicationContext(), attachments);
                         searchRecyclerView.setAdapter(searchAdapter);
                     } catch (JSONException e) {
@@ -128,5 +132,12 @@ public class CreatePaloSearchFragment extends Fragment {
     
     public Attachment getSelectedSong(){
         return searchAdapter.getSelectedSong();
+    }
+
+    public void dismissKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (null != activity.getCurrentFocus())
+            imm.hideSoftInputFromWindow(activity.getCurrentFocus()
+                    .getApplicationWindowToken(), 0);
     }
 }

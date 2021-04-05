@@ -32,8 +32,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.palo.palo.volley.ServerURLs.CREATE_COMMENT;
-import static com.palo.palo.volley.ServerURLs.CREATE_POST;
 import static com.palo.palo.volley.ServerURLs.GET_COMMENTS;
+import static com.palo.palo.volley.ServerURLs.USER_BY_ID;
 
 public class ExtendedPostActivity extends AppCompatActivity {
     Palo attachedPalo;
@@ -52,6 +52,7 @@ public class ExtendedPostActivity extends AppCompatActivity {
         backButton.setOnClickListener(v -> finish());
         attachedPalo = getIntent().getParcelableExtra("selected_post");
         setView(attachedPalo);
+        // TODO set current user profile pic next to make comment text field.
 
         //comment initialization
         newCommentBody = findViewById(R.id.addCommentBody);
@@ -63,8 +64,8 @@ public class ExtendedPostActivity extends AppCompatActivity {
         commentRV.setAdapter(commentAdapter);
         commentRV.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         updateCommentView();
-
     }
+
     private void setView(Palo palo){
         Picasso.get().load(palo.getAuthor().getProfileImage()).into((ImageView) findViewById(R.id.paloAuthorProfileImage));
         ((TextView) findViewById(R.id.paloAuthorUserName)).setText(palo.getAuthor().getUsername());
@@ -83,7 +84,6 @@ public class ExtendedPostActivity extends AppCompatActivity {
 
     private JsonArrayRequest getComments(){
         int post_id = attachedPalo.getId();
-        post_id = 10; //todo delete this
         return new JsonArrayRequest(Request.Method.GET, GET_COMMENTS + post_id,null,
                 response -> {
                     if (response.length() == 0){
@@ -95,15 +95,30 @@ public class ExtendedPostActivity extends AppCompatActivity {
                             Comment comment = null;
                             try {
                                 comment = extractComment(response.getJSONObject(i));
+                                userRequest(i, comment.getAuthor().getId());
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                             comments.add(comment);
                         }
+                        commentAdapter.swapDataSet(comments);
                     }
-                    commentAdapter.swapDataSet(comments);
                 },
                 error -> {System.out.println(error.getMessage());});
+    }
+
+    private void userRequest(int commentIndex, int userId){
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,USER_BY_ID + userId, null, response -> {
+            try {
+                comments.get(commentIndex).setAuthorUsername(response.getString("username"));
+                commentAdapter.updateComment(commentIndex, comments.get(commentIndex));
+                // TODO set profile image here...
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }, error -> System.out.println(error.getMessage()));
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
 
     public void post(){
@@ -115,14 +130,14 @@ public class ExtendedPostActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         String url = CREATE_COMMENT + attachedPalo.getId();
-        url = CREATE_COMMENT + "10";
         JsonObjectRequest request = new JsonObjectRequest(url, newPost, json -> {
             try {
                 if(json.getString("message").equals("success")) {
                     Toast.makeText(this, "successfully posted.", Toast.LENGTH_LONG).show();
                     System.out.println("Made new comment successfully");
                     newCommentBody.setText("");
-                    //dismissKeyboard(this);
+                    dismissKeyboard(this);
+                    updateCommentView();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

@@ -21,6 +21,10 @@ public class Comment {
         this.author = author;
     }
 
+    public void setAuthorUsername(String username) {
+        this.author.setUsername(username);
+    }
+
     public String getPostDate() {
         return postDate;
     }
