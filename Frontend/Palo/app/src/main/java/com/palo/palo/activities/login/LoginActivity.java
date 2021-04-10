@@ -8,14 +8,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.palo.palo.R;
 import com.palo.palo.SharedPrefManager;
 import com.palo.palo.activities.MainActivity;
+import com.palo.palo.activities.login.register.RegisterActivity;
 import com.palo.palo.model.User;
 import com.palo.palo.volley.ServerURLs;
 import com.palo.palo.volley.VolleySingleton;
