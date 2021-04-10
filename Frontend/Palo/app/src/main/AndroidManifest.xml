@@ -12,7 +12,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Palo">
-        <activity android:name=".activities.CreateNewPostActivity"/>
         <activity android:name=".activities.login.register.RegisterActivity" />
         <activity android:name=".activities.ExtendedPostActivity"/>
         <activity android:name=".activities.CreateNewPostActivity" />
