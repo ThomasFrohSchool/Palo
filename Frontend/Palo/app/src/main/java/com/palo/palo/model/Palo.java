@@ -3,6 +3,9 @@ package com.palo.palo.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Model for posts.
  */
@@ -24,6 +27,27 @@ public class Palo implements Parcelable {
         attachment = parcel.readParcelable(Attachment.class.getClassLoader());
         id = parcel.readInt();
     }
+
+    public Palo(JSONObject paloJSON) throws JSONException {
+        id = paloJSON.getInt("id");
+        author = new User(paloJSON.getInt("user_id"));
+        postDate = paloJSON.getString("createDate");
+        caption = paloJSON.getString("description");
+        switch (paloJSON.getInt("type")){
+            case 0:
+                attachment = new Album(paloJSON.getString("spot_id"));
+                break;
+            case 1:
+                attachment = new Artist(paloJSON.getString("spot_id"));
+                break;
+            case 2:
+                attachment = new Song(paloJSON.getString("spot_id"));
+                break;
+            default: System.out.println("error");
+        }
+        isLiked = false;
+    }
+
 
     public User getAuthor() {
         return author;
