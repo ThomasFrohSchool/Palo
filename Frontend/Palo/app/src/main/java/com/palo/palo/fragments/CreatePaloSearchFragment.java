@@ -1,5 +1,7 @@
 package com.palo.palo.fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -19,7 +22,7 @@ import com.palo.palo.AttachementSearchAdapter;
 import com.palo.palo.R;
 import com.palo.palo.model.Album;
 import com.palo.palo.model.Artist;
-import com.palo.palo.model.Attatchment;
+import com.palo.palo.model.Attachment;
 import com.palo.palo.model.Song;
 import com.palo.palo.volley.VolleySingleton;
 
@@ -39,6 +42,7 @@ public class CreatePaloSearchFragment extends Fragment {
     private EditText searchET;
     private ImageButton searchButton;
     AttachementSearchAdapter searchAdapter;
+    ArrayList<Attachment> attachments;
 
     public CreatePaloSearchFragment() {}
 
@@ -61,7 +65,8 @@ public class CreatePaloSearchFragment extends Fragment {
         searchButton.setOnClickListener(v -> getSearchResultsFromSpotify());
         searchRecyclerView = view.findViewById(R.id.create_new_post_search_recycler_view);
         searchRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-        searchRecyclerView.setAdapter(new AttachementSearchAdapter(getActivity().getApplicationContext(), new ArrayList<>()));
+        searchAdapter = new AttachementSearchAdapter(getActivity().getApplicationContext(), new ArrayList<>());
+        searchRecyclerView.setAdapter(searchAdapter);
     }
 
     private void getSearchResultsFromSpotify() {
@@ -70,13 +75,14 @@ public class CreatePaloSearchFragment extends Fragment {
                 url,
                 response -> {
                     try {
+                        System.out.println(response);
                         JSONObject json = new JSONObject(response);
-                        ArrayList<Attatchment> attachments = new ArrayList<>();
+                        attachments = new ArrayList<>();
                         addAlbums(attachments, json.getJSONArray("albums"));
                         addArtist(attachments, json.getJSONArray("artists"));
                         addTracks(attachments, json.getJSONArray("tracks"));
-                        searchAdapter = new AttachementSearchAdapter(getActivity().getApplicationContext(), attachments);
-                        searchRecyclerView.setAdapter(searchAdapter);
+                        dismissKeyboard(getActivity());
+                        searchAdapter.swapDataSet(attachments);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -85,15 +91,15 @@ public class CreatePaloSearchFragment extends Fragment {
         VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(request);
     }
 
-    private void addTracks(ArrayList<Attatchment> attachments, JSONArray a) throws JSONException {
+    private void addTracks(ArrayList<Attachment> attachments, JSONArray a) throws JSONException {
         for (int i =0; i <a.length(); i++)
             attachments.add(extractTrack(a.getJSONObject(i)));
     }
-    private void addAlbums(ArrayList<Attatchment> attachments, JSONArray a) throws JSONException {
+    private void addAlbums(ArrayList<Attachment> attachments, JSONArray a) throws JSONException {
         for (int i =0; i <a.length(); i++)
             attachments.add(extractAlbum(a.getJSONObject(i)));
     }
-    private void addArtist(ArrayList<Attatchment> attachments, JSONArray a) throws JSONException {
+    private void addArtist(ArrayList<Attachment> attachments, JSONArray a) throws JSONException {
         for (int i =0; i <a.length(); i++)
             attachments.add(extractArtist(a.getJSONObject(i)));
     }
@@ -109,8 +115,8 @@ public class CreatePaloSearchFragment extends Fragment {
 
     private static Artist extractArtist(JSONObject songJSON) throws JSONException {
         Artist artist = new Artist();
-        artist.setTitle("");
-        artist.setArtist(songJSON.getString("artist"));
+        artist.setTitle(songJSON.getString("artist"));
+        artist.setArtist("");
         artist.setSpotifyId(songJSON.getString("id"));
         artist.setAlbumCover(songJSON.getString("imageUrl"));
         artist.setSpotifyLink(songJSON.getString("link"));
@@ -126,7 +132,14 @@ public class CreatePaloSearchFragment extends Fragment {
                 songJSON.getString("playbackLink"));
     }
     
-    public Attatchment getSelectedSong(){
+    public Attachment getSelectedSong(){
         return searchAdapter.getSelectedSong();
+    }
+
+    public void dismissKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (null != activity.getCurrentFocus())
+            imm.hideSoftInputFromWindow(activity.getCurrentFocus()
+                    .getApplicationWindowToken(), 0);
     }
 }

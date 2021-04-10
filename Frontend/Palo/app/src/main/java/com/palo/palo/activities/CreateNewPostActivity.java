@@ -12,8 +12,7 @@ import android.widget.Toast;
 import com.palo.palo.R;
 import com.palo.palo.fragments.CreatePaloFragment;
 import com.palo.palo.fragments.CreatePaloSearchFragment;
-import com.palo.palo.model.Attatchment;
-import com.palo.palo.model.Song;
+import com.palo.palo.model.Attachment;
 
 
 public class CreateNewPostActivity extends AppCompatActivity {
@@ -55,12 +54,12 @@ public class CreateNewPostActivity extends AppCompatActivity {
 
     private void nextClicked(){
         if(createNewSearchFrag.isVisible()) {
-            Attatchment song = ((CreatePaloSearchFragment) createNewSearchFrag).getSelectedSong();
+            Attachment song = ((CreatePaloSearchFragment) createNewSearchFrag).getSelectedSong();
             if (song == null) {
                 Toast.makeText(getApplicationContext(), "Select an attachment.", Toast.LENGTH_LONG).show();
                 return;
             }
-            ((CreatePaloFragment) createNewFrag).setAttatchment(song);
+            ((CreatePaloFragment) createNewFrag).setAttachment(song);
             fm.beginTransaction().hide(active).show(createNewFrag).commit();
             active = createNewFrag;
             back.setText("BACK");

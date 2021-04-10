@@ -13,19 +13,18 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.palo.palo.model.Attatchment;
-import com.palo.palo.model.Song;
+import com.palo.palo.model.Attachment;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class AttachementSearchAdapter extends RecyclerView.Adapter<AttachementSearchAdapter.ViewHolder> {
     LayoutInflater inflater;
-    List<Attatchment> searchResults;
+    List<Attachment> searchResults;
     int selectedIndex = -1;
     Context context;
 
-    public AttachementSearchAdapter(Context context, List<Attatchment> searchResults){
+    public AttachementSearchAdapter(Context context, List<Attachment> searchResults){
         this.inflater = LayoutInflater.from(context);
         this.searchResults = searchResults;
         this.context = context;
@@ -66,7 +65,12 @@ public class AttachementSearchAdapter extends RecyclerView.Adapter<AttachementSe
         return searchResults.size();
     }
 
-    public Attatchment getSelectedSong(){
+    public void swapDataSet(List<Attachment> newAttachments){
+        this.searchResults = newAttachments;
+        notifyDataSetChanged();
+    }
+
+    public Attachment getSelectedSong(){
         if (selectedIndex == -1) return null;
         return searchResults.get(selectedIndex);
     }

@@ -10,6 +10,7 @@ import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
+import coms309.Posts.Comments;
 import coms309.Posts.Posts;
 
 @Entity
@@ -21,9 +22,11 @@ public class User {
 	private String username;
 	private String password;
 	private String email;
+	private String profile;
 
 	@OneToMany
 	private List<Posts> posts;
+
 	
 	@ManyToMany
 	private List<User> followers;
@@ -88,6 +91,9 @@ public class User {
 	}
 	public void setPosts(List<Posts> posts){
 		this.posts = posts;
+	}
+	public void setProfile(String img){
+		this.profile = img;
 	}
 	public void addPosts(Posts post){
 		this.posts.add(post);

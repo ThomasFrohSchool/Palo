@@ -12,6 +12,8 @@ import java.util.List;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import top.jfunc.json.impl.JSONArray;
+import top.jfunc.json.impl.JSONObject;
 import coms309.Users.User;
 import coms309.Users.UserTable;
 
@@ -31,6 +33,9 @@ public class PostsController {
     PostsTable postsTable;
     @Autowired
     UserTable userTable;
+
+    @Autowired
+    CommentsTable commentsTable;
 
     /**
      * 
@@ -77,6 +82,9 @@ public class PostsController {
                 p.add(ps);
             }
         }
+        for(Posts ps : user.getPosts()){
+            p.add(ps);
+        }
         SimpleDateFormat formatter1=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         p.sort((e1, e2) -> {
             try {
@@ -87,5 +95,46 @@ public class PostsController {
             }
         });
         return p;
+    }
+
+
+
+    //COMMENTS
+    @ApiOperation(value = "Create a new comment")
+    @PostMapping(path = "/createComment/{postID}")
+    String createComment(@PathVariable int postID, @ApiParam(value="JSON comment object",required=true) @RequestBody Comments comment){
+        if (comment == null)
+            return failure;
+        comment.setPosts(postsTable.findById(postID));
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+        LocalDateTime now = LocalDateTime.now(); 
+        comment.setCreateDate(dtf.format(now));
+        Posts post = postsTable.findById(postID);
+        post.addComment(comment);
+        commentsTable.save(comment);
+        postsTable.save(postsTable.findById(comment.getPosts_id()));
+        return success;
+    }
+
+
+    @ApiOperation(value = "List comments for a specific post")
+    @GetMapping(path = "/posts/getcomments/{postID}")
+    public String getComments(@PathVariable("postID") int postID){
+        List<Comments> comList = postsTable.findById(postID).getComments();
+
+        JSONArray arr = new JSONArray();
+
+        
+        for(int i = 0; i < comList.size(); i++){
+            JSONObject toAdd = new JSONObject();
+            toAdd.put("body", comList.get(i).getBody());
+            toAdd.put("user_id", comList.get(i).getUser_id());
+            toAdd.put("createDate", comList.get(i).getCreateDate());
+
+            arr.put(toAdd);
+        }
+
+
+        return arr.toString();
     }
 }

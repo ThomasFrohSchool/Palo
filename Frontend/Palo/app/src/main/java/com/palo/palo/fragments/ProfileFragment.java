@@ -2,6 +2,7 @@ package com.palo.palo.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,23 +21,29 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.palo.palo.FeedAdapter;
 import com.palo.palo.R;
 import com.palo.palo.SharedPrefManager;
+import com.palo.palo.activities.ExtendedPostActivity;
 import com.palo.palo.model.Palo;
 import com.palo.palo.model.Song;
 import com.palo.palo.model.User;
 import com.palo.palo.volley.VolleySingleton;
 import com.squareup.picasso.Picasso;
+import com.palo.palo.volley.ServerURLs.*;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.palo.palo.volley.ServerURLs.PICS;
+import static com.palo.palo.volley.ServerURLs.USER;
+
 /**
  * This fragment is for the users profile page and its functionality.
  * This class is associated with the fragment_profile.xml.
  */
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListener {
     //temporary url
     private static String url = "https://440b43ef-556f-4d7d-a95d-081ca321b8f9.mock.pstmn.io";
     private TextView profileName;
@@ -48,8 +55,11 @@ public class ProfileFragment extends Fragment {
     private TextView followingAmt;
     //private TextView following;
     private static User user;
-    private ProgressDialog p;
+    //private ProgressDialog p;
     private RecyclerView r;
+    FeedAdapter postAdapter;
+    List<Palo> palos;
+    private String str;
 
     public ProfileFragment() {}
 
@@ -83,25 +93,30 @@ public class ProfileFragment extends Fragment {
         });
 
         profileName.setText(user.getUsername());
-        getProfile();
+        getProfile(USER + user.getId());
+        postAdapter = new FeedAdapter(getActivity().getApplicationContext(), new ArrayList<>(), this);
+        r.setAdapter(postAdapter);
+        r.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         extractPalos();
     }
 
-    private void getProfile() {
+    public String getProfile(String s) {
         //p.show();
-        JsonObjectRequest j = new JsonObjectRequest(Request.Method.GET, url + "/profile?q=" + user.getUsername(), null,
+        JsonObjectRequest j = new JsonObjectRequest(Request.Method.GET, s, null,
                 response -> {
                     try {
-                        String imgLink = response.getString("profileImage");
-                        Picasso.get().load(imgLink).into(profileImage);
-                        followerAmt.setText(response.getString("followers"));
-                        followingAmt.setText(response.getString("following"));
+                        //String imgLink = response.getString("profileImage");
+                        str = response.getString("username");
+                        Picasso.get().load(PICS + user.getId() + "/" + user.getId()).into(profileImage);
+                        followerAmt.setText(String.valueOf(response.getJSONArray("followers").length()));
+                        followingAmt.setText(String.valueOf(response.getJSONArray("following").length()));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }, Throwable::printStackTrace);
         //p.hide();
         VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(j);
+        return str;
     }
 
     private void extractPalos() {
@@ -109,10 +124,10 @@ public class ProfileFragment extends Fragment {
         VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(request);
     }
 
-    private static JsonArrayRequest getUserPalos(RecyclerView recyclerView, Context context, TextView amt) {
+    private JsonArrayRequest getUserPalos(RecyclerView recyclerView, Context context, TextView amt) {
         return new JsonArrayRequest(Request.Method.GET, url + "/Palo?q=" + user.getUsername(), null,
                 response -> {
-                    List<Palo> palos = new ArrayList<>();
+                    palos = new ArrayList<>();
                     for(int i = 0; i < response.length(); i++) {
                         try {
                             palos.add(extractPalo(response.getJSONObject(i)));
@@ -123,8 +138,7 @@ public class ProfileFragment extends Fragment {
                             e.printStackTrace();
                         }
                     }
-                    recyclerView.setLayoutManager(new LinearLayoutManager(context));
-                    recyclerView.setAdapter(new FeedAdapter(context, palos));
+                    postAdapter.swapDataSet(palos);
                 }, Throwable::printStackTrace);
     }
 
@@ -133,7 +147,7 @@ public class ProfileFragment extends Fragment {
         palo.setAuthor(extractUser(paloJSON.getJSONObject("author")));
         palo.setPostDate(paloJSON.getString("postdate"));
         palo.setCaption(paloJSON.getString("caption"));
-        palo.setAttachedSong(extractSong(paloJSON.getJSONObject("song")));
+        palo.setAttachment(extractSong(paloJSON.getJSONObject("song")));
         return palo;
     }
 
@@ -148,9 +162,23 @@ public class ProfileFragment extends Fragment {
 
     // Example --> {"username": "tiffmay", "profile_image": "fillimage link here"},
     private static User extractUser(JSONObject userJSON) throws JSONException{
-        User user = new User();
+        //User user = new User();
         user.setUsername(userJSON.getString("username"));
-        user.setProfileImage(userJSON.getString("profile_image"));
+        user.setProfileImage(PICS + user.getId() + "/" + user.getId());
         return user;
+    }
+
+    @Override
+    public void onPaloClick(int position) {
+        System.out.println("post clicked..." + palos.get(position).getCaption());
+        Palo p = palos.get(position);
+        Intent intent =  new Intent(getContext(), ExtendedPostActivity.class);
+        intent.putExtra("selected_post", palos.get(position));
+        startActivity(intent);
+    }
+
+    @Override
+    public void onLikeClicked(int position) {
+        System.out.println("post like clicked..." + palos.get(position).getCaption());
     }
 }
