@@ -1,4 +1,4 @@
-package com.palo.palo.fragments;
+package com.palo.palo.fragments.feed;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,9 +19,6 @@ import com.palo.palo.FeedAdapter;
 import com.palo.palo.R;
 import com.palo.palo.SharedPrefManager;
 import com.palo.palo.activities.ExtendedPostActivity;
-import com.palo.palo.fragments.feed.FeedPresenter;
-import com.palo.palo.fragments.feed.IFeedPresenter;
-import com.palo.palo.fragments.feed.IFeedView;
 import com.palo.palo.model.Palo;
 
 import java.util.ArrayList;

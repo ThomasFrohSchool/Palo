@@ -37,7 +37,7 @@ public class FeedPresenter implements IFeedPresenter, IFeedVolleyListener {
     @Override
     public void onSuccess(JSONArray response) throws JSONException {
         ArrayList<Palo> palos = new ArrayList<>();
-        for (int i = 0; i < response.length(); i++) {
+        for (int i = response.length()-1; i >= 0; i--) {
             try {
                 Palo palo = new Palo (response.getJSONObject(i));
                 model.getUserRequest(i, palo.getAuthor().getId(), this);

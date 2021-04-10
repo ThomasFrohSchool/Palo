@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.FeedFragment">
+    tools:context=".fragments.feed.FeedFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/songList"
@@ -39,6 +39,4 @@
             app:layout_constraintTop_toBottomOf="@+id/emptyFeedMessage"
             app:layout_constraintBottom_toBottomOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 </FrameLayout>
