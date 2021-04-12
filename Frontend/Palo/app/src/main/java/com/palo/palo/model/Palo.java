@@ -37,6 +37,8 @@ public class Palo implements Parcelable {
         this.author.setUsername(username);
     }
 
+    public void setPaloAuthorProfileImage(String image) { this.author.setProfileImage(image);}
+
     public String getPostDate() {
         return postDate;
     }
