@@ -43,12 +43,17 @@ public class JUnitControllerTest {
     @Test
 	public void findByIdTest() {
 		when(users.findById(1)).thenReturn(new User("jDoe", "123456", "jDoe@gmail.com"));
+		when(users.findById(2)).thenReturn(new User("test", "zxcv", "test@zxc.com"));
 
 		User acct = users.findById(1);
-
+		User acct2 = users.findById(2);
 		assertEquals("jDoe", acct.getUsername());
 		assertEquals("123456", acct.getPassword());
 		assertEquals("jDoe@gmail.com", acct.getEmail());
+
+		assertEquals("test", acct2.getUsername());
+		assertEquals("zxcv", acct2.getPassword());
+		assertEquals("test@zxc.com", acct2.getEmail());
 	}
 	@Test
 	public void getFollowersTest() {
