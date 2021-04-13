@@ -46,6 +46,11 @@ public class UserSearchAdapter extends RecyclerView.Adapter<UserSearchAdapter.Vi
         return searchResults.size();
     }
 
+    public void swapDataSet(List<User> users){
+        this.searchResults = users;
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView userNameTV;
         ImageView profilePic;

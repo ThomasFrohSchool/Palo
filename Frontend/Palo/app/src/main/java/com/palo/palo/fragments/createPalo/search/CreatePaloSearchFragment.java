@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +20,11 @@ import android.widget.Toast;
 import com.palo.palo.AttachementSearchAdapter;
 
 import com.palo.palo.R;
-import com.palo.palo.fragments.createPalo.search.ISearchPresenter;
-import com.palo.palo.fragments.createPalo.search.ISearchView;
-import com.palo.palo.fragments.createPalo.search.SearchPresenter;
+import com.palo.palo.fragments.searchPage.ISearchPresenter;
+import com.palo.palo.fragments.searchPage.ISearchView;
+import com.palo.palo.fragments.searchPage.SearchPresenter;
 import com.palo.palo.model.Attachment;
+import com.palo.palo.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +59,7 @@ public class CreatePaloSearchFragment extends Fragment implements ISearchView {
         searchRecyclerView = view.findViewById(R.id.create_new_post_search_recycler_view);
 
         presenter = new SearchPresenter(this, context);
-        searchButton.setOnClickListener(v -> presenter.loadSearchResults(searchET.getText().toString()));
+        searchButton.setOnClickListener(v -> presenter.loadSpotifySearchResults(searchET.getText().toString()));
         searchRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         searchAdapter = new AttachementSearchAdapter(context, new ArrayList<>());
         searchRecyclerView.setAdapter(searchAdapter);
@@ -68,15 +70,25 @@ public class CreatePaloSearchFragment extends Fragment implements ISearchView {
     }
 
     @Override
-    public void loadAttatchments(List<Attachment> attachments) {
+    public void loadAttachments(List<Attachment> attachments) {
         this.attachments = attachments;
         searchRecyclerView.setVisibility(View.VISIBLE);
         searchAdapter.swapDataSet(attachments);
     }
 
     @Override
+    public void loadUsers(List<User> users) {
+        return;
+    }
+
+    @Override
     public void makeToast(String message) {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void logd(String response) {
+        Log.d(CreatePaloSearchFragment.class.getSimpleName(),response);
     }
 
     @Override

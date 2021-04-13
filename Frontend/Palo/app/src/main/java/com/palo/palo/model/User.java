@@ -3,6 +3,11 @@ package com.palo.palo.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import static com.palo.palo.volley.ServerURLs.PICS;
+
 /**
  * Model for users.
  */
@@ -30,6 +35,12 @@ public class User implements Parcelable {
         this.id = id;
         this.username = "TEMP_USER";
         this.profileImage = "https://img.apmcdn.org/4f25ecdbbd7af5fed833153302515a94c990de11/square/7aacc5-20130508-favorite-album-covers.jpg";
+    }
+
+    public User(JSONObject userJson) throws JSONException {
+        username = userJson.getString("username");
+        id = userJson.getInt("id");
+        profileImage = PICS + userJson.getInt("id") + "/" + userJson.getInt("id");
     }
 
     public int getId() {
