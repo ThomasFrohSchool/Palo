@@ -18,7 +18,7 @@ import android.widget.Toast;
 import com.palo.palo.FeedAdapter;
 import com.palo.palo.R;
 import com.palo.palo.SharedPrefManager;
-import com.palo.palo.activities.ExtendedPostActivity;
+import com.palo.palo.activities.extendedPost.ExtendedPostActivity;
 import com.palo.palo.model.Palo;
 
 import java.util.ArrayList;

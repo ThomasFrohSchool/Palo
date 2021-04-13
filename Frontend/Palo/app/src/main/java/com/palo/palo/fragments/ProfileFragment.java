@@ -1,6 +1,5 @@
 package com.palo.palo.fragments;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,7 +20,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.palo.palo.FeedAdapter;
 import com.palo.palo.R;
 import com.palo.palo.SharedPrefManager;
-import com.palo.palo.activities.ExtendedPostActivity;
+import com.palo.palo.activities.extendedPost.ExtendedPostActivity;
 import com.palo.palo.model.Palo;
 import com.palo.palo.model.Song;
 import com.palo.palo.model.User;

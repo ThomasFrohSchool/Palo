@@ -1,5 +1,8 @@
 package com.palo.palo.model;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class Comment {
     private User author;
     private int author_id;
@@ -12,6 +15,11 @@ public class Comment {
         this.postDate = postDate;
         this.caption = caption;
         this.author = new User(author_id);
+    }
+    public Comment(JSONObject commentJSON) throws JSONException {
+        author_id = commentJSON.getInt("user_id");
+        postDate = commentJSON.getString("createDate");
+        caption = commentJSON.getString("body");
     }
     public User getAuthor() {
         return author;
