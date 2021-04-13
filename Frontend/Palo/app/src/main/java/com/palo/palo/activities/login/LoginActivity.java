@@ -2,49 +2,51 @@ package com.palo.palo.activities.login;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.palo.palo.R;
 import com.palo.palo.SharedPrefManager;
 import com.palo.palo.activities.MainActivity;
 import com.palo.palo.activities.login.register.RegisterActivity;
 import com.palo.palo.model.User;
-import com.palo.palo.volley.ServerURLs;
-import com.palo.palo.volley.VolleySingleton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * This activity class is used for the login functionality.
  * This class is associated with the activity_login.xml file.
  */
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements ILoginView {
 
     EditText emailField;
     EditText passwordField;
     Button register;
     Button login;
+    Context context;
+    ILoginPresenter presenter;
+    private String TAG = LoginActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        context = getApplicationContext();
 
         if (SharedPrefManager.getInstance(this).isLoggedIn()) {
             finish();
             startActivity(new Intent(this, MainActivity.class));
         }
+
+        presenter = new LoginPresenter(this, context);
 
         emailField = findViewById(R.id.loginEmail);
         passwordField = findViewById(R.id.loginPassword);
@@ -55,52 +57,52 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
         });
         login = findViewById(R.id.loginButton);
-        login.setOnClickListener(v -> login());
+        login.setOnClickListener(v -> postLogin());
     }
 
-    // todo - should probably create a login class and move this there
+    @Override
+    public void makeToast(String message) {
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void logd(String response) {
+        Log.d(TAG,response);
+    }
+
+    public void startNewActivity() {
+        finish();
+        startActivity(new Intent(this, MainActivity.class));
+    }
+
+    @Override
+    public void postLogin() {
+        JSONObject json = null;
+        try {
+            json = setupLoginJson();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if (json == null) return;
+        presenter.login(json);
+    }
 
     /**
      * This method is for login functionality when the login button is pressed.
      * Sends a post request to the backend and gets information back for if an existing account with
      * the given parameters works.
      */
-    private void login(){
-        String email = emailField.getText().toString();
-        String password = passwordField.getText().toString();
+    @Override
+    public void login(User user) {
+        SharedPrefManager.getInstance(context).login(user);
+    }
 
-        if (hasEmptyCredentials(email, password)) return;
-        Map<String, String> params = new HashMap<>();
-        params.put("password", password);
-        params.put("username", email);
-
-        JsonObjectRequest request = new JsonObjectRequest(ServerURLs.LOGIN, new JSONObject(params), new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject json) {
-                try {
-                    if(!json.getBoolean("error")) {
-
-                        JSONObject userJson = json.getJSONObject("user");
-
-                        User user = new User(Integer.parseInt(userJson.getString("id")), userJson.getString("username"), userJson.getString("email"));
-                        SharedPrefManager.getInstance(getApplicationContext()).login(user);
-
-                        finish();
-                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }}, new Response.ErrorListener(){
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
-                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-            }
-        });
-
-        VolleySingleton.getInstance(this).addToRequestQueue(request);
+    @Override
+    public void dismissKeyboard() {
+        Activity activity = this;
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (null != activity.getCurrentFocus())
+            imm.hideSoftInputFromWindow(activity.getCurrentFocus().getApplicationWindowToken(), 0);
     }
 
     /**
@@ -116,13 +118,22 @@ public class LoginActivity extends AppCompatActivity {
             return true;
         }
 
-        // TODO check if email is valid
-
         if(password.isEmpty()){
             passwordField.setError("Enter password.");
             passwordField.requestFocus();
             return true;
         }
         return false;
+    }
+
+    private JSONObject setupLoginJson() throws JSONException {
+        String email = emailField.getText().toString();
+        String password = passwordField.getText().toString();
+
+        if (hasEmptyCredentials(email, password)) return null;
+        JSONObject json = new JSONObject();
+        json.put("password", password);
+        json.put("username", email);
+        return json;
     }
 }
