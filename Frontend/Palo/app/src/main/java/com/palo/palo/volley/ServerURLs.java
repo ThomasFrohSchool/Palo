@@ -28,6 +28,7 @@ public class ServerURLs {
     public static final String FEED = ROOT + "feed/";
     public static final String USER_BY_ID = ROOT + "user/";
     public static final String POSTS_FROM_USER = ROOT + "posts/";
+    public static final String FOLLOW = ROOT + "add/";
 
     public static String ATTACHMENT(int type){
         switch (type){

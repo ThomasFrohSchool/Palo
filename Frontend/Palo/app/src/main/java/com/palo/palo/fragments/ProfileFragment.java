@@ -35,6 +35,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +50,7 @@ import static com.palo.palo.volley.ServerURLs.USER_BY_ID;
  */
 public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListener {
     //temporary url
-    private static String url = "https://440b43ef-556f-4d7d-a95d-081ca321b8f9.mock.pstmn.io";
+    //private static String url = "https://440b43ef-556f-4d7d-a95d-081ca321b8f9.mock.pstmn.io";
     private TextView profileName;
     private ImageView profileImage;
     private TextView paloAmt;
@@ -58,7 +59,7 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
     //private TextView followers;
     private TextView followingAmt;
     //private TextView following;
-    private static User user;
+    private User user;
     //private ProgressDialog p;
     private RecyclerView r;
     FeedAdapter postAdapter;
@@ -106,14 +107,29 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
 
     public String getProfile(String s) {
         //p.show();
+        ArrayList<Integer> userFollowing = new ArrayList<>();
+        ArrayList<Integer> userFollowers = new ArrayList<>();
         JsonObjectRequest j = new JsonObjectRequest(Request.Method.GET, s, null,
                 response -> {
                     try {
                         //String imgLink = response.getString("profileImage");
                         str = response.getString("username");
+                        //JSONArray following = response.getJSONArray("following");
+                        //JSONArray followers = response.getJSONArray("followers");
+                        user.setProfileImage(PICS + user.getId() + "/" + user.getId());
                         Picasso.get().load(PICS + user.getId() + "/" + user.getId()).into(profileImage);
                         followerAmt.setText(String.valueOf(response.getJSONArray("followers").length()));
                         followingAmt.setText(String.valueOf(response.getJSONArray("following").length()));
+                        for(int i = 0; i < response.getJSONArray("following").length(); i++) {
+                            //Integer f = following.getInt(i);
+                            userFollowing.add(response.getJSONArray("following").getInt(i));
+                        }
+                        for(int i = 0; i < response.getJSONArray("followers").length(); i++) {
+                            //Integer f = followers.getInt(i);
+                            userFollowers.add(response.getJSONArray("followers").getInt(i));
+                        }
+                        user.setUserFollowing(userFollowing);
+                        user.setUserFollowers(userFollowers);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
