@@ -22,6 +22,8 @@ import com.palo.palo.FeedAdapter;
 import com.palo.palo.R;
 import com.palo.palo.SharedPrefManager;
 import com.palo.palo.activities.ExtendedPostActivity;
+import com.palo.palo.model.Album;
+import com.palo.palo.model.Artist;
 import com.palo.palo.model.Palo;
 import com.palo.palo.model.Song;
 import com.palo.palo.model.User;
@@ -33,11 +35,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.palo.palo.volley.ServerURLs.ATTACHMENT;
 import static com.palo.palo.volley.ServerURLs.PICS;
-import static com.palo.palo.volley.ServerURLs.USER;
+import static com.palo.palo.volley.ServerURLs.POSTS_FROM_USER;
+import static com.palo.palo.volley.ServerURLs.USER_BY_ID;
 
 /**
  * This fragment is for the users profile page and its functionality.
@@ -45,7 +50,7 @@ import static com.palo.palo.volley.ServerURLs.USER;
  */
 public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListener {
     //temporary url
-    private static String url = "https://440b43ef-556f-4d7d-a95d-081ca321b8f9.mock.pstmn.io";
+    //private static String url = "https://440b43ef-556f-4d7d-a95d-081ca321b8f9.mock.pstmn.io";
     private TextView profileName;
     private ImageView profileImage;
     private TextView paloAmt;
@@ -54,7 +59,7 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
     //private TextView followers;
     private TextView followingAmt;
     //private TextView following;
-    private static User user;
+    private User user;
     //private ProgressDialog p;
     private RecyclerView r;
     FeedAdapter postAdapter;
@@ -93,7 +98,7 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
         });
 
         profileName.setText(user.getUsername());
-        getProfile(USER + user.getId());
+        getProfile(USER_BY_ID + user.getId());
         postAdapter = new FeedAdapter(getActivity().getApplicationContext(), new ArrayList<>(), this);
         r.setAdapter(postAdapter);
         r.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
@@ -102,14 +107,29 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
 
     public String getProfile(String s) {
         //p.show();
+        ArrayList<Integer> userFollowing = new ArrayList<>();
+        ArrayList<Integer> userFollowers = new ArrayList<>();
         JsonObjectRequest j = new JsonObjectRequest(Request.Method.GET, s, null,
                 response -> {
                     try {
                         //String imgLink = response.getString("profileImage");
                         str = response.getString("username");
+                        //JSONArray following = response.getJSONArray("following");
+                        //JSONArray followers = response.getJSONArray("followers");
+                        user.setProfileImage(PICS + user.getId() + "/" + user.getId());
                         Picasso.get().load(PICS + user.getId() + "/" + user.getId()).into(profileImage);
                         followerAmt.setText(String.valueOf(response.getJSONArray("followers").length()));
                         followingAmt.setText(String.valueOf(response.getJSONArray("following").length()));
+                        for(int i = 0; i < response.getJSONArray("following").length(); i++) {
+                            //Integer f = following.getInt(i);
+                            userFollowing.add(response.getJSONArray("following").getInt(i));
+                        }
+                        for(int i = 0; i < response.getJSONArray("followers").length(); i++) {
+                            //Integer f = followers.getInt(i);
+                            userFollowers.add(response.getJSONArray("followers").getInt(i));
+                        }
+                        user.setUserFollowing(userFollowing);
+                        user.setUserFollowers(userFollowers);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -125,14 +145,19 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
     }
 
     private JsonArrayRequest getUserPalos(RecyclerView recyclerView, Context context, TextView amt) {
-        return new JsonArrayRequest(Request.Method.GET, url + "/Palo?q=" + user.getUsername(), null,
+        return new JsonArrayRequest(Request.Method.GET, POSTS_FROM_USER + user.getId(), null,
                 response -> {
                     palos = new ArrayList<>();
                     for(int i = 0; i < response.length(); i++) {
                         try {
-                            palos.add(extractPalo(response.getJSONObject(i)));
-                            String len = String.valueOf(response.length());
-                            amt.setText(len);
+                            Palo palo = extractPalo(response.getJSONObject(i), context);
+                            userRequest(i, palo.getAuthor().getId(), context);
+                            if (palo.getAttachment().getSpotifyId() != null)
+                                attachmentRequest(i, palo.getAttachment().getType(), palo.getAttachment().getSpotifyId(), context);
+                            palos.add(palo);
+                            //palos.add(extractPalo(response.getJSONObject(i), context));
+                            //String len = String.valueOf(response.length());
+                            amt.setText(String.valueOf(response.length()));
                         }
                         catch (JSONException e){
                             e.printStackTrace();
@@ -142,7 +167,58 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
                 }, Throwable::printStackTrace);
     }
 
-    private static Palo extractPalo(JSONObject paloJSON) throws JSONException {
+    private static Palo extractPalo(JSONObject paloJSON, Context context) throws JSONException {
+        Palo palo = new Palo();
+        palo.setId(paloJSON.getInt("id"));
+        palo.setAuthor(new User(paloJSON.getInt("user_id")));
+//        JsonObjectRequest userRequest = userRequest(paloJSON.getInt("user_id"), palo, context);
+//        VolleySingleton.getInstance(context).addToRequestQueue(userRequest);
+        palo.setPostDate(paloJSON.getString("createDate"));
+        palo.setCaption(paloJSON.getString("description"));
+        int type = paloJSON.getInt("type");
+        switch (type){
+            case 0:
+                palo.setAttachment(new Album(paloJSON.getString("spot_id")));
+                break;
+            case 1:
+                palo.setAttachment(new Artist(paloJSON.getString("spot_id")));
+                break;
+            case 2:
+                palo.setAttachment(new Song(paloJSON.getString("spot_id")));
+                break;
+            default: System.out.println("error");
+        }
+        return palo;
+    }
+
+    private void attachmentRequest(int palo_index, int type, String spotify_link, Context context){
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,ATTACHMENT(type) + spotify_link, null, response -> {
+            try {
+                String name = (type == 1) ? "" : response.getString("name");
+                palos.get(palo_index).updateAttachment(name, response.getString("artist"), response.getString("imageUrl"), response.getString("id"));
+                postAdapter.updatePalo(palo_index, palos.get(palo_index));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }, error -> System.out.println(error.getMessage()));
+        VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(request);
+    }
+
+    private void userRequest(int palo_index, int userId, Context context){
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,USER_BY_ID + userId, null, response -> {
+            try {
+                palos.get(palo_index).setAuthorUsername(response.getString("username"));
+                postAdapter.updatePalo(palo_index, palos.get(palo_index));
+                palos.get(palo_index).setPaloAuthorProfileImage(PICS + userId + "/" + userId);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }, error -> System.out.println(error.getMessage()));
+        VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(request);
+    }
+
+    /*private static Palo extractPalo(JSONObject paloJSON) throws JSONException {
         Palo palo = new Palo();
         palo.setAuthor(extractUser(paloJSON.getJSONObject("author")));
         palo.setPostDate(paloJSON.getString("postdate"));
@@ -166,7 +242,7 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
         user.setUsername(userJSON.getString("username"));
         user.setProfileImage(PICS + user.getId() + "/" + user.getId());
         return user;
-    }
+    }*/
 
     @Override
     public void onPaloClick(int position) {
