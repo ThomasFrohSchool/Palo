@@ -38,6 +38,7 @@ import java.util.List;
 
 import static com.palo.palo.volley.ServerURLs.ATTACHMENT;
 import static com.palo.palo.volley.ServerURLs.FEED;
+import static com.palo.palo.volley.ServerURLs.PICS;
 import static com.palo.palo.volley.ServerURLs.USER_BY_ID;
 
 /**
@@ -198,7 +199,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
             try {
                 palos.get(palo_index).setAuthorUsername(response.getString("username"));
                 feedAdapter.updatePalo(palo_index, palos.get(palo_index));
-                // TODO set profile image here...
+                palos.get(palo_index).setPaloAuthorProfileImage(PICS + userId + "/" + userId);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

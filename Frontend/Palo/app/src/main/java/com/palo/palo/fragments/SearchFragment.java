@@ -27,7 +27,9 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.JsonArray;
 import com.palo.palo.AttachementSearchAdapter;
+import com.palo.palo.FeedAdapter;
 import com.palo.palo.R;
+import com.palo.palo.SharedPrefManager;
 import com.palo.palo.UserSearchAdapter;
 import com.palo.palo.model.Album;
 import com.palo.palo.model.Artist;
@@ -40,9 +42,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Map;
 
+import static com.palo.palo.volley.ServerURLs.FOLLOW;
 import static com.palo.palo.volley.ServerURLs.PICS;
 import static com.palo.palo.volley.ServerURLs.SEARCH;
 import static com.palo.palo.volley.ServerURLs.USERS;
@@ -50,7 +54,7 @@ import static com.palo.palo.volley.ServerURLs.USERS;
 /**
  * Fragment to allow user to search songs, albums, artist, etc. from Spotify.
  */
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements UserSearchAdapter.onUserListener{
     private EditText song;
     //private TextView req;
     private Button bSpotify;
@@ -66,6 +70,8 @@ public class SearchFragment extends Fragment {
     private String tag_json_obj = "jobj_req", tag_json_array = "jarray_req";
     private String tag_string_req = "string_req";
     private String str;
+    ArrayList<User> usersList;
+    private User user;
 
     public SearchFragment() {}
 
@@ -81,11 +87,12 @@ public class SearchFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        //TextView headerET = view.findViewById(R.id.search_header);
+        user = SharedPrefManager.getInstance(getActivity().getApplicationContext()).getUser();
+
         song = view.findViewById(R.id.spotifySearch);
-        //req = view.findViewById(R.id.res);
         bSpotify = view.findViewById(R.id.buttonSpotify);
         bUsers = view.findViewById(R.id.buttonUsers);
+        userAdapter = new UserSearchAdapter(getActivity().getApplicationContext(), usersList, this);
         r = view.findViewById(R.id.res);
         r.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
 
@@ -121,21 +128,20 @@ public class SearchFragment extends Fragment {
      * @param s
      */
     public void makeUsersRequest(String s) {
-        ArrayList<User> users = new ArrayList<>();
+        //ArrayList<User> users = new ArrayList<>();
+        usersList = new ArrayList<>();
         JsonArrayRequest arr = new JsonArrayRequest(USERS,
                 response -> {
                     Log.d(JSONTAG, response.toString());
                     try {
-                        addUsers(users, response, s);
-                        r.setAdapter(new UserSearchAdapter(getActivity().getApplicationContext(), new ArrayList<>()));
-                        userAdapter = new UserSearchAdapter(getActivity().getApplicationContext(), users);
+                        addUsers(usersList, response, s);
+                        //r.setAdapter(new UserSearchAdapter(getActivity().getApplicationContext(), new ArrayList<>(), this, user.getUserFollowing()));
+                        userAdapter = new UserSearchAdapter(getActivity().getApplicationContext(), usersList, this);
                         r.setAdapter(userAdapter);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                }, error -> {
-                    error.printStackTrace();
-                });
+                }, error -> error.printStackTrace());
 
         VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(arr);
     }
@@ -149,22 +155,22 @@ public class SearchFragment extends Fragment {
         StringRequest stringRequest = new StringRequest(Request.Method.GET,
                 hurl,
                 response -> {
-                    str = response;
+            str = response;
                     Log.d(STRINGTAG, response);
                     try {
-                        JSONObject o = new JSONObject(response);
-                        ArrayList<Attachment> al = new ArrayList<>();
-                        addAlbums(al, o.getJSONArray("albums"));
-                        addArtist(al, o.getJSONArray("artists"));
-                        addTracks(al, o.getJSONArray("tracks"));
-                        r.setAdapter(new AttachementSearchAdapter(getActivity().getApplicationContext(), new ArrayList<>()));
-                        spotifyAdapter = new AttachementSearchAdapter(getActivity().getApplicationContext(), al);
-                        r.setAdapter(spotifyAdapter);
-                        Log.d(STRINGTAG, str);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    //req.setText("Response: " + response);
+                JSONObject o = new JSONObject(response);
+                ArrayList<Attachment> al = new ArrayList<>();
+                addAlbums(al, o.getJSONArray("albums"));
+                addArtist(al, o.getJSONArray("artists"));
+                addTracks(al, o.getJSONArray("tracks"));
+                r.setAdapter(new AttachementSearchAdapter(getActivity().getApplicationContext(), new ArrayList<>()));
+                spotifyAdapter = new AttachementSearchAdapter(getActivity().getApplicationContext(), al);
+                r.setAdapter(spotifyAdapter);
+                Log.d(STRINGTAG, str);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        //req.setText("Response: " + response);
                 }, error -> error.printStackTrace());
         //p.hide();
         VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(stringRequest);
@@ -177,6 +183,7 @@ public class SearchFragment extends Fragment {
             JSONObject o = a.getJSONObject(i);
             if(s.equalsIgnoreCase(o.getString("username"))) {
                 users.add(extractUser(o));
+                //usersList.add(extractUser(o));
             }
         }
     }
@@ -195,11 +202,11 @@ public class SearchFragment extends Fragment {
     }
 
     private static User extractUser(JSONObject userJson) throws JSONException {
-        User user = new User();
-        user.setUsername(userJson.getString("username"));
-        user.setProfileImage(PICS + userJson.getInt("id") + "/" + userJson.getInt("id"));
+        User newUser = new User(userJson.getInt("id"));
+        newUser.setUsername(userJson.getString("username"));
+        newUser.setProfileImage(PICS + userJson.getInt("id") + "/" + userJson.getInt("id"));
 
-        return user;
+        return newUser;
     }
 
     private static Album extractAlbum(JSONObject songJSON) throws JSONException {
@@ -229,5 +236,21 @@ public class SearchFragment extends Fragment {
                 songJSON.getString("id"),
                 songJSON.getString("link"),
                 songJSON.getString("playbackLink"));
+    }
+
+    @Override
+    public void onFollowClicked(int position) {
+        System.out.println("user followed " + usersList.get(position).getId());
+        user.addFollowing(usersList.get(position).getId());
+
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.GET, FOLLOW + user.getId() + "/" + usersList.get(position).getId(), null,
+                response -> {
+                    System.out.println("Attempting to follow " + usersList.get(position).getId());
+                },
+                error -> {
+                    error.printStackTrace();
+                }
+        );
     }
 }
