@@ -115,6 +115,11 @@ public class SearchFragment extends Fragment {
         VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(jsonSongRequest);
     }
 
+    /**
+     * Makes json array request to server. Server respons with list of users. On response, updates result recycler view
+     * with found matching usernames.
+     * @param s
+     */
     public void makeUsersRequest(String s) {
         ArrayList<User> users = new ArrayList<>();
         JsonArrayRequest arr = new JsonArrayRequest(USERS,

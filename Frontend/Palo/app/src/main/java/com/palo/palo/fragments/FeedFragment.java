@@ -79,6 +79,9 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
         extractSongs(SharedPrefManager.getInstance(myView.getContext()).getUser().getId());
     }
 
+    /**
+     * Sets recycler view visible and makes volley call to get posts for feed.
+     */
     private void refreshFeed(){
         recyclerView.setVisibility(View.VISIBLE);
         emptyFeedMessage.setVisibility(View.INVISIBLE);
@@ -95,6 +98,15 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
         return feedVolleyResponse;
     }
 
+    /**
+     * Makes volley call to server to get posts based off of who the user is following.
+     * Makes request to "{server_url}/feed/{user_id}".
+     * Updates recycler view.
+     * @param recyclerView
+     * @param context
+     * @param currentUserId
+     * @return
+     */
     private  JsonArrayRequest feedRequest(RecyclerView recyclerView, Context context, int currentUserId){
         return new JsonArrayRequest(Request.Method.GET, FEED + currentUserId, null, response -> {
             if (response.length() == 0 ){
@@ -155,6 +167,13 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
         return palo;
     }
 
+    /**
+     * Makes volley request to update attachment on a post. Updates attachment based off of data recieved.
+     * @param palo_index
+     * @param type
+     * @param spotify_link
+     * @param context
+     */
     private void attachmentRequest(int palo_index, int type, String spotify_link, Context context){
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,ATTACHMENT(type) + spotify_link, null, response -> {
             try {
@@ -168,6 +187,12 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
         VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(request);
     }
 
+    /**
+     * Makes volley call to get username and profile image of a post author.
+     * @param palo_index
+     * @param userId
+     * @param context
+     */
     private void userRequest(int palo_index, int userId, Context context){
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,USER_BY_ID + userId, null, response -> {
             try {
@@ -182,6 +207,10 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
         VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(request);
     }
 
+    /**
+     * When a palo is clicked, an extended view of the palo clicked is made and is shown.
+     * @param position
+     */
     @Override
     public void onPaloClick(int position) {
         System.out.println("post clicked..." + palos.get(position).getCaption());

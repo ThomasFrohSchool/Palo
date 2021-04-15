@@ -35,6 +35,11 @@ import static com.palo.palo.volley.ServerURLs.CREATE_COMMENT;
 import static com.palo.palo.volley.ServerURLs.GET_COMMENTS;
 import static com.palo.palo.volley.ServerURLs.USER_BY_ID;
 
+/**
+ * This activity is to show an extended view of a post. It is accessible from feed or profile views.
+ * Basic post detials (caption, author, post date) are still visible. Comments are displayed and are
+ * able to be made on the post.
+ */
 public class ExtendedPostActivity extends AppCompatActivity {
     Palo attachedPalo;
     RecyclerView commentRV;
@@ -66,6 +71,10 @@ public class ExtendedPostActivity extends AppCompatActivity {
         updateCommentView();
     }
 
+    /**
+     * Sets the basic post information received from feed when post was clicked.
+     * @param palo
+     */
     private void setView(Palo palo){
         Picasso.get().load(palo.getAuthor().getProfileImage()).into((ImageView) findViewById(R.id.paloAuthorProfileImage));
         ((TextView) findViewById(R.id.paloAuthorUserName)).setText(palo.getAuthor().getUsername());
@@ -77,11 +86,19 @@ public class ExtendedPostActivity extends AppCompatActivity {
         Picasso.get().load(palo.getAttachment().getAlbumCover()).into((ImageView) findViewById(R.id.coverImage));
     }
 
+    /**
+     * Updates comment view based with data received on volley call to the surver.
+     */
     private void updateCommentView(){
         JsonArrayRequest request = getComments();
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
 
+    /**
+     * Sets up comment volley request. Makes request to "{server_url}/posts/getcomments/{post_id}".
+     * On response sets comment recyclerview with received data.
+     * @return
+     */
     private JsonArrayRequest getComments(){
         int post_id = attachedPalo.getId();
         return new JsonArrayRequest(Request.Method.GET, GET_COMMENTS + post_id,null,
@@ -107,6 +124,12 @@ public class ExtendedPostActivity extends AppCompatActivity {
                 error -> {System.out.println(error.getMessage());});
     }
 
+    /**
+     * Makes volley call to server to update username and profile picture on comments received.
+     * Makes request to "{server_url}/user/{user_id}".
+     * @param commentIndex
+     * @param userId
+     */
     private void userRequest(int commentIndex, int userId){
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,USER_BY_ID + userId, null, response -> {
             try {
@@ -121,6 +144,10 @@ public class ExtendedPostActivity extends AppCompatActivity {
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
 
+    /**
+     * Makes post request to server to make a new comment on post.
+     * Makes request to "{server_url}/createComment/{post_id}".
+     */
     public void post(){
         JSONObject newPost = new JSONObject();
         try {
@@ -148,12 +175,22 @@ public class ExtendedPostActivity extends AppCompatActivity {
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
 
+    /**
+     * Creates comment object from json data received from server. Sets userid, postdate, and caption of comment.
+     * @param commentJSON
+     * @return
+     * @throws JSONException
+     */
     private  Comment extractComment(JSONObject commentJSON) throws JSONException {
         return new Comment(commentJSON.getInt("user_id"),
                            commentJSON.getString("createDate"),
                            commentJSON.getString("body"));
     }
 
+    /**
+     * Minimizes keyboard when called.
+     * @param activity
+     */
     public void dismissKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         if (null != activity.getCurrentFocus())

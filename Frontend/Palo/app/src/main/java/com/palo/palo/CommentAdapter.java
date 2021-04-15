@@ -16,7 +16,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-
+/**
+ * Adapter for comment recyclerview.
+ */
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
 
     LayoutInflater inflater;

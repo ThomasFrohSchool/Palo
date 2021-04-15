@@ -100,6 +100,11 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
         extractPalos();
     }
 
+    /**
+     * Makes volley request to set profile infomation.
+     * @param s
+     * @return
+     */
     public String getProfile(String s) {
         //p.show();
         JsonObjectRequest j = new JsonObjectRequest(Request.Method.GET, s, null,
@@ -119,11 +124,21 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
         return str;
     }
 
+    /**
+     * See Feed Fragement onPaloClick method.
+     */
     private void extractPalos() {
         JsonArrayRequest request = getUserPalos(r, getActivity().getApplicationContext(), paloAmt);
         VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(request);
     }
 
+    /**
+     * Sets up volley request to recieve a users posts from the server. Updates recycler view to shows posts.
+     * @param recyclerView
+     * @param context
+     * @param amt
+     * @return
+     */
     private JsonArrayRequest getUserPalos(RecyclerView recyclerView, Context context, TextView amt) {
         return new JsonArrayRequest(Request.Method.GET, url + "/Palo?q=" + user.getUsername(), null,
                 response -> {
@@ -168,6 +183,10 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
         return user;
     }
 
+    /**
+     * See Feed Fragement onPaloClick method.
+     * @param position
+     */
     @Override
     public void onPaloClick(int position) {
         System.out.println("post clicked..." + palos.get(position).getCaption());

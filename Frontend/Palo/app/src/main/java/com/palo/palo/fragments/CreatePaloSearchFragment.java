@@ -36,7 +36,10 @@ import java.util.ArrayList;
 
 import static com.palo.palo.volley.ServerURLs.SEARCH;
 
-
+/**
+ * This fragment is for creating a post. Allows users to search spotify to select an attachment for a post.
+ * This class is associated with fragment_create_palo_search.xml.
+ */
 public class CreatePaloSearchFragment extends Fragment {
     private RecyclerView searchRecyclerView;
     private EditText searchET;
@@ -69,6 +72,11 @@ public class CreatePaloSearchFragment extends Fragment {
         searchRecyclerView.setAdapter(searchAdapter);
     }
 
+    /**
+     * Makes volley request to server.
+     * Makes request to "{server_url}/search?q={search_message}".
+     * Sets recylerview with songs, tracks, and albums received.
+     */
     private void getSearchResultsFromSpotify() {
         String url = SEARCH + searchET.getText().toString();
         StringRequest request = new StringRequest(Request.Method.GET,
@@ -103,6 +111,13 @@ public class CreatePaloSearchFragment extends Fragment {
         for (int i =0; i <a.length(); i++)
             attachments.add(extractArtist(a.getJSONObject(i)));
     }
+
+    /**
+     * Creates album object form json data.
+     * @param songJSON
+     * @return
+     * @throws JSONException
+     */
     private static Album extractAlbum(JSONObject songJSON) throws JSONException {
         Album album = new Album();
         album.setTitle(songJSON.getString("name"));
@@ -113,6 +128,12 @@ public class CreatePaloSearchFragment extends Fragment {
         return album;
     }
 
+    /**
+     * Creates artist object from json data.
+     * @param songJSON
+     * @return
+     * @throws JSONException
+     */
     private static Artist extractArtist(JSONObject songJSON) throws JSONException {
         Artist artist = new Artist();
         artist.setTitle(songJSON.getString("artist"));
@@ -123,6 +144,12 @@ public class CreatePaloSearchFragment extends Fragment {
         return artist;
     }
 
+    /**
+     * Creates song object from json data.
+     * @param songJSON
+     * @return
+     * @throws JSONException
+     */
     private static Song extractTrack(JSONObject songJSON) throws JSONException {
         return new Song(songJSON.getString("name"),
                 songJSON.getString("artist"),
@@ -131,11 +158,19 @@ public class CreatePaloSearchFragment extends Fragment {
                 songJSON.getString("link"),
                 songJSON.getString("playbackLink"));
     }
-    
+
+    /**
+     * Returns clicked attatchment from search recycler view.
+     * @return
+     */
     public Attachment getSelectedSong(){
         return searchAdapter.getSelectedSong();
     }
 
+    /**
+     * Minimizes keyboard when called.
+     * @param activity
+     */
     public void dismissKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         if (null != activity.getCurrentFocus())

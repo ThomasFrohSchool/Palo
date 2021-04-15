@@ -29,7 +29,7 @@ import org.json.JSONObject;
 import static com.palo.palo.volley.ServerURLs.CREATE_POST;
 
 /**
- * This fragment is for creating a post.
+ * This fragment is for creating a post. Allows user to add caption and the ability to post a new Palo.
  * This class is associated with fragment_create_palo.xml.
  */
 public class CreatePaloFragment extends Fragment {
@@ -58,7 +58,11 @@ public class CreatePaloFragment extends Fragment {
         myView = view;
         captionField = view.findViewById(R.id.caption_create_new_post);
     }
-    
+
+    /**
+     * Makes post request to server to make a new post.
+     * Makes request to "{server_url}/createPost/{user_id}".
+     */
     public void post(){
         // receives currently {"message":"success"}
         JSONObject newPost = new JSONObject();
@@ -86,6 +90,10 @@ public class CreatePaloFragment extends Fragment {
         startActivity(new Intent(getActivity(), MainActivity.class));
     }
 
+    /**
+     * Sets attachment based off chosen attachment from create post spotify search fragment.
+     * @param a selected Spotify attachment (song, album, or artist)
+     */
     public void setAttachment(Attachment a){
         this.attachment = a;
         ((TextView) myView.findViewById(R.id.songTitle)).setText(attachment.getTitle());

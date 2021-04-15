@@ -1,5 +1,8 @@
 package com.palo.palo.model;
 
+/**
+ * Model for comment on post.
+ */
 public class Comment {
     private User author;
     private int author_id;

@@ -2,6 +2,9 @@ package com.palo.palo.model;
 
 import android.os.Parcel;
 
+/**
+ * Model for album attachment recieved from spotify.
+ */
 public class Album extends Attachment {
     String albumCover;
     String artist;
