@@ -1,3 +1,4 @@
+/*
 package coms309.DMs;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,3 +9,4 @@ public interface dmTable extends JpaRepository<DM, Long> {
     //List<User> findById(int id);
     //void deleteById(int id);
 }
+*/
