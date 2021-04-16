@@ -1,6 +1,12 @@
 package com.palo.palo.model;
 
-public class Song extends Attatchment {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+/**
+ * Model for song attachment recieved from spotify.
+ */
+public class Song extends Attachment {
     public static final int TYPE = 2;
     private  String title;
     private String artist;
@@ -14,6 +20,17 @@ public class Song extends Attatchment {
         this.artist = artist;
         this.albumCover = albumCover;
         this.playbackLink = playbackLink;
+    }
+    public Song(Parcel parcel){
+        playbackLink = parcel.readString();
+        setSpotifyId(parcel.readString());
+        title = parcel.readString();
+        artist = parcel.readString();
+        albumCover = parcel.readString();
+        setSpotifyLink(parcel.readString());
+    }
+    public Song(String spot_link){
+        super(spot_link);
     }
 
     public String getTitle() {
@@ -52,4 +69,32 @@ public class Song extends Attatchment {
     public void setPlaybackLink(String playbackLink) {
         this.playbackLink = playbackLink;
     }
+    
+    @Override
+    public int describeContents() {
+        return hashCode();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(playbackLink);
+        dest.writeString(getSpotifyId());
+        dest.writeString(title);
+        dest.writeString(artist);
+        dest.writeString(albumCover);
+        dest.writeString(getSpotifyLink());
+    }
+
+    public static final Parcelable.Creator<Song> CREATOR = new Parcelable.Creator<Song>() {
+
+        @Override
+        public Song createFromParcel(Parcel parcel) {
+            return new Song(parcel);
+        }
+
+        @Override
+        public Song[] newArray(int size) {
+            return new Song[0];
+        }
+    };
 }

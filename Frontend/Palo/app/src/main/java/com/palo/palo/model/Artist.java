@@ -1,10 +1,19 @@
 package com.palo.palo.model;
 
-public class Artist extends Attatchment{
+import android.os.Parcel;
+
+/**
+ * Model for artist attachment recieved from spotify.
+ */
+public class Artist extends Attachment {
 
     public Artist(){}
     public Artist(String spotifyId){
         super(spotifyId);
+    }
+
+    public Artist(Parcel parcel){
+        //TODO
     }
     
     @Override

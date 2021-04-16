@@ -29,7 +29,7 @@
         android:drawableStart="@drawable/ic_action_user"
         android:drawableLeft="@drawable/ic_action_user"
         android:drawablePadding="10dp"
-        android:hint="@string/prompt_email"
+        android:hint="Username"
         android:inputType="textEmailAddress"
         android:selectAllOnFocus="true"
         app:layout_constraintBottom_toTopOf="@+id/loginPassword"
