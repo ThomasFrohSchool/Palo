@@ -1,1 +1,0 @@
-Open index.html in browser to view javadocs.

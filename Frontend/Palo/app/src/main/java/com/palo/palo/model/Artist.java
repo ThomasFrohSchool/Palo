@@ -2,6 +2,9 @@ package com.palo.palo.model;
 
 import android.os.Parcel;
 
+/**
+ * Model for artist attachment recieved from spotify.
+ */
 import org.json.JSONException;
 import org.json.JSONObject;
 

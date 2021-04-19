@@ -3,6 +3,9 @@ package com.palo.palo.model;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * Model for comment on post.
+ */
 public class Comment {
     private User author;
     private int author_id;

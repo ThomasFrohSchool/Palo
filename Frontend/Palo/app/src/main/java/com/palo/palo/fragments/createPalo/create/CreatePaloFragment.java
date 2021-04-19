@@ -26,7 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * This fragment is for creating a post.
+ * This fragment is for creating a post. Allows user to add caption and the ability to post a new Palo.
  * This class is associated with fragment_create_palo.xml.
  */
 public class CreatePaloFragment extends Fragment implements ICreatePaloView {
@@ -69,6 +69,13 @@ public class CreatePaloFragment extends Fragment implements ICreatePaloView {
         if (null != activity.getCurrentFocus())
             imm.hideSoftInputFromWindow(activity.getCurrentFocus().getApplicationWindowToken(), 0);
     }
+
+    /**
+     * Makes post request to server to make a new post.
+     * Makes request to "{server_url}/createPost/{user_id}".
+     */
+    public void post(){
+        // receives currently {"message":"success"}
 
     @Override
     public void startNewActivity() {

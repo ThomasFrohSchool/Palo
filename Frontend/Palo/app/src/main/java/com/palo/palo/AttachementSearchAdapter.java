@@ -18,6 +18,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+/**
+ * Adapter for spotify search recyclerview.
+ */
 public class AttachementSearchAdapter extends RecyclerView.Adapter<AttachementSearchAdapter.ViewHolder> {
     LayoutInflater inflater;
     List<Attachment> searchResults;

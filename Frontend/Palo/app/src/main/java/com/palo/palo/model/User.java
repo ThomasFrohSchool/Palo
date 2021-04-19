@@ -3,6 +3,8 @@ package com.palo.palo.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -16,6 +18,8 @@ public class User implements Parcelable {
     private String username;
     public String email;
     private String profileImage;
+    private ArrayList<Integer> userFollowing;
+    private ArrayList<Integer> userFollowers;
 
     public User(){}
 
@@ -23,6 +27,8 @@ public class User implements Parcelable {
         this.id = id;
         this.username = username;
         this.email = email;
+        this.userFollowing = getUserFollowing();
+        this.userFollowers = getUserFollowers();
     }
     
     public User(Parcel parcel){
@@ -30,11 +36,15 @@ public class User implements Parcelable {
         username = parcel.readString();
         email = parcel.readString();
         profileImage = parcel.readString();
+        this.userFollowing = getUserFollowing();
+        this.userFollowers = getUserFollowers();
     }
     public User(int id){
         this.id = id;
         this.username = "TEMP_USER";
         this.profileImage = "https://img.apmcdn.org/4f25ecdbbd7af5fed833153302515a94c990de11/square/7aacc5-20130508-favorite-album-covers.jpg";
+        this.userFollowing = getUserFollowing();
+        this.userFollowers = getUserFollowers();
     }
 
     public User(JSONObject userJson) throws JSONException {
@@ -68,6 +78,38 @@ public class User implements Parcelable {
 
     public void setProfileImage(String profileImage) {
         this.profileImage = profileImage;
+    }
+
+    public ArrayList<Integer> getUserFollowing() { return userFollowing; }
+
+    public ArrayList<Integer> getUserFollowers() { return userFollowers; }
+
+    public void setUserFollowing(ArrayList<Integer> userFollowing) { this.userFollowing = userFollowing; }
+
+    public void setUserFollowers(ArrayList<Integer> userFollowers) { this.userFollowers = userFollowers; }
+
+    public boolean getUserByIdFollowing(Integer id) {
+        for(int i = 0; i < userFollowing.size(); i++) {
+            if(id == userFollowing.get(i))
+                return true;
+        }
+        return false;
+    }
+
+    public void addFollowing(Integer id) {
+        userFollowing.add(id);
+    }
+
+    public boolean toggleIsFollowing(int id) {
+        int pos;
+        for(int i = 0; i < userFollowing.size(); i++) {
+            if(userFollowing.get(i) == id) {
+                userFollowing.remove(i);
+                return false;
+            }
+        }
+        userFollowing.add(id);
+        return true;
     }
 
     @Override

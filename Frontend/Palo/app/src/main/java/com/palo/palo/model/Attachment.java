@@ -3,6 +3,9 @@ package com.palo.palo.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * Model for an attachment recieved from spotify.
+ */
 public class Attachment implements Parcelable {
     private String spotifyId;
     private String title;

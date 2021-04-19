@@ -3,6 +3,9 @@ package com.palo.palo.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * Model for song attachment recieved from spotify.
+ */
 import org.json.JSONException;
 import org.json.JSONObject;
 
