@@ -16,11 +16,11 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MockitoFeedTest {
-    @Mock
-    private FeedFragment fragment;
-
-    @Rule
-    public MockitoRule mockitoRule = MockitoJUnit.rule();
+//    @Mock
+//    private FeedFragment fragment;
+//
+//    @Rule
+//    public MockitoRule mockitoRule = MockitoJUnit.rule();
 
 //    @Test
 //    public void getCorrectEmptyFeedResponse() {

@@ -19,15 +19,15 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ThomasTest {
-
-    @Mock
-    private SearchFragment searchSpotify;
-    private SearchFragment searchUsers;
-    private SearchFragment radioactiveTest;
-    private ProfileFragment profile;
-
-    @Rule
-    public MockitoRule mockitoRule = MockitoJUnit.rule();
+//
+//    @Mock
+//    private SearchFragment searchSpotify;
+//    private SearchFragment searchUsers;
+//    private SearchFragment radioactiveTest;
+//    private ProfileFragment profile;
+//
+//    @Rule
+//    public MockitoRule mockitoRule = MockitoJUnit.rule();
 
 //    @Test
 //    public void getSpotifyResponseTest() {
