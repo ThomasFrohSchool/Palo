@@ -11,7 +11,7 @@ import org.json.JSONException;
 
 
 import static com.palo.palo.volley.ServerURLs.ATTACHMENT;
-import static com.palo.palo.volley.ServerURLs.USER;
+import static com.palo.palo.volley.ServerURLs.USER_BY_ID;
 
 public class ProfileModel {
     private Context context;
@@ -21,7 +21,7 @@ public class ProfileModel {
     }
     
     public void getProfile(int userId, IProfileVolleyListener volleyListener){
-        JsonObjectRequest j = new JsonObjectRequest(Request.Method.GET, USER + userId, null,
+        JsonObjectRequest j = new JsonObjectRequest(Request.Method.GET, USER_BY_ID + userId, null,
                 response -> {
                     try {
                         volleyListener.onProfileSuccess(response);

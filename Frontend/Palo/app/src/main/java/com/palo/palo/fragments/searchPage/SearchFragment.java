@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * Fragment to allow user to search songs, albums, artist, etc. from Spotify.
  */
-public class SearchFragment extends Fragment implements ISearchView {
+public class SearchFragment extends Fragment implements UserSearchAdapter.onUserListener, ISearchView {
     private EditText song;
     private Button bSpotify;
     private Button bUsers;
@@ -71,7 +71,7 @@ public class SearchFragment extends Fragment implements ISearchView {
         r = view.findViewById(R.id.res);
         r.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         spotifyAdapter = new AttachementSearchAdapter(context, new ArrayList<>());
-        userAdapter = new UserSearchAdapter(context, new ArrayList<>());
+        userAdapter = new UserSearchAdapter(context, new ArrayList<>(), this);
 
 
         p = new ProgressDialog(getActivity().getApplicationContext());
@@ -115,4 +115,22 @@ public class SearchFragment extends Fragment implements ISearchView {
         if (null != activity.getCurrentFocus())
             imm.hideSoftInputFromWindow(activity.getCurrentFocus().getApplicationWindowToken(), 0);
     }
+
+    @Override
+    public void onFollowClicked(int position) {
+        // todo make this mvp
+//        System.out.println("user followed " + usersList.get(position).getId());
+//        user.addFollowing(usersList.get(position).getId());
+//
+//        JsonObjectRequest request = new JsonObjectRequest(
+//                Request.Method.GET, FOLLOW + user.getId() + "/" + usersList.get(position).getId(), null,
+//                response -> {
+//                    System.out.println("Attempting to follow " + usersList.get(position).getId());
+//                },
+//                error -> {
+//                    error.printStackTrace();
+//                }
+//        );
+    }
+
 }

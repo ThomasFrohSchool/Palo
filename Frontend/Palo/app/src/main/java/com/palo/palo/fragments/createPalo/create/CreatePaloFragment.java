@@ -70,13 +70,6 @@ public class CreatePaloFragment extends Fragment implements ICreatePaloView {
             imm.hideSoftInputFromWindow(activity.getCurrentFocus().getApplicationWindowToken(), 0);
     }
 
-    /**
-     * Makes post request to server to make a new post.
-     * Makes request to "{server_url}/createPost/{user_id}".
-     */
-    public void post(){
-        // receives currently {"message":"success"}
-
     @Override
     public void startNewActivity() {
         startActivity(new Intent(getActivity(), MainActivity.class));
