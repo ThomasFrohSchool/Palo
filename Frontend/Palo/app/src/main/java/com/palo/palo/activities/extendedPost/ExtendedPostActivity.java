@@ -16,8 +16,10 @@ import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.palo.palo.CommentAdapter;
 import com.palo.palo.R;
@@ -40,7 +42,8 @@ public class ExtendedPostActivity extends AppCompatActivity implements IExtended
     List<Comment> comments;
     EditText newCommentBody;
     TextView postComment;
-    WebView playbackWebView;
+    VideoView playbackVideoView;
+    MediaController playbackController;
     Context context;
     IExtendedPostPresenter presenter;
     private String TAG = ExtendedPostActivity.class.getSimpleName();
@@ -72,17 +75,15 @@ public class ExtendedPostActivity extends AppCompatActivity implements IExtended
                 makeToast("null playback link... need to handle at somepoint");
             } else {
                 makeToast("playback link... =" + ((Song) attachedPalo.getAttachment()).getPlaybackLink() );
-                playbackWebView = findViewById(R.id.playbackWebView);
-                playbackWebView.setVisibility(View.VISIBLE);
-                playbackWebView.loadUrl(((Song) attachedPalo.getAttachment()).getPlaybackLink());
+                playbackVideoView = findViewById(R.id.playbackVideoView);
+                playbackController = new MediaController(this);
+                playbackVideoView.setVisibility(View.VISIBLE);
+                playbackVideoView.setVideoPath(((Song) attachedPalo.getAttachment()).getPlaybackLink());
+                playbackController.setAnchorView(playbackVideoView);
+                playbackVideoView.setMediaController(playbackController);
+//                playbackVideoView.start();
     //            presenter.loadPlaybackLink();
-                playbackWebView.setWebViewClient(new WebViewClient(){
-                    @Override
-                    public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                        view.loadUrl(url);
-                        return true;
-                    }
-                });
+
             }
         }
         presenter.loadComments();
