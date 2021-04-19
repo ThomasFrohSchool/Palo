@@ -172,5 +172,9 @@ public class Palo implements Parcelable {
             return new Palo[0];
         }
     };
+
+    public void updateAttachmentPlaybackLink(String playbackLink) {
+        ((Song)attachment).setPlaybackLink(playbackLink);
+    }
 }
 

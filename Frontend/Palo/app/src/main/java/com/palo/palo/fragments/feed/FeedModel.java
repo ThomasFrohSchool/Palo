@@ -28,6 +28,7 @@ public class FeedModel {
                 volleyListener.onEmptyResponse(response.toString());
             } else {
                 try {
+                    System.out.println("CAT: " +response.toString());
                     volleyListener.onSuccess(response);
                 } catch (JSONException e) {
                     e.printStackTrace();

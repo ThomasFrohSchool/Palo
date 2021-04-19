@@ -8,7 +8,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -20,6 +24,7 @@ import com.palo.palo.R;
 import com.palo.palo.SharedPrefManager;
 import com.palo.palo.model.Comment;
 import com.palo.palo.model.Palo;
+import com.palo.palo.model.Song;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -35,6 +40,7 @@ public class ExtendedPostActivity extends AppCompatActivity implements IExtended
     List<Comment> comments;
     EditText newCommentBody;
     TextView postComment;
+    WebView playbackWebView;
     Context context;
     IExtendedPostPresenter presenter;
     private String TAG = ExtendedPostActivity.class.getSimpleName();
@@ -60,7 +66,25 @@ public class ExtendedPostActivity extends AppCompatActivity implements IExtended
         commentRV = findViewById(R.id.commentRecyclerView);
         commentRV.setAdapter(commentAdapter);
         commentRV.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-
+        if(attachedPalo.getAttachment() instanceof Song){
+            makeToast("attachment is a song...");
+            if(((Song) attachedPalo.getAttachment()).getPlaybackLink() == null){
+                makeToast("null playback link... need to handle at somepoint");
+            } else {
+                makeToast("playback link... =" + ((Song) attachedPalo.getAttachment()).getPlaybackLink() );
+                playbackWebView = findViewById(R.id.playbackWebView);
+                playbackWebView.setVisibility(View.VISIBLE);
+                playbackWebView.loadUrl(((Song) attachedPalo.getAttachment()).getPlaybackLink());
+    //            presenter.loadPlaybackLink();
+                playbackWebView.setWebViewClient(new WebViewClient(){
+                    @Override
+                    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                        view.loadUrl(url);
+                        return true;
+                    }
+                });
+            }
+        }
         presenter.loadComments();
     }
 
