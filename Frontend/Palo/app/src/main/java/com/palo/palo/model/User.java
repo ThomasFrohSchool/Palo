@@ -43,6 +43,11 @@ public class User implements Parcelable {
         profileImage = PICS + userJson.getInt("id") + "/" + userJson.getInt("id");
     }
 
+    public User(int userId, String username) {
+        id = userId;
+        this.username = username;
+    }
+
     public int getId() {
         return id;
     }

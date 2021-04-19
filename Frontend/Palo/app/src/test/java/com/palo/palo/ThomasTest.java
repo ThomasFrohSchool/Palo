@@ -1,13 +1,12 @@
 package com.palo.palo;
 
-import com.palo.palo.fragments.ProfileFragment;
+import com.palo.palo.fragments.profile.ProfileFragment;
 import com.palo.palo.fragments.searchPage.SearchFragment;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.MockitoRule;
@@ -64,16 +63,16 @@ public class ThomasTest {
 //        assertEquals("{\"albums\":[{\"artist\":\"Imagine Dragons\",\"imageUrl\":\"https:\\/\\/i.scdn.co\\/image\\/ab67616d00001e02d8941843ba4d684f76a94956\",\"name\":\"Radioactive\",\"link\":\"https:\\/\\/open.spotify.com\\/album\\/2M0IZTKgkN3ZpYluF4lKAM\",\"id\":\"2M0IZTKgkN3ZpYluF4lKAM\"},{\"artist\":\"Yelawolf\",\"imageUrl\":\"https:\\/\\/i.scdn.co\\/image\\/ab67616d00001e02bf9fe0cffb9aa2067d0f9dbd\",\"name\":\"Radioactive (Explicit Version)\",\"link\":\"https:\\/\\/open.spotify.com\\/album\\/3AGMorE666prvzWaHGddKo\",\"id\":\"3AGMorE666prvzWaHGddKo\"},{\"artist\":\"Coopex\",\"imageUrl\":\"https:\\/\\/i.scdn.co\\/image\\/ab67616d00001e028c9090622b50cc038f0cc83a\",\"name\":\"Radioactive\",\"link\":\"https:\\/\\/open.spotify.com\\/album\\/7fVLADYf4hoYyLxxhPe7Fl\",\"id\":\"7fVLADYf4hoYyLxxhPe7Fl\"},{\"artist\":\"Our Last Night\",\"imageUrl\":\"https:\\/\\/i.scdn.co\\/image\\/ab67616d00001e02fe6a7460764de7351e8a60ef\",\"name\":\"Radioactive (Rock)\",\"link\":\"https:\\/\\/open.spotify.com\\/album\\/5c8aag18y7tbMTPl3HDSk0\",\"id\":\"5c8aag18y7tbMTPl3HDSk0\"},{\"artist\":\"Eklipse\",\"imageUrl\":\"https:\\/\\/i.scdn.co\\/image\\/ab67616d00001e0255cc73b8414b28e7403e25c6\",\"name\":\"Radioactive\",\"link\":\"https:\\/\\/open.spotify.com\\/album\\/64oVw9vapfndM0UYmN1PY3\",\"id\":\"64oVw9vapfndM0UYmN1PY3\"}], \"artists\":[{\"artist\":\"Radioactive Man\",\"imageUrl\":\"https:\\/\\/i.scdn.co\\/image\\/ab67616d00001e02c4efb10726a902af113746f9\",\"link\":\"https:\\/\\/open.spotify.com\\/artist\\/3phNexX9ywXXZYuOxZRthf\",\"id\":\"3phNexX9ywXXZYuOxZRthf\"},{\"artist\":\"The Radioactive Chicken Heads\",\"imageUrl\":\"https:\\/\\/i.scdn.co\\/image\\/4f41c6e0bed9a73a1e925cbc3367be54ffbf3b79\",\"link\":\"https:\\/\\/open.spotify.com\\/artist\\/5B1beGo4vI8hCBCh3xXeQF\",\"id\":\"5B1beGo4vI8hCBCh3xXeQF\"},{\"artist\":\"Radioactive Sandwich\",\"imageUrl\":\"https:\\/\\/i.scdn.co\\/image\\/ab676161000051749e6531331acb92ac6aa40538\",\"link\":\"https:\\/\\/open.spotify.com\\/artist\\/4BoFWukjB4ZmtZzest1edM\",\"id\":\"4BoFWukjB4ZmtZzest1edM\"},{\"artist\":\"Radioactive Sago Project\",\"imageUrl\":\"https:\\/\\/i.scdn.co\\/image\\/ab67616d00001e0256f9d44a03410d1a615b48e8\",\"link\":\"https:\\/\\/open.spotify.com\\/artist\\/0do3DwgbF0O2n01aZJ61th\",\"id\":\"0do3DwgbF0O2n01aZJ61th\"},{\"artist\":\"The Radioactive Sago Project\",\"imageUrl\":\"https:\\/\\/i.scdn.co\\/image\\/ab67616d00001e02f4b279c56a0d924a421a3148\",\"link\":\"https:\\/\\/open.spotify.com\\/artist\\/6SLGDrRhiZkj8E10RIC6QK\",\"id\":\"6SLGDrRhiZkj8E10RIC6QK\"}], \"tracks\":[{\"playbackLink\":null,\"artist\":\"Imagine Dragons\",\"imageUrl\":\"https:\\/\\/i.scdn.co\\/image\\/ab67616d00001e02b2b2747c89d2157b0b29fb6a\",\"name\":\"Radioactive\",\"link\":\"https:\\/\\/open.spotify.com\\/track\\/4G8gkOterJn0Ywt6uhqbhp\",\"id\":\"4G8gkOterJn0Ywt6uhqbhp\"},{\"playbackLink\":null,\"artist\":\"Imagine Dragons\",\"imageUrl\":\"https:\\/\\/i.scdn.co\\/image\\/ab67616d00001e02d8941843ba4d684f76a94956\",\"name\":\"Radioactive\",\"link\":\"https:\\/\\/open.spotify.com\\/track\\/69yfbpvmkIaB10msnKT7Q5\",\"id\":\"69yfbpvmkIaB10msnKT7Q5\"},{\"playbackLink\":\"https:\\/\\/p.scdn.co\\/mp3-preview\\/3baee2d1a8c79b9800d9df61c329f28b9c9365cf?cid=b82ef89345fa42a7893a0f199d64439f\",\"artist\":\"Pentatonix\",\"imageUrl\":\"https:\\/\\/i.scdn.co\\/image\\/ab67616d00001e02b7c8f5fe522c41d590c8e4e5\",\"name\":\"Radioactive\",\"link\":\"https:\\/\\/open.spotify.com\\/track\\/7dJGehjbhJvs3K4fWwYTW1\",\"id\":\"7dJGehjbhJvs3K4fWwYTW1\"},{\"playbackLink\":\"https:\\/\\/p.scdn.co\\/mp3-preview\\/04f8d75f90dbfce17c04231a148ec86c8eeeb595?cid=b82ef89345fa42a7893a0f199d64439f\",\"artist\":\"Kings of Leon\",\"imageUrl\":\"https:\\/\\/i.scdn.co\\/image\\/ab67616d00001e02496ed45f8f3dddaf410fd86e\",\"name\":\"Radioactive\",\"link\":\"https:\\/\\/open.spotify.com\\/track\\/60CirPlTOEWOUBus7HxV3B\",\"id\":\"60CirPlTOEWOUBus7HxV3B\"},{\"playbackLink\":null,\"artist\":\"Bullet For My Valentine\",\"imageUrl\":\"https:\\/\\/i.scdn.co\\/image\\/ab67616d00001e025a5245f47bc01d907571074c\",\"name\":\"Radioactive\",\"link\":\"https:\\/\\/open.spotify.com\\/track\\/2okeBtFNVJ4n33NEV1RxBm\",\"id\":\"2okeBtFNVJ4n33NEV1RxBm\"}]}", result);
 //    }
 
-    @Test
-    public void getProfileTest() {
-        profile = mock(ProfileFragment.class);
-        when(profile.getProfile("USER + 1")).thenReturn("TommySmokes");
-
-        String profileCorrect = "USER + 1";
-
-        String result = profile.getProfile(profileCorrect);
-        assertEquals("TommySmokes", result);
-
-        verify(profile, times(1)).getProfile("USER + 1");
-    }
+//    @Test
+//    public void getProfileTest() {
+//        profile = mock(ProfileFragment.class);
+//        when(profile.getProfile("USER + 1")).thenReturn("TommySmokes");
+//
+//        String profileCorrect = "USER + 1";
+//
+//        String result = profile.getProfile(profileCorrect);
+//        assertEquals("TommySmokes", result);
+//
+//        verify(profile, times(1)).getProfile("USER + 1");
+//    }
 }
