@@ -1,4 +1,4 @@
-package coms309.WebSocket;
+package coms309.DMs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
