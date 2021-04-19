@@ -20,13 +20,13 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 @RunWith(AndroidJUnit4.class)
 public class LoginViewTest {
-//    private static final int SIMULATED_DELAY_MS = 1000;
-//
-//    @Rule
-//    public ActivityTestRule<LoginActivity> activityRule = new ActivityTestRule<>(LoginActivity.class);
-//
-//    @Test
-//    public void loginTest(){
+    private static final int SIMULATED_DELAY_MS = 1000;
+
+    @Rule
+    public ActivityTestRule<LoginActivity> activityRule = new ActivityTestRule<>(LoginActivity.class);
+
+    @Test
+    public void loginTest(){
 //        Intents.init();
 //
 //        String username = "asdf"; //username and password are same...
@@ -44,7 +44,7 @@ public class LoginViewTest {
 //
 //        intended(hasComponent("com.palo.palo.activities.MainActivity"));
 //        Intents.release();
-//    }
+    }
 
 }
 
