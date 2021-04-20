@@ -13,21 +13,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ProgressBar;
-import android.widget.SearchView;
-import android.widget.TextView;
 
 import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
-import com.google.gson.JsonArray;
 import com.palo.palo.AttachementSearchAdapter;
-import com.palo.palo.FeedAdapter;
 import com.palo.palo.R;
 import com.palo.palo.SharedPrefManager;
 import com.palo.palo.UserSearchAdapter;
@@ -42,14 +34,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Map;
 
 import static com.palo.palo.volley.ServerURLs.FOLLOW;
 import static com.palo.palo.volley.ServerURLs.PICS;
 import static com.palo.palo.volley.ServerURLs.SEARCH;
+import static com.palo.palo.volley.ServerURLs.UNFOLLOW;
 import static com.palo.palo.volley.ServerURLs.USERS;
+import static com.palo.palo.volley.ServerURLs.USER_BY_ID;
 
 /**
  * Fragment to allow user to search songs, albums, artist, etc. from Spotify.
@@ -71,6 +63,7 @@ public class SearchFragment extends Fragment implements UserSearchAdapter.onUser
     private String tag_string_req = "string_req";
     private String str;
     ArrayList<User> usersList;
+    ArrayList<Integer> userFollowing;
     private User user;
 
     public SearchFragment() {}
@@ -92,7 +85,9 @@ public class SearchFragment extends Fragment implements UserSearchAdapter.onUser
         song = view.findViewById(R.id.spotifySearch);
         bSpotify = view.findViewById(R.id.buttonSpotify);
         bUsers = view.findViewById(R.id.buttonUsers);
-        userAdapter = new UserSearchAdapter(getActivity().getApplicationContext(), usersList, this);
+        getFollowing();
+
+        userAdapter = new UserSearchAdapter(getActivity().getApplicationContext(), usersList, userFollowing, this);
         r = view.findViewById(R.id.res);
         r.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
 
@@ -129,6 +124,9 @@ public class SearchFragment extends Fragment implements UserSearchAdapter.onUser
      */
     public void makeUsersRequest(String s) {
         //ArrayList<User> users = new ArrayList<>();
+
+        getFollowing();
+
         usersList = new ArrayList<>();
         JsonArrayRequest arr = new JsonArrayRequest(USERS,
                 response -> {
@@ -136,7 +134,14 @@ public class SearchFragment extends Fragment implements UserSearchAdapter.onUser
                     try {
                         addUsers(usersList, response, s);
                         //r.setAdapter(new UserSearchAdapter(getActivity().getApplicationContext(), new ArrayList<>(), this, user.getUserFollowing()));
-                        userAdapter = new UserSearchAdapter(getActivity().getApplicationContext(), usersList, this);
+                        userAdapter = new UserSearchAdapter(getActivity().getApplicationContext(), usersList, userFollowing, this);
+                        /*for(int i = 0; i < usersList.size(); i++) {
+                            for(int j = 0; j < userFollowing.size(); j++) {
+                                if(usersList.get(i).getId() == userFollowing.get(j)) {
+                                    userAdapter.toggleFollow(true);
+                                }
+                            }
+                        }*/
                         r.setAdapter(userAdapter);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -144,6 +149,28 @@ public class SearchFragment extends Fragment implements UserSearchAdapter.onUser
                 }, error -> error.printStackTrace());
 
         VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(arr);
+    }
+
+    private void getFollowing() {
+        //ArrayList<Integer> u = new ArrayList<>();
+        userFollowing = new ArrayList<>();
+
+        JsonObjectRequest j = new JsonObjectRequest(Request.Method.GET, USER_BY_ID + user.getId(), null,
+                response -> {
+                    try {
+                        JSONArray arr = response.getJSONArray("following");
+                        for(int i = 0; i < arr.length(); i++) {
+                            Integer f = arr.getInt(i);
+                            userFollowing.add(f);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }, Throwable::printStackTrace);
+        //p.hide();
+        VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(j);
+
+        //return u;
     }
 
     /**
@@ -239,9 +266,9 @@ public class SearchFragment extends Fragment implements UserSearchAdapter.onUser
     }
 
     @Override
-    public void onFollowClicked(int position) {
+    public void onAddFollowClicked(int position) {
         System.out.println("user followed " + usersList.get(position).getId());
-        user.addFollowing(usersList.get(position).getId());
+        //user.addFollowing(usersList.get(position).getId());
 
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET, FOLLOW + user.getId() + "/" + usersList.get(position).getId(), null,
@@ -252,5 +279,24 @@ public class SearchFragment extends Fragment implements UserSearchAdapter.onUser
                     error.printStackTrace();
                 }
         );
+
+        VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(request);
+    }
+
+    @Override
+    public void onRemoveFollowClicked(int position) {
+        System.out.println("user removed " + usersList.get(position).getId());
+
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.GET, UNFOLLOW + user.getId() + "/" + usersList.get(position).getId(), null,
+                response -> {
+                    System.out.println("Attempting to unfollow " + usersList.get(position).getId());
+                },
+                error -> {
+                    error.printStackTrace();
+                }
+        );
+
+        VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(request);
     }
 }
