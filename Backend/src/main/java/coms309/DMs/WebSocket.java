@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
 @Controller      // this is needed for this to be an endpoint to springboot
 @ServerEndpoint(value = "/chat/{from}/{to}")  // this is Websocket url
@@ -74,8 +75,8 @@ public class WebSocket {
 		String toUser = sessionUsernameMap.get(session).split(":")[1];
 
       // send the message to the sender and receiver
-		sendMessageToPArticularUser(toUser, fromUser, "[DM] " + fromUser + ": " + message);
-		sendMessageToPArticularUser(fromUser, toUser, "[DM] " + fromUser + ": " + message);
+		sendMessageToPArticularUser(toUser, fromUser, fromUser + ": " + message);
+		sendMessageToPArticularUser(fromUser, toUser, fromUser + ": " + message);
 
 		
 
@@ -135,10 +136,10 @@ public class WebSocket {
 		StringBuilder sb = new StringBuilder();
 		if(dm != null && dm.size() != 0) {
 			for (Message d : dm) {
-				sb.append(d.getfromUser() + " to "+ d.gettoUser()+ ": " + d.getContent() + "\n");
+				sb.append(d.getfromUser() + ": " + d.getContent() + "\n");
 			}
 		}
 		return sb.toString();
 	}
 
-} // end of Class
+} 
