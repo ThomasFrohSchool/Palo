@@ -1,5 +1,6 @@
 package coms309.DMs;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 @Controller      // this is needed for this to be an endpoint to springboot
-@ServerEndpoint(value = "/chat/{username}")  // this is Websocket url
+@ServerEndpoint(value = "/chat/{from}/{to}")  // this is Websocket url
 public class WebSocket {
 
   // cannot autowire static directly (instead we do it by the below
@@ -44,20 +45,22 @@ public class WebSocket {
 	private final Logger logger = LoggerFactory.getLogger(WebSocket.class);
 
 	@OnOpen
-	public void onOpen(Session session, @PathParam("username") String username) 
+	public void onOpen(Session session, @PathParam("from") String fromUser,@PathParam("to") String touser) 
       throws IOException {
 
 		logger.info("Entered into Open");
 
     // store connecting user information
-		sessionUsernameMap.put(session, username);
-		usernameSessionMap.put(username, session);
+		sessionUsernameMap.put(session, fromUser+":"+touser);
+		//sessionUsernameMap.put(session, touser+":"+fromUser);
+		usernameSessionMap.put(fromUser+":"+touser, session);
+		//usernameSessionMap.put(touser+":"+fromUser, session);
 
 		//Send chat history to the newly connected user
-		sendMessageToPArticularUser(username, getChatHistory());
+		sendMessageToPArticularUser(fromUser, touser, getChatHistory(fromUser,touser));
 		
     // broadcast that new user joined
-		String message = "User:" + username + " has Joined the Chat";
+		String message = "User:" + fromUser + " has Joined the Chat";
 		broadcast(message);
 	}
 
@@ -67,23 +70,20 @@ public class WebSocket {
 
 		// Handle new messages
 		logger.info("Entered into Message: Got Message:" + message);
-		String username = sessionUsernameMap.get(session);
+		String fromUser = sessionUsernameMap.get(session).split(":")[0];
 
     // Direct message to a user using the format "@username <message>"
-		if (message.startsWith("@")) {
-			String destUsername = message.split(" ")[0].substring(1); 
+		
+		String toUser = sessionUsernameMap.get(session).split(":")[1];
 
       // send the message to the sender and receiver
-			sendMessageToPArticularUser(destUsername, "[DM] " + username + ": " + message);
-			sendMessageToPArticularUser(username, "[DM] " + username + ": " + message);
+		sendMessageToPArticularUser(toUser, fromUser, "[DM] " + fromUser + ": " + message);
+		sendMessageToPArticularUser(fromUser, toUser, "[DM] " + fromUser + ": " + message);
 
-		} 
-    else { // broadcast
-			broadcast(username + ": " + message);
-		}
+		
 
 		// Saving chat history to repository
-		msgTable.save(new Message(username, message));
+		msgTable.save(new Message(fromUser, toUser, message));
 	}
 
 
@@ -110,14 +110,23 @@ public class WebSocket {
 	}
 
 
-	private void sendMessageToPArticularUser(String username, String message) {
+	private void sendMessageToPArticularUser(String fromuser, String toUser, String message) {
 		try {
-			usernameSessionMap.get(username).getBasicRemote().sendText(message);
+			usernameSessionMap.get(fromuser+":"+toUser).getBasicRemote().sendText(message);
 		} 
     catch (IOException e) {
 			logger.info("Exception: " + e.getMessage().toString());
 			e.printStackTrace();
 		}
+	catch(NullPointerException e){
+		try{
+			usernameSessionMap.get(toUser+":"+fromuser).getBasicRemote().sendText("ERROR: USER NOT IN CHAT");
+		}
+		catch (IOException ie) {
+			logger.info("Exception: " + ie.getMessage().toString());
+			ie.printStackTrace();
+		}
+	}
 	}
 
 
@@ -137,14 +146,27 @@ public class WebSocket {
 	
 
   // Gets the Chat history from the repository
-	private String getChatHistory() {
-		List<Message> messages = msgTable.findAll();
+	private String getChatHistory(String fromName, String toName) {
+		List<Message> messages = msgTable.findByfromUser(fromName);
+		List<Message> dm = new ArrayList<Message>();
+		for(int i=0;i<messages.size();i++){
+			if(messages.get(i).gettoUser() == toName){
+				dm.add(messages.get(i));
+			}
+		}
+		List<Message> toMessages = msgTable.findBytoUser(toName);
+		for(int i=0;i<toMessages.size();i++){
+			if(toMessages.get(i).gettoUser() == fromName){
+				dm.add(toMessages.get(i));
+			}
+		}
+		//List<Message> messages = msgTable.findAll();
     
     // convert the list to a string
 		StringBuilder sb = new StringBuilder();
-		if(messages != null && messages.size() != 0) {
-			for (Message message : messages) {
-				sb.append(message.getUserName() + ": " + message.getContent() + "\n");
+		if(dm != null && dm.size() != 0) {
+			for (Message d : dm) {
+				sb.append(d.getfromUser() + " to "+ d.gettoUser()+ ": " + d.getContent() + "\n");
 			}
 		}
 		return sb.toString();

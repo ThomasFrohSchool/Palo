@@ -28,8 +28,13 @@ public class Message {
 	@NotNull
     @Size(max = 100)
     @Column
-    private String userName;
+    private String fromUser;
 	
+    @NotNull
+    @Size(max = 100)
+    @Column
+    private String toUser;
+
 	@NotNull
     @Lob
     private String content;
@@ -42,8 +47,9 @@ public class Message {
 	
 	public Message() {};
 	
-	public Message(String userName, String content) {
-		this.userName = userName;
+	public Message(String fromUser, String toUser, String content) {
+		this.fromUser = fromUser;
+        this.toUser = toUser;
 		this.content = content;
 	}
 
@@ -55,14 +61,19 @@ public class Message {
         this.id = id;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getfromUser() {
+        return this.fromUser;
+    }
+    public String gettoUser() {
+        return this.toUser;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setfromUser(String userName) {
+        this.fromUser = userName;
     }
-
+    public void settoUser(String userName) {
+        this.toUser = userName;
+    }
     public String getContent() {
         return content;
     }
