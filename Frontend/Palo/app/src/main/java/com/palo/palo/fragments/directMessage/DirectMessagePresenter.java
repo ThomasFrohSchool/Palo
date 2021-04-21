@@ -25,11 +25,7 @@ public class DirectMessagePresenter implements IDirectMessagePresenter, IDirectM
 
     @Override
     public void loadUsers() {
-        List<String> usernames = new ArrayList<>();
-        usernames.add("!");
-        view.loadUsersSearch(usernames);
-//        todo uncomment below
-//        model.getUsersRequest(this);
+        model.getUsersRequest(this);
     }
 
     @Override
