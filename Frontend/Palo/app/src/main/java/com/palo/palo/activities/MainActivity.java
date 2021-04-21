@@ -12,7 +12,7 @@ import com.palo.palo.R;
 import com.palo.palo.SharedPrefManager;
 import com.palo.palo.activities.login.LoginActivity;
 import com.palo.palo.fragments.feed.FeedFragment;
-import com.palo.palo.fragments.PaloListFragment;
+import com.palo.palo.fragments.directMessage.DirectMessageFragment;
 import com.palo.palo.fragments.profile.ProfileFragment;
 import com.palo.palo.fragments.searchPage.SearchFragment;
 
@@ -24,7 +24,7 @@ import com.palo.palo.fragments.searchPage.SearchFragment;
 public class MainActivity extends AppCompatActivity{
     BottomNavigationView bottomNavBar;
     final Fragment feedFrag = new FeedFragment();
-    final Fragment palolistFrag = new PaloListFragment();
+    final Fragment palolistFrag = new DirectMessageFragment();
     final Fragment searchFrag = new SearchFragment();
     final Fragment profileFrag = new ProfileFragment();
     final FragmentManager fm = getSupportFragmentManager();
