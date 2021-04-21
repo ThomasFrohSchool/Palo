@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.palo.palo.FeedAdapter;
 import com.palo.palo.R;
 import com.palo.palo.SharedPrefManager;
 import com.palo.palo.activities.extendedPost.ExtendedPostActivity;
+import com.palo.palo.activities.profile.ProfileActivity;
 import com.palo.palo.model.Palo;
 
 import java.util.ArrayList;
@@ -74,6 +76,15 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
     @Override
     public void onLikeClicked(int position) {
         System.out.println("post like clicked..." + palos.get(position).getCaption());
+    }
+
+    @Override
+    public void onUserNameClicked(int position) {
+        System.out.println("post like clicked..." + palos.get(position).getAuthorUsername());
+        Palo p = palos.get(position);
+        Intent intent =  new Intent(getContext(), ProfileActivity.class);
+        intent.putExtra("user_obj", palos.get(position).getAuthor());
+        startActivity(intent);
     }
 
     @Override
