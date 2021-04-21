@@ -59,9 +59,6 @@ public class WebSocket {
 		//Send chat history to the newly connected user
 		sendMessageToPArticularUser(fromUser, touser, getChatHistory(fromUser,touser));
 		
-    // broadcast that new user joined
-		String message = "User:" + fromUser + " has Joined the Chat";
-		broadcast(message);
 	}
 
 
@@ -95,10 +92,6 @@ public class WebSocket {
 		String username = sessionUsernameMap.get(session);
 		sessionUsernameMap.remove(session);
 		usernameSessionMap.remove(username);
-
-    // broadcase that the user disconnected
-		String message = username + " disconnected";
-		broadcast(message);
 	}
 
 
@@ -118,50 +111,26 @@ public class WebSocket {
 			logger.info("Exception: " + e.getMessage().toString());
 			e.printStackTrace();
 		}
-	catch(NullPointerException e){
-		try{
-			usernameSessionMap.get(toUser+":"+fromuser).getBasicRemote().sendText("ERROR: USER NOT IN CHAT");
-		}
-		catch (IOException ie) {
-			logger.info("Exception: " + ie.getMessage().toString());
-			ie.printStackTrace();
+		catch(NullPointerException e){
 		}
 	}
-	}
-
-
-	private void broadcast(String message) {
-		sessionUsernameMap.forEach((session, username) -> {
-			try {
-				session.getBasicRemote().sendText(message);
-			} 
-      catch (IOException e) {
-				logger.info("Exception: " + e.getMessage().toString());
-				e.printStackTrace();
-			}
-
-		});
-
-	}
-	
 
   // Gets the Chat history from the repository
 	private String getChatHistory(String fromName, String toName) {
 		List<Message> messages = msgTable.findByfromUser(fromName);
 		List<Message> dm = new ArrayList<Message>();
 		for(int i=0;i<messages.size();i++){
-			if(messages.get(i).gettoUser() == toName){
+			if(messages.get(i).gettoUser().equals(toName)){
 				dm.add(messages.get(i));
 			}
 		}
-		List<Message> toMessages = msgTable.findBytoUser(toName);
+		List<Message> toMessages = msgTable.findBytoUser(fromName);
 		for(int i=0;i<toMessages.size();i++){
-			if(toMessages.get(i).gettoUser() == fromName){
+			if(toMessages.get(i).getfromUser().equals(toName)){
 				dm.add(toMessages.get(i));
 			}
 		}
 		//List<Message> messages = msgTable.findAll();
-    
     // convert the list to a string
 		StringBuilder sb = new StringBuilder();
 		if(dm != null && dm.size() != 0) {
