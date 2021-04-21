@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.provider.ContactsContract;
 import android.view.LayoutInflater;
@@ -35,6 +36,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
     private final String FEED_STR_TAG = FeedFragment.class.getSimpleName();
     RecyclerView recyclerView;
     FeedAdapter feedAdapter;
+    SwipeRefreshLayout layout;
     TextView emptyFeedMessage;
     Button refreshFeed;
     View myView;
@@ -58,10 +60,18 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
         myView = view;
         context = getActivity().getApplicationContext();
         recyclerView = view.findViewById(R.id.songList);
+        layout = view.findViewById(R.id.feedSwipeRefreshLayout);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         feedAdapter = new FeedAdapter(context, new ArrayList<>(), this);
         recyclerView.setAdapter(feedAdapter);
         feedPresenter = new FeedPresenter(this, context,  SharedPrefManager.getInstance(myView.getContext()).getUser().getId());
+        layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                layout.setRefreshing(false);
+                feedPresenter.loadFeed(SharedPrefManager.getInstance(myView.getContext()).getUser().getId());
+            }
+        });
     }
 
     @Override
@@ -75,7 +85,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
 
     @Override
     public void onLikeClicked(int position) {
-        System.out.println("post like clicked..." + palos.get(position).getCaption());
+        System.out.println("post like clicked..." + palos.get(position).getAttachment().getTitle());
     }
 
     @Override
