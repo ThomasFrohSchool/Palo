@@ -7,7 +7,7 @@
     tools:context=".fragments.directMessage.DirectMessageFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/new_post_layout"
+        android:id="@+id/dmLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:context=".fragments.createPalo.create.CreatePaloFragment">
@@ -61,12 +61,24 @@
                     app:layout_constraintBottom_toBottomOf="parent"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Button
+                android:visibility="gone"
+                android:id="@+id/clearUserSearchButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="CLEAR SEARCH RESULTS"
+                app:layout_constraintTop_toBottomOf="@+id/clearUserSearchButton"
+                app:layout_constraintBottom_toTopOf="@+id/dmUserSearchBarLayout"
+
+                />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/directMessageRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="14"
-                app:layout_constraintTop_toBottomOf="@+id/search_bar_layout" />
+                app:layout_constraintTop_toBottomOf="@+id/clearUserSearchButton" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 

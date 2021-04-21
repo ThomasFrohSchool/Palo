@@ -14,14 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.palo.palo.R;
-import com.palo.palo.UserSearchAdapter;
-import com.palo.palo.fragments.searchPage.SearchFragment;
-import com.palo.palo.model.User;
+import com.palo.palo.UserSearchDMAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,11 +28,13 @@ import java.util.List;
  * This fragment is for the different PaloLists a user would follow or create.
  * This class is associated with fragment_palo_list.xml.
  */
-public class DirectMessageFragment extends Fragment implements UserSearchAdapter.onUserListener, IDirectMessageView {
+public class DirectMessageFragment extends Fragment implements UserSearchDMAdapter.onUserDMListener, IDirectMessageView {
+    EditText searchET;
     ImageButton searchButton;
+    Button clearSearchResults;
     RecyclerView recyclerView;
-    UserSearchAdapter userSearchAdapter;
-    List<User> users;
+    UserSearchDMAdapter userSearchDMAdapter;
+    List<String> usernames;
     Context context;
     IDirectMessagePresenter presenter;
     String TAG = DirectMessageFragment.class.getSimpleName();
@@ -54,26 +54,42 @@ public class DirectMessageFragment extends Fragment implements UserSearchAdapter
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         context = getActivity().getApplicationContext();
+        searchET = view.findViewById(R.id.searchUserDM);
         searchButton = view.findViewById(R.id.userSearchBarButton);
-        recyclerView = view.findViewById(R.id.userSearchBarButton);
+        clearSearchResults = view.findViewById(R.id.clearUserSearchButton);
+        recyclerView = view.findViewById(R.id.directMessageRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        userSearchAdapter = new UserSearchAdapter(context, new ArrayList<>(), this);
-        presenter = new DirectMessagePresenter();
+        userSearchDMAdapter = new UserSearchDMAdapter(context, new ArrayList<>(), this);
+        recyclerView.setAdapter(userSearchDMAdapter);
+        presenter = new DirectMessagePresenter(this, context);
+        searchButton.setOnClickListener(v -> presenter.loadUsersSearch(searchET.getText().toString()));
+        clearSearchResults.setOnClickListener(v -> presenter.loadUsers());
+
     }
 
     @Override
-    public void onFollowClicked(int position) {
+    public void onUserClicked(int position) {
         //TODO go to chat screen...
     }
 
     @Override
-    public void loadUsers(List<User> users) {
-        
+    public void loadUsers(List<String> users) {
+        clearSearchResults.setVisibility(View.GONE);
+        this.usernames = users;
+        userSearchDMAdapter.swapDataSet(users);
+    }
+
+    @Override
+    public void loadUsersSearch(List<String> users) {
+        clearSearchResults.setVisibility(View.VISIBLE);
+        this.usernames = users;
+        userSearchDMAdapter.swapDataSet(users);
     }
 
     @Override
     public void makeToast(String message) {
-        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+        System.out.println(message);
+//        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
     }
 
     @Override
