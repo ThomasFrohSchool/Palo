@@ -33,6 +33,7 @@ public class MessageController {
                 contacted.add(toAdd);
             }
         }
+
         return contacted;
     }
 }

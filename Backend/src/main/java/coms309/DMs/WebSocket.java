@@ -1,5 +1,7 @@
 package coms309.DMs;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -17,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RestController;
 
 @Controller      // this is needed for this to be an endpoint to springboot
 @ServerEndpoint(value = "/chat/{from}/{to}")  // this is Websocket url
@@ -131,7 +132,13 @@ public class WebSocket {
 				dm.add(toMessages.get(i));
 			}
 		}
-		//List<Message> messages = msgTable.findAll();
+
+
+
+		//SimpleDateFormat formatter1=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        dm.sort((e1, e2) ->
+            (e1.getSent().toString()).compareTo((e2.getSent().toString())));
+			
     // convert the list to a string
 		StringBuilder sb = new StringBuilder();
 		if(dm != null && dm.size() != 0) {
@@ -139,6 +146,10 @@ public class WebSocket {
 				sb.append(d.getfromUser() + ": " + d.getContent() + "\n");
 			}
 		}
+
+		
+
+
 		return sb.toString();
 	}
 
