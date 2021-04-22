@@ -54,6 +54,8 @@ public class FeedPresenter implements IFeedPresenter, IFeedVolleyListener {
     @Override
     public void onError(String message) {
         view.makeToast(message);
+        //TODO fix error in the toast function
+        System.out.println("Error in the feed fragment with toasts");
     }
 
     @Override

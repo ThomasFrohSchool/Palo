@@ -27,8 +27,8 @@ public class User implements Parcelable {
         this.id = id;
         this.username = username;
         this.email = email;
-        this.userFollowing = getUserFollowing();
-        this.userFollowers = getUserFollowers();
+        this.userFollowing = new ArrayList<>();
+        this.userFollowers = new ArrayList<>();
     }
     
     public User(Parcel parcel){
@@ -36,15 +36,15 @@ public class User implements Parcelable {
         username = parcel.readString();
         email = parcel.readString();
         profileImage = parcel.readString();
-        this.userFollowing = getUserFollowing();
-        this.userFollowers = getUserFollowers();
+        this.userFollowing = new ArrayList<>();
+        this.userFollowers = new ArrayList<>();
     }
     public User(int id){
         this.id = id;
         this.username = "TEMP_USER";
         this.profileImage = "https://img.apmcdn.org/4f25ecdbbd7af5fed833153302515a94c990de11/square/7aacc5-20130508-favorite-album-covers.jpg";
-        this.userFollowing = getUserFollowing();
-        this.userFollowers = getUserFollowers();
+        this.userFollowing = new ArrayList<>();
+        this.userFollowers = new ArrayList<>();
     }
 
     public User(JSONObject userJson) throws JSONException {
