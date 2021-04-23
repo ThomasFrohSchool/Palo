@@ -38,15 +38,15 @@ public class UserSearchAdapter extends RecyclerView.Adapter<UserSearchAdapter.Vi
     User user;
     List<Integer> userFollowing;
 
-    public UserSearchAdapter(Context context, List<User> searchResults, List<Integer> userFollowing, onUserListener onUserListener) {
+    public UserSearchAdapter(Context context, List<User> searchResults, onUserListener onUserListener) {
         user = SharedPrefManager.getInstance(context).getUser();
         this.inflater = LayoutInflater.from(context);
         this.searchResults = searchResults;
         this.context = context;
         this.onUserListener = onUserListener;
-        this.userFollowing = userFollowing;
-        user.setUserFollowing(userFollowing);
-        System.out.println(user.getUserFollowing());
+        getFollowing();
+        //user.setUserFollowing(userFollowing);
+        //System.out.println(user.getUserFollowing());
         //getFollowing();
         //user.setUserFollowing(userFollowing);
     }
@@ -103,6 +103,7 @@ public class UserSearchAdapter extends RecyclerView.Adapter<UserSearchAdapter.Vi
         }
 
         public void followClicked(int pos) {
+            getFollowing();
             toggleFollow(toggleIsFollowing(searchResults.get(pos).getId()));
             if(getIsFollowing(searchResults.get(pos).getId()))
                 onUserListener.onAddFollowClicked(pos);
@@ -152,9 +153,8 @@ public class UserSearchAdapter extends RecyclerView.Adapter<UserSearchAdapter.Vi
         public void onRemoveFollowClicked(int position);
     }
 
-    /*private void getFollowing() {
+    private void getFollowing() {
         ArrayList<Integer> u = new ArrayList<>();
-        //userFollowing = new ArrayList<>();
 
         JsonObjectRequest j = new JsonObjectRequest(Request.Method.GET, USER_BY_ID + user.getId(), null,
                 response -> {
@@ -169,9 +169,7 @@ public class UserSearchAdapter extends RecyclerView.Adapter<UserSearchAdapter.Vi
                         e.printStackTrace();
                     }
                 }, Throwable::printStackTrace);
-        //p.hide();
-        VolleySingleton.getInstance(context).addToRequestQueue(j);
 
-        //return u;
-    }*/
+        VolleySingleton.getInstance(context).addToRequestQueue(j);
+    }
 }
