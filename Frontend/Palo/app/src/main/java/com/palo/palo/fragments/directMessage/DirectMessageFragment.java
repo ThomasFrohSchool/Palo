@@ -2,6 +2,7 @@ package com.palo.palo.fragments.directMessage;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 
 import com.palo.palo.R;
 import com.palo.palo.UserSearchDMAdapter;
+import com.palo.palo.activities.DirectMessageUserActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +72,9 @@ public class DirectMessageFragment extends Fragment implements UserSearchDMAdapt
     @Override
     public void onUserClicked(int position) {
         //TODO go to chat screen...
+        Intent intent = new Intent(context, DirectMessageUserActivity.class);
+        intent.putExtra("USER_TO_SEND", usernames.get(position));
+        startActivity(intent);
     }
 
     @Override

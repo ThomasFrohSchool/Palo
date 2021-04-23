@@ -50,38 +50,4 @@ public class DirectMessageModel {
                 }, error -> volleyListener.onSearchError(error.getMessage()));
         VolleySingleton.getInstance(context).addToRequestQueue(request);
     }
-
-    private void connectWebSocket() {
-        URI uri;
-        try {
-            uri = new URI("ws/chat/" + SharedPrefManager.getInstance(context).getUser().getUsername() + "/");
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        WebSocketClient mWebSocketClient = new WebSocketClient(uri) {
-            @Override
-            public void onOpen(ServerHandshake handshakedata) {
-                Log.i("Websocket", "Opened");
-            }
-
-            @Override
-            public void onMessage(String message) {
-                Log.i("Websocket", "Message Received");
-
-            }
-
-            @Override
-            public void onClose(int code, String reason, boolean remote) {
-
-            }
-
-            @Override
-            public void onError(Exception ex) {
-
-            }
-        };
-        mWebSocketClient.connect();
-    }
 }

@@ -7,10 +7,11 @@
         android:icon="@drawable/ic_action_home"
         app:showAsAction="ifRoom"/>
 
-    <item android:id="@+id/action_palolist"
-        android:title="PaloList"
-        android:icon="@drawable/ic_action_music_note"
-        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/action_dm"
+        android:icon="@android:drawable/ic_dialog_email"
+        android:title="DM"
+        app:showAsAction="ifRoom" />
 
     <item android:id="@+id/action_create"
         android:title="Create"
