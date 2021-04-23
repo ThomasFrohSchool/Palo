@@ -1,12 +1,18 @@
 package com.palo.palo.fragments.directMessage;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.palo.palo.SharedPrefManager;
 import com.palo.palo.volley.VolleySingleton;
 
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONException;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import static com.palo.palo.volley.ServerURLs.DM_LIST;
 import static com.palo.palo.volley.ServerURLs.SEARCH_BY_USERNAME;
@@ -43,5 +49,39 @@ public class DirectMessageModel {
                     }
                 }, error -> volleyListener.onSearchError(error.getMessage()));
         VolleySingleton.getInstance(context).addToRequestQueue(request);
+    }
+
+    private void connectWebSocket() {
+        URI uri;
+        try {
+            uri = new URI("ws/chat/" + SharedPrefManager.getInstance(context).getUser().getUsername() + "/");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        WebSocketClient mWebSocketClient = new WebSocketClient(uri) {
+            @Override
+            public void onOpen(ServerHandshake handshakedata) {
+                Log.i("Websocket", "Opened");
+            }
+
+            @Override
+            public void onMessage(String message) {
+                Log.i("Websocket", "Message Received");
+
+            }
+
+            @Override
+            public void onClose(int code, String reason, boolean remote) {
+
+            }
+
+            @Override
+            public void onError(Exception ex) {
+
+            }
+        };
+        mWebSocketClient.connect();
     }
 }
