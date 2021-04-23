@@ -10,8 +10,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.palo.palo.R;
-import com.palo.palo.fragments.CreatePaloFragment;
-import com.palo.palo.fragments.CreatePaloSearchFragment;
+import com.palo.palo.fragments.createPalo.create.CreatePaloFragment;
+import com.palo.palo.fragments.createPalo.search.CreatePaloSearchFragment;
 import com.palo.palo.model.Attachment;
 
 
@@ -59,13 +59,13 @@ public class CreateNewPostActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Select an attachment.", Toast.LENGTH_LONG).show();
                 return;
             }
-            ((CreatePaloFragment) createNewFrag).setAttachment(song);
+            ((CreatePaloFragment) createNewFrag).loadAttatchment(song);
             fm.beginTransaction().hide(active).show(createNewFrag).commit();
             active = createNewFrag;
             back.setText("BACK");
             next.setText("POST");
         } else {
-            ((CreatePaloFragment) createNewFrag).post();
+            ((CreatePaloFragment) createNewFrag).postPalo();
             startActivity(new Intent(CreateNewPostActivity.this, MainActivity.class));
         }
 

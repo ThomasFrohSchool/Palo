@@ -5,6 +5,9 @@ import android.os.Parcel;
 /**
  * Model for artist attachment recieved from spotify.
  */
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class Artist extends Attachment {
 
     public Artist(){}
@@ -14,6 +17,12 @@ public class Artist extends Attachment {
 
     public Artist(Parcel parcel){
         //TODO
+    }
+
+    public Artist(JSONObject json) throws JSONException {
+        super(json.getString("id"), json.getString("link"));
+        setTitle(json.getString("artist"));
+        setAlbumCover(json.getString("imageUrl"));
     }
     
     @Override

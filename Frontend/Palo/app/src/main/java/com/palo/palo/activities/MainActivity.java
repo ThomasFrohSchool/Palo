@@ -11,10 +11,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.palo.palo.R;
 import com.palo.palo.SharedPrefManager;
 import com.palo.palo.activities.login.LoginActivity;
-import com.palo.palo.fragments.FeedFragment;
+import com.palo.palo.fragments.feed.FeedFragment;
 import com.palo.palo.fragments.PaloListFragment;
-import com.palo.palo.fragments.ProfileFragment;
-import com.palo.palo.fragments.SearchFragment;
+import com.palo.palo.fragments.profile.ProfileFragment;
+import com.palo.palo.fragments.searchPage.SearchFragment;
 
 
 /**

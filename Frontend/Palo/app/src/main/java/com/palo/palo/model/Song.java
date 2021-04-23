@@ -6,6 +6,9 @@ import android.os.Parcelable;
 /**
  * Model for song attachment recieved from spotify.
  */
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class Song extends Attachment {
     public static final int TYPE = 2;
     private  String title;
@@ -31,6 +34,14 @@ public class Song extends Attachment {
     }
     public Song(String spot_link){
         super(spot_link);
+    }
+
+    public Song(JSONObject json)  throws JSONException  {
+        super(json.getString("id"), json.getString("link"));
+        this.title = json.getString("name");
+        this.artist = json.getString("artist");
+        this.albumCover = json.getString("imageUrl");
+        this.playbackLink =  json.getString("playbackLink");
     }
 
     public String getTitle() {

@@ -5,14 +5,14 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.CreatePaloFragment">
+    tools:context=".fragments.createPalo.create.CreatePaloFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/new_post_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="top"
-        tools:context=".fragments.CreatePaloFragment">
+        tools:context=".fragments.createPalo.create.CreatePaloFragment">
 
 
 
