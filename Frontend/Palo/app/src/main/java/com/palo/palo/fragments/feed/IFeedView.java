@@ -11,4 +11,5 @@ public interface IFeedView {
     public void makeToast(String message);
     public void updatePalo(int paloIndex, Palo palo);
     public Palo getPalo(int paloIndex);
+    public void updateLikeToPalo(int paloIndex, boolean isLiked);
 }

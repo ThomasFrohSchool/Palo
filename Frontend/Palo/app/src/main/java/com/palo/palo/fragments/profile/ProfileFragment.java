@@ -94,7 +94,9 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
 
     @Override
     public void onLikeClicked(int position) {
-        System.out.println("post like clicked..." + palos.get(position).getCaption());
+        Palo palo =  palos.get(position);
+        System.out.println("post like clicked..." + palo.getCaption() + palo.getIsLiked());
+        profilePresenter.likePalo(position, palo.getId(), SharedPrefManager.getInstance(context).getUser().getId(), !palo.getIsLiked());
     }
 
     @Override
@@ -146,5 +148,13 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
     @Override
     public void setPaloCount(String num) {
         paloAmt.setText(num);
+    }
+
+    @Override
+    public void updateLikeToPalo(int paloIndex, boolean isLiked) {
+        Palo p = palos.get(paloIndex);
+        p.setIsLiked(isLiked);
+        System.out.println("updateLike = " + isLiked);
+        postAdapter.updatePalo(paloIndex, p);
     }
 }

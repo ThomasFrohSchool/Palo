@@ -35,6 +35,7 @@ public class ExtendedPostActivity extends AppCompatActivity implements IExtended
     List<Comment> comments;
     EditText newCommentBody;
     TextView postComment;
+    TextView likeTV;
     Context context;
     IExtendedPostPresenter presenter;
     private String TAG = ExtendedPostActivity.class.getSimpleName();
@@ -49,6 +50,8 @@ public class ExtendedPostActivity extends AppCompatActivity implements IExtended
         attachedPalo = getIntent().getParcelableExtra("selected_post");
         setPaloView(attachedPalo);
         presenter = new ExtendedPostPresenter(this, context, attachedPalo.getId());
+        likeTV = findViewById(R.id.paloLike);
+        likeTV.setOnClickListener(v -> likeClicked());
 
         // TODO set current user profile pic next to make comment text field.
 
@@ -64,6 +67,10 @@ public class ExtendedPostActivity extends AppCompatActivity implements IExtended
         presenter.loadComments();
     }
 
+    public void likeClicked(){
+        System.out.println("post like clicked..." + attachedPalo.getIsLiked());
+        presenter.likePalo(attachedPalo.getId(), SharedPrefManager.getInstance(context).getUser().getId(), !attachedPalo.getIsLiked());
+    }
 
     @Override
     public void makeToast(String message) {
@@ -96,6 +103,13 @@ public class ExtendedPostActivity extends AppCompatActivity implements IExtended
     @Override
     public void postComment() {
         presenter.postComment(setupCommentJson());
+    }
+
+    @Override
+    public void updateLikeToPalo( boolean isLiked) {
+        attachedPalo.setIsLiked(isLiked);
+        if(isLiked) likeTV.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_heart_full,0,0,0);
+        else likeTV.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_heart_empty,0,0,0);
     }
 
     @Override

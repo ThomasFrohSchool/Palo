@@ -4,14 +4,17 @@ import android.content.Context;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.palo.palo.fragments.feed.IFeedVolleyListener;
 import com.palo.palo.volley.VolleySingleton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 
+import static com.palo.palo.volley.ServerURLs.ADD_LIKE;
 import static com.palo.palo.volley.ServerURLs.CREATE_COMMENT;
 import static com.palo.palo.volley.ServerURLs.GET_COMMENTS;
+import static com.palo.palo.volley.ServerURLs.REMOVE_LIKE;
 import static com.palo.palo.volley.ServerURLs.USER_BY_ID;
 
 public class ExtendedPostModel {
@@ -68,6 +71,31 @@ public class ExtendedPostModel {
                  },
                 error -> volleyListener.onError(error.getMessage()));
 
+        VolleySingleton.getInstance(context).addToRequestQueue(request);
+    }
+
+    public void addPaloLike(int paloId, int userId, IExtendedPostVolleyListener volleyListener){
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, ADD_LIKE(paloId, userId), null, response -> {
+            try {
+                if(response.getString("message").equals("success"))
+                    volleyListener.onLikeRequestSuccess(true);
+            } catch (JSONException e) {
+                volleyListener.onError(response.toString());
+            }
+        }, error -> volleyListener.onError(error.getMessage()));
+        VolleySingleton.getInstance(context).addToRequestQueue(request);
+    }
+
+
+    public void removePaloLike( int paloId, int userId, IExtendedPostVolleyListener volleyListener){
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, REMOVE_LIKE(paloId, userId), null, response -> {
+            try {
+                if(response.getString("message").equals("success"))
+                    volleyListener.onLikeRequestSuccess(false);
+            } catch (JSONException e) {
+                volleyListener.onError(response.toString());
+            }
+        }, error -> volleyListener.onError(error.getMessage()));
         VolleySingleton.getInstance(context).addToRequestQueue(request);
     }
 }
