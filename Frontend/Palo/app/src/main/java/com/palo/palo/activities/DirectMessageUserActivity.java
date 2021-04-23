@@ -47,7 +47,8 @@ public class DirectMessageUserActivity extends AppCompatActivity {
         connectWebSocket();
 
         back.setOnClickListener(v -> {
-            Intent intent = new Intent(context, DirectMessageFragment.class);
+            mWebSocketClient.close();
+            Intent intent = new Intent(context, MainActivity.class);
             startActivity(intent);
         });
 
