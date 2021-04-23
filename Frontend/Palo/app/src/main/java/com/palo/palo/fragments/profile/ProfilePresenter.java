@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import static com.palo.palo.volley.ServerURLs.PICS;
+import static com.palo.palo.volley.ServerURLs.POSTS_FROM_USER;
 
 
 public class ProfilePresenter implements IProfilePresenter, IProfileVolleyListener {
@@ -38,7 +39,7 @@ public class ProfilePresenter implements IProfilePresenter, IProfileVolleyListen
     @Override
     public void loadPosts(int userId) {
         //todo update path to server path
-        String url = "https://440b43ef-556f-4d7d-a95d-081ca321b8f9.mock.pstmn.io" + "/Palo?q=" + username;
+        String url = POSTS_FROM_USER + userId;
         model.getUserPosts(url, username, this);
     }
 
