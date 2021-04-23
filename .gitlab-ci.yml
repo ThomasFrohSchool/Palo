@@ -9,6 +9,11 @@ build-code-job:
   stage: build
   tags:
     - backend
+  only:
+    refs:
+      - master
+    changes:
+      - Backend/**/*
   script:
     - mkdir -p /home/gitlab-runner/testBuild
     - echo "Going to try and build the API:"
@@ -20,6 +25,11 @@ test-code-job1:
   stage: test
   tags:
     - backend
+  only:
+    refs:
+      - master
+    changes:
+      - Backend/**/*
   script:
     - echo "Running JUnit Mockito test :-)"
     - cd ./Backend
@@ -30,7 +40,10 @@ test-code-deploy:
   tags:
     - backend
   only:
-    - master
+    refs:
+      - master
+    changes:
+      - Backend/**/*
   script:
     - echo "This will deploy the tested build"
     - cp -r /home/gitlab-runner/testBuild/* /palo/
