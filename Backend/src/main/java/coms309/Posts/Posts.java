@@ -33,6 +33,9 @@ public class Posts {
 	@OneToMany
 	private List<Comments> comments;
 
+	@OneToMany
+	private List<Likes> likeList;
+
 	public Posts(String description, int type, String spot_id){
 		this.spot_id = spot_id;
 		this.description = description;
@@ -73,6 +76,12 @@ public class Posts {
 	public List<Comments> getComments(){
 		return this.comments;
 	}
+	public List<Likes> getLikeList(){
+		return this.likeList;
+	}
+	public void addLikeList(Likes l){
+		this.likeList.add(l);
+	}
 	public void setDescription(String description){
 		this.description = description;
 	}
@@ -96,5 +105,8 @@ public class Posts {
 	}
 	public void setComments (List<Comments> comments){
 		this.comments = comments;
+	}
+	public void setLikeList(List <Likes> l){
+		this.likeList= l;
 	}
 }

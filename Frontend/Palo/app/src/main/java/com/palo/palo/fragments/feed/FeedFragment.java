@@ -39,7 +39,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
     Button refreshFeed;
     View myView;
     IFeedPresenter feedPresenter;
-    Context context;
+    private Context context;
     List<Palo> palos;
 
     public FeedFragment() { }
@@ -108,7 +108,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
 
     @Override
     public void makeToast(String message) {
-        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+        //Toast.makeText(context, message, Toast.LENGTH_LONG).show();
     }
 
     @Override

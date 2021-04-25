@@ -11,6 +11,7 @@ public class Comment {
     private int author_id;
     private String postDate;
     private String caption;
+    private String authorUsername;
     
     public Comment(){}
     public Comment(int author_id, String postDate, String caption){
@@ -24,6 +25,7 @@ public class Comment {
         author = new User(author_id);
         postDate = commentJSON.getString("createDate");
         caption = commentJSON.getString("body");
+        author = new User(author_id);
     }
     public User getAuthor() {
         return author;
@@ -52,4 +54,6 @@ public class Comment {
     public void setCaption(String caption) {
         this.caption = caption;
     }
+
+    public int getAuthor_id() { return author_id; }
 }
