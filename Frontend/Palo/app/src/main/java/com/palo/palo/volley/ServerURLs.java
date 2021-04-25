@@ -23,6 +23,7 @@ public class ServerURLs {
     public static final String POSTS_FROM_USER = ROOT + "posts/";
     public static final String FOLLOW = ROOT + "add/";
     public static final String DMSOCKET = "ws://coms-309-021.cs.iastate.edu:8080/chat/";
+    public static final String UNFOLLOW = ROOT + "remove/";
 
     public static String ATTACHMENT(int type){
         switch (type){
