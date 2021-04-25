@@ -149,8 +149,8 @@ public class UserSearchAdapter extends RecyclerView.Adapter<UserSearchAdapter.Vi
     }
 
     public interface onUserListener {
-        public void onAddFollowClicked(int position);
-        public void onRemoveFollowClicked(int position);
+        public String onAddFollowClicked(int position);
+        public String onRemoveFollowClicked(int position);
     }
 
     private void getFollowing() {

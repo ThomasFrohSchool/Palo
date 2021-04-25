@@ -142,7 +142,7 @@ public class SearchFragment extends Fragment implements UserSearchAdapter.onUser
 
     //TODO make the follow functions mvp format
     @Override
-    public void onAddFollowClicked(int position) {
+    public String onAddFollowClicked(int position) {
         System.out.println("user followed " + usersList.get(position).getId());
         //user.addFollowing(usersList.get(position).getId());
 
@@ -157,10 +157,12 @@ public class SearchFragment extends Fragment implements UserSearchAdapter.onUser
         );
 
         VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(request);
+
+        return "user followed " + usersList.get(position).getId();
     }
 
     @Override
-    public void onRemoveFollowClicked(int position) {
+    public String onRemoveFollowClicked(int position) {
         System.out.println("user removed " + usersList.get(position).getId());
 
         JsonObjectRequest request = new JsonObjectRequest(
@@ -174,6 +176,8 @@ public class SearchFragment extends Fragment implements UserSearchAdapter.onUser
         );
 
         VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(request);
+
+        return "user removed " + usersList.get(position).getId();
     }
 
 }
