@@ -15,5 +15,6 @@ public interface IProfileView {
     public void setFollowersCount(String num);
     public void setFollowingCount(String num);
     public void setPaloCount(String num);
+    public void hideOwnProfileStuff();
     public void updateLikeToPalo(int paloIndex, boolean isLiked);
 }

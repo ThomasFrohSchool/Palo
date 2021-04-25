@@ -1,5 +1,7 @@
 package com.palo.palo.volley;
 
+import com.palo.palo.SharedPrefManager;
+
 /**
  * ServerURLs contains paths to server. This contains the server's root address and all the paths to the routes to the server.
  * See server swaagger docs at "http://coms-309-021.cs.iastate.edu:8080/swagger-ui.html#/" for more details on endpoints.
@@ -20,6 +22,8 @@ public class ServerURLs {
     public static final String USER_BY_ID = ROOT + "user/";
     public static final String POSTS_FROM_USER = ROOT + "posts/";
     public static final String FOLLOW = ROOT + "add/";
+    public static final String DMSOCKET = "ws://coms-309-021.cs.iastate.edu:8080/chat/";
+    public static final String UNFOLLOW = ROOT + "remove/";
     public static final String ADD_LIKE(int postId, int userId){return ROOT + "like/add/"+ postId + "/" + userId;}
     public static final String REMOVE_LIKE(int postId, int userId){return ROOT + "like/remove/"+ postId + "/" + userId;}
 

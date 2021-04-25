@@ -7,7 +7,9 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,7 @@ import com.palo.palo.FeedAdapter;
 import com.palo.palo.R;
 import com.palo.palo.SharedPrefManager;
 import com.palo.palo.activities.extendedPost.ExtendedPostActivity;
+import com.palo.palo.activities.profile.ProfileActivity;
 import com.palo.palo.model.Palo;
 
 import java.util.ArrayList;
@@ -33,6 +36,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
     private final String FEED_STR_TAG = FeedFragment.class.getSimpleName();
     RecyclerView recyclerView;
     FeedAdapter feedAdapter;
+    SwipeRefreshLayout layout;
     TextView emptyFeedMessage;
     Button refreshFeed;
     View myView;
@@ -56,10 +60,18 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
         myView = view;
         context = getActivity().getApplicationContext();
         recyclerView = view.findViewById(R.id.songList);
+        layout = view.findViewById(R.id.feedSwipeRefreshLayout);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         feedAdapter = new FeedAdapter(context, new ArrayList<>(), this);
         recyclerView.setAdapter(feedAdapter);
         feedPresenter = new FeedPresenter(this, context,  SharedPrefManager.getInstance(myView.getContext()).getUser().getId());
+        layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                layout.setRefreshing(false);
+                feedPresenter.loadFeed(SharedPrefManager.getInstance(myView.getContext()).getUser().getId());
+            }
+        });
     }
 
     @Override
@@ -76,6 +88,15 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
         Palo palo =  palos.get(position);
         System.out.println("post like clicked..." + palo.getCaption() + palo.getIsLiked());
         feedPresenter.likePalo(position, palo.getId(), SharedPrefManager.getInstance(context).getUser().getId(), !palo.getIsLiked());
+    }
+
+    @Override
+    public void onUserNameClicked(int position) {
+        System.out.println("post like clicked..." + palos.get(position).getAuthorUsername());
+        Palo p = palos.get(position);
+        Intent intent =  new Intent(getContext(), ProfileActivity.class);
+        intent.putExtra("user_obj", palos.get(position).getAuthor());
+        startActivity(intent);
     }
 
     @Override

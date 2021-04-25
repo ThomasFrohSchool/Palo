@@ -91,6 +91,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         public ViewHolder(@NonNull View itemView, OnFeedListener onFeedListener) {
             super(itemView);
             authorUserNameTV = itemView.findViewById(R.id.paloAuthorUserName);
+            authorUserNameTV.setOnClickListener(v -> onFeedListener.onUserNameClicked(getAdapterPosition()));
             postdateTV = itemView.findViewById(R.id.paloDate);
             captionTV = itemView.findViewById(R.id.paloCaption);
             authorProfileImage = itemView.findViewById(R.id.paloAuthorProfileImage);
@@ -120,5 +121,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
     public interface OnFeedListener {
         public void onPaloClick(int position);
         public void onLikeClicked(int position);
+        public void onUserNameClicked(int position);
     }
 }

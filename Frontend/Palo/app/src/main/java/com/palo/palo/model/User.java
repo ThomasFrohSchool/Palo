@@ -3,7 +3,11 @@ package com.palo.palo.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,8 +22,8 @@ public class User implements Parcelable {
     private String username;
     public String email;
     private String profileImage;
-    private ArrayList<Integer> userFollowing;
-    private ArrayList<Integer> userFollowers;
+    private List<Integer> userFollowing;
+    private List<Integer> userFollowers;
 
     public User(){}
 
@@ -41,8 +45,8 @@ public class User implements Parcelable {
     }
     public User(int id){
         this.id = id;
-        this.username = "TEMP_USER";
-        this.profileImage = "https://img.apmcdn.org/4f25ecdbbd7af5fed833153302515a94c990de11/square/7aacc5-20130508-favorite-album-covers.jpg";
+        this.username = "";
+        this.profileImage = "https://icon-library.com/images/default-user-icon/default-user-icon-4.jpg";
         this.userFollowing = new ArrayList<>();
         this.userFollowers = new ArrayList<>();
     }
@@ -80,15 +84,19 @@ public class User implements Parcelable {
         this.profileImage = profileImage;
     }
 
-    public ArrayList<Integer> getUserFollowing() { return userFollowing; }
+    public List<Integer> getUserFollowing() { return userFollowing; }
 
-    public ArrayList<Integer> getUserFollowers() { return userFollowers; }
+    public List<Integer> getUserFollowers() { return userFollowers; }
 
-    public void setUserFollowing(ArrayList<Integer> userFollowing) { this.userFollowing = userFollowing; }
+    public void setUserFollowing(List<Integer> userFollowing) {
+        this.userFollowing = userFollowing;
+    }
 
-    public void setUserFollowers(ArrayList<Integer> userFollowers) { this.userFollowers = userFollowers; }
+    public void setUserFollowers(List<Integer> userFollowers) {
+        this.userFollowers = userFollowers;
+    }
 
-    public boolean getUserByIdFollowing(Integer id) {
+    /*public boolean getUserByIdFollowing(Integer id) {
         for(int i = 0; i < userFollowing.size(); i++) {
             if(id == userFollowing.get(i))
                 return true;
@@ -101,16 +109,17 @@ public class User implements Parcelable {
     }
 
     public boolean toggleIsFollowing(int id) {
-        int pos;
+        //int pos;
         for(int i = 0; i < userFollowing.size(); i++) {
             if(userFollowing.get(i) == id) {
                 userFollowing.remove(i);
+
                 return false;
             }
         }
         userFollowing.add(id);
         return true;
-    }
+    }*/
 
     @Override
     public int describeContents() {

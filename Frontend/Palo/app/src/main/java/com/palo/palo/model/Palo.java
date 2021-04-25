@@ -86,30 +86,29 @@ public class Palo implements Parcelable {
 
     public Palo(JSONObject paloJSON, String username, String profilePic) throws JSONException {
         System.out.println("!!!!" + paloJSON.toString());
-        //todo fix this (used in profile)
-//        id = paloJSON.getInt("id");
-//        author = new User(paloJSON.getInt("user_id"), username);
-        author = new User();
+        id = paloJSON.getInt("id");
+        author = new User(paloJSON.getInt("user_id"), username);
+        //author = new User();
         author.setUsername(username);
         author.setProfileImage(profilePic);
-//        postDate = paloJSON.getString("createDate");
-//        caption = paloJSON.getString("description");
-        postDate = paloJSON.getString("postdate");
-        caption = paloJSON.getString("caption");
-//        switch (paloJSON.getInt("type")){
-//            case 0:
-//                attachment = new Album(paloJSON.getString("spot_id"));
-//                break;
-//            case 1:
-//                attachment = new Artist(paloJSON.getString("spot_id"));
-//                break;
-//            case 2:
-//                attachment = new Song(paloJSON.getString("spot_id"));
-//                break;
-//            default: System.out.println("error");
-//        }
+        postDate = paloJSON.getString("createDate");
+        caption = paloJSON.getString("description");
+        //postDate = paloJSON.getString("createDate");
+        //caption = paloJSON.getString("caption");
+        switch (paloJSON.getInt("type")){
+            case 0:
+                attachment = new Album(paloJSON.getString("spot_id"));
+                break;
+            case 1:
+                attachment = new Artist(paloJSON.getString("spot_id"));
+                break;
+            case 2:
+                attachment = new Song(paloJSON.getString("spot_id"));
+                break;
+            default: System.out.println("error");
+        }
 
-        attachment = new Song("7niXXokVzkvRw81pF4Q9Ad"); //todo delete
+        //attachment = new Song("7niXXokVzkvRw81pF4Q9Ad"); //todo delete
         
         isLiked = false;
     }

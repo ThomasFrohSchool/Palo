@@ -36,7 +36,7 @@ public class ProfileModel {
     }
 
     public void getUserPosts(String url, String username, IProfileVolleyListener volleyListener){
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url + "/Palo?q=" + username, null,
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
                 response -> {
                     try {
                         volleyListener.onPostsSuccess(response);

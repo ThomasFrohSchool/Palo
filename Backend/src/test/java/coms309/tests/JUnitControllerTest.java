@@ -1,5 +1,8 @@
 package coms309.tests;
 
+import coms309.DMs.Message;
+import coms309.DMs.MessageController;
+import coms309.DMs.MessageTable;
 import coms309.Posts.*;
 import coms309.Spotify.SpotifyController;
 import coms309.Users.*;
@@ -21,7 +24,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-@SpringBootTest  
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class JUnitControllerTest {
 
 
@@ -34,6 +37,12 @@ public class JUnitControllerTest {
 
 	@Mock
 	PostsTable posts;
+
+	@Mock
+	MessageController messageController;
+
+	@Mock
+	MessageTable messages;
 
     @Before
 	public void init() {
@@ -104,5 +113,56 @@ public class JUnitControllerTest {
 		assertEquals("Night Visions (Deluxe)", obj.getString("name"));
 		assertEquals("https://open.spotify.com/album/1rzDtYMpZDhRgKNigB467r", obj.getString("link"));
 		assertEquals("1rzDtYMpZDhRgKNigB467r", obj.getString("id"));
+	}
+
+	@Test
+	public void getDmListTest(){
+		List<String> marshallList = new ArrayList<String>();
+		List<String> davidList = new ArrayList<String>();
+		marshallList.add("david");
+		marshallList.add("tiffany");
+		marshallList.add("thomas");
+
+		davidList.add("marshall");
+		davidList.add("john");
+		davidList.add("steve");
+		when(messageController.getDmList("marshall")).thenReturn(marshallList);
+		when(messageController.getDmList("david")).thenReturn(davidList);
+
+		List<String> marshallObj = messageController.getDmList("marshall");
+		List<String> davidObj = messageController.getDmList("david");
+
+		for(int i = 0; i < marshallList.size();i++){
+			assertEquals(marshallList.get(i), marshallObj.get(i));
+		}
+		for(int i = 0; i < davidList.size();i++){
+			assertEquals(davidList.get(i), davidObj.get(i));
+		}
+
+	}
+
+	@Test
+	public void messageFindByFromUserTest(){
+		List<Message> fromMarshall = new ArrayList<>();
+		fromMarshall.add(new Message("marshall", "david", "yoooo dave whats up!"));
+		fromMarshall.add(new Message("marshall", "thomas", "Tommy you gotta check out this new song I found!"));
+
+		List<Message> fromDavid = new ArrayList<>();
+		fromDavid.add(new Message("david", "marshall", "Hey man, long time no see!"));
+		fromDavid.add(new Message("david", "tiffany", "Yo tiff, check out my latest post, its an album from my favorite anime!!"));
+		
+		when(messages.findByfromUser("marshall")).thenReturn(fromMarshall);
+		when(messages.findByfromUser("david")).thenReturn(fromDavid);
+
+		List<Message> fromMarshallObj = messages.findByfromUser("marshall");
+		List<Message> fromDavidObj = messages.findByfromUser("david");
+
+		for(int i = 0; i < fromMarshall.size();i++){
+			assertEquals(fromMarshall.get(i), fromMarshallObj.get(i));
+		}
+
+		for(int i = 0; i < fromDavid.size();i++){
+			assertEquals(fromDavid.get(i), fromDavidObj.get(i));
+		}
 	}
 }
