@@ -6,6 +6,11 @@ stages:
   - androidtest
 
 build-code-job:
+  only:
+    refs:
+      - master
+    changes:
+      - Backend/**/*
   stage: build
   tags:
     - backend
@@ -22,6 +27,11 @@ build-code-job:
     - cp -r ./target/* /home/gitlab-runner/testBuild/
 
 test-code-job1:
+  only:
+    refs:
+      - master
+    changes:
+      - Backend/**/*
   stage: test
   tags:
     - backend

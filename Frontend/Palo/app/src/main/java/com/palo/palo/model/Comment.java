@@ -22,6 +22,7 @@ public class Comment {
     }
     public Comment(JSONObject commentJSON) throws JSONException {
         author_id = commentJSON.getInt("user_id");
+        author = new User(author_id);
         postDate = commentJSON.getString("createDate");
         caption = commentJSON.getString("body");
         author = new User(author_id);
