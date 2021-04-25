@@ -61,6 +61,8 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
         context = getActivity().getApplicationContext();
         recyclerView = view.findViewById(R.id.songList);
         layout = view.findViewById(R.id.feedSwipeRefreshLayout);
+        emptyFeedMessage = view.findViewById(R.id.emptyFeedMessage);
+        refreshFeed= view.findViewById(R.id.refreshFeedButton);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         feedAdapter = new FeedAdapter(context, new ArrayList<>(), this);
         recyclerView.setAdapter(feedAdapter);
