@@ -20,27 +20,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-@Controller      // this is needed for this to be an endpoint to springboot
-@ServerEndpoint(value = "/chat/{from}/{to}")  // this is Websocket url
+@Controller 
+@ServerEndpoint(value = "/chat/{from}/{to}")  
 public class WebSocket {
 
-  // cannot autowire static directly (instead we do it by the below
-  // method
+
 	private static MessageTable msgTable; 
 
-	/*
-   * Grabs the MessageRepository singleton from the Spring Application
-   * Context.  This works because of the @Controller annotation on this
-   * class and because the variable is declared as static.
-   * There are other ways to set this. However, this approach is
-   * easiest.
-	 */
+
 	@Autowired
 	public void setMessageRepository(MessageTable table) {
-		msgTable = table;  // we are setting the static variable
+		msgTable = table;  
 	}
 
-	// Store all socket session and their corresponding username.
+
 	private static Map<Session, String> sessionUsernameMap = new Hashtable<>();
 	private static Map<String, Session> usernameSessionMap = new Hashtable<>();
 
@@ -52,13 +45,10 @@ public class WebSocket {
 
 		logger.info("Entered into Open");
 
-    // store connecting user information
-		sessionUsernameMap.put(session, fromUser+":"+touser);
-		//sessionUsernameMap.put(session, touser+":"+fromUser);
-		usernameSessionMap.put(fromUser+":"+touser, session);
-		//usernameSessionMap.put(touser+":"+fromUser, session);
 
-		//Send chat history to the newly connected user
+		sessionUsernameMap.put(session, fromUser+":"+touser);
+		usernameSessionMap.put(fromUser+":"+touser, session);
+
 		sendMessageToPArticularUser(fromUser, touser, getChatHistory(fromUser,touser));
 		
 	}
@@ -67,21 +57,17 @@ public class WebSocket {
 	@OnMessage
 	public void onMessage(Session session, String message) throws IOException {
 
-		// Handle new messages
+
 		logger.info("Entered into Message: Got Message:" + message);
 		String fromUser = sessionUsernameMap.get(session).split(":")[0];
 
-    // Direct message to a user using the format "@username <message>"
+
 		
 		String toUser = sessionUsernameMap.get(session).split(":")[1];
 
-      // send the message to the sender and receiver
 		sendMessageToPArticularUser(toUser, fromUser, fromUser + ": " + message);
 		sendMessageToPArticularUser(fromUser, toUser, fromUser + ": " + message);
 
-		
-
-		// Saving chat history to repository
 		msgTable.save(new Message(fromUser, toUser, message));
 	}
 
@@ -90,7 +76,6 @@ public class WebSocket {
 	public void onClose(Session session) throws IOException {
 		logger.info("Entered into Close");
 
-    // remove the user connection information
 		String username = sessionUsernameMap.get(session);
 		sessionUsernameMap.remove(session);
 		usernameSessionMap.remove(username);
@@ -99,7 +84,6 @@ public class WebSocket {
 
 	@OnError
 	public void onError(Session session, Throwable throwable) {
-		// Do error handling here
 		logger.info("Entered into Error");
 		throwable.printStackTrace();
 	}
@@ -117,7 +101,6 @@ public class WebSocket {
 		}
 	}
 
-  // Gets the Chat history from the repository
 	private String getChatHistory(String fromName, String toName) {
 		List<Message> messages = msgTable.findByfromUser(fromName);
 		List<Message> dm = new ArrayList<Message>();
@@ -135,11 +118,11 @@ public class WebSocket {
 
 
 
-		//SimpleDateFormat formatter1=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+
         dm.sort((e1, e2) ->
             (e1.getSent().toString()).compareTo((e2.getSent().toString())));
 			
-    // convert the list to a string
+
 		StringBuilder sb = new StringBuilder();
 		if(dm != null && dm.size() != 0) {
 			for (Message d : dm) {
