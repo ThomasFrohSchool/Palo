@@ -12,9 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Palo"
         android:usesCleartextTraffic="true">
+        <activity android:name=".activities.profile.ProfileActivity"/>
         <activity android:name=".activities.DirectMessageUserActivity"></activity>
         <activity android:name=".activities.login.register.RegisterActivity" />
-        <activity android:name=".activities.extendedPost.ExtendedPostActivity" />
+        <activity android:name=".activities.extendedPost.ExtendedPostActivity"/>
         <activity android:name=".activities.CreateNewPostActivity" />
         <activity android:name=".activities.login.LoginActivity">
             <intent-filter>

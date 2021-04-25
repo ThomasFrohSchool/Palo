@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import com.palo.palo.CommentAdapter;
 import com.palo.palo.R;
 import com.palo.palo.SharedPrefManager;
+import com.palo.palo.activities.profile.ProfileActivity;
 import com.palo.palo.model.Comment;
 import com.palo.palo.model.Palo;
 import com.squareup.picasso.Picasso;
@@ -28,7 +30,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExtendedPostActivity extends AppCompatActivity implements IExtendedPostView{
+public class ExtendedPostActivity extends AppCompatActivity implements CommentAdapter.OnCommentListener, IExtendedPostView{
     Palo attachedPalo;
     RecyclerView commentRV;
     CommentAdapter commentAdapter;
@@ -56,7 +58,7 @@ public class ExtendedPostActivity extends AppCompatActivity implements IExtended
         newCommentBody = findViewById(R.id.addCommentBody);
         postComment = findViewById(R.id.postCommentButton);
         postComment.setOnClickListener(v -> postComment());
-        commentAdapter = new CommentAdapter(getApplicationContext(), new ArrayList<>());
+        commentAdapter = new CommentAdapter(getApplicationContext(), new ArrayList<>(), this);
         commentRV = findViewById(R.id.commentRecyclerView);
         commentRV.setAdapter(commentAdapter);
         commentRV.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -126,5 +128,13 @@ public class ExtendedPostActivity extends AppCompatActivity implements IExtended
             e.printStackTrace();
         }
         return newComment;
+    }
+
+    @Override
+    public void onCommentUserClicked(int position) {
+        System.out.println("post like clicked..." + comments.get(position).getAuthor().getUsername());
+        Intent intent =  new Intent(this, ProfileActivity.class);
+        intent.putExtra("user_obj", comments.get(position).getAuthor());
+        startActivity(intent);
     }
 }
