@@ -10,8 +10,10 @@ import com.palo.palo.volley.VolleySingleton;
 
 import org.json.JSONException;
 
+import static com.palo.palo.volley.ServerURLs.ADD_LIKE;
 import static com.palo.palo.volley.ServerURLs.ATTACHMENT;
 import static com.palo.palo.volley.ServerURLs.FEED;
+import static com.palo.palo.volley.ServerURLs.REMOVE_LIKE;
 import static com.palo.palo.volley.ServerURLs.USER_BY_ID;
 
 public class FeedModel {
@@ -52,6 +54,31 @@ public class FeedModel {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,ATTACHMENT(type) + spotifyId, null, response -> {
             try {
                 volleyListener.onAttachmentRequestSuccess(paloIndex, type, response);
+            } catch (JSONException e) {
+                volleyListener.onError(response.toString());
+            }
+        }, error -> volleyListener.onError(error.getMessage()));
+        VolleySingleton.getInstance(context).addToRequestQueue(request);
+    }
+
+    public void addPaloLike(int position, int paloId, int userId, IFeedVolleyListener volleyListener){
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, ADD_LIKE(paloId, userId), null, response -> {
+            try {
+                if(response.getString("message").equals("success"))
+                    volleyListener.onLikeRequestSuccess(position, true);
+            } catch (JSONException e) {
+                volleyListener.onError(response.toString());
+            }
+        }, error -> volleyListener.onError(error.getMessage()));
+        VolleySingleton.getInstance(context).addToRequestQueue(request);
+    }
+
+
+    public void removePaloLike(int position, int paloId, int userId, IFeedVolleyListener volleyListener){
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, REMOVE_LIKE(paloId, userId), null, response -> {
+            try {
+                if(response.getString("message").equals("success"))
+                    volleyListener.onLikeRequestSuccess(position, false);
             } catch (JSONException e) {
                 volleyListener.onError(response.toString());
             }

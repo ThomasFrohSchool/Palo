@@ -85,7 +85,9 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
 
     @Override
     public void onLikeClicked(int position) {
-        System.out.println("post like clicked..." + palos.get(position).getAttachment().getTitle());
+        Palo palo =  palos.get(position);
+        System.out.println("post like clicked..." + palo.getCaption() + palo.getIsLiked());
+        feedPresenter.likePalo(position, palo.getId(), SharedPrefManager.getInstance(context).getUser().getId(), !palo.getIsLiked());
     }
 
     @Override
@@ -130,5 +132,13 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
     @Override
     public Palo getPalo(int paloIndex) {
         return palos.get(paloIndex);
+    }
+
+    @Override
+    public void updateLikeToPalo(int paloIndex, boolean isLiked) {
+        Palo p = palos.get(paloIndex);
+        p.setIsLiked(isLiked);
+        System.out.println("updateLike = " + isLiked);
+        feedAdapter.updatePalo(paloIndex, p);
     }
 }

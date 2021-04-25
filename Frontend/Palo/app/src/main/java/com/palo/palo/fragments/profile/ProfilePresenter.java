@@ -44,6 +44,13 @@ public class ProfilePresenter implements IProfilePresenter, IProfileVolleyListen
     }
 
     @Override
+    public void likePalo(int position, int paloId, int userId, boolean toLike) {
+        if(toLike)
+            model.addPaloLike(position, paloId, userId, this);
+        model.removePaloLike(position, paloId, userId, this);
+    }
+
+    @Override
     public void onEmptyResponse(String response) {
         view.loadEmptyPosts();
     }
@@ -62,6 +69,7 @@ public class ProfilePresenter implements IProfilePresenter, IProfileVolleyListen
         for (int i = response.length()-1; i >= 0; i--) {
             try {
                 //todo update Palo constructor below to handle correct formated json response from server
+                //todo handle likes in palo...
                 Palo palo = new Palo (response.getJSONObject(i), username, PICS + userId + "/" + userId);
 //                model.getUserRequest(i, palo.getAuthor().getId(), this);
                 if (palo.getAttachment().getSpotifyId() != null)
@@ -87,5 +95,10 @@ public class ProfilePresenter implements IProfilePresenter, IProfileVolleyListen
         Palo palo = view.getPalo(paloIndex);
         palo.updateAttachment(name, response.getString("artist"), response.getString("imageUrl"), response.getString("id"));
         view.updatePalo(paloIndex, palo);
+    }
+
+    @Override
+    public void onLikeRequestSuccess(int position, boolean isLiked) {
+        view.updateLikeToPalo(position, isLiked);
     }
 }
