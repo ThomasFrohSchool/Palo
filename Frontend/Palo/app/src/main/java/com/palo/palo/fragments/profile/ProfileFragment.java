@@ -88,7 +88,7 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
         System.out.println("post clicked..." + palos.get(position).getCaption());
         Palo p = palos.get(position);
         Intent intent =  new Intent(getContext(), ExtendedPostActivity.class);
-        intent.putExtra("selected_post", palos.get(position));
+        intent.putExtra("selected_post", p);
         startActivity(intent);
     }
 
@@ -115,7 +115,8 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
 
     @Override
     public void makeToast(String message) {
-        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+        //Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+        System.out.println("filler for the toast for errors in profile: " + message);
     }
 
     @Override
