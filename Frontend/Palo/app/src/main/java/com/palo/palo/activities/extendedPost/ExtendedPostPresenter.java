@@ -36,7 +36,7 @@ public class ExtendedPostPresenter implements IExtendedPostPresenter, IExtendedP
         ArrayList<Comment> comments = new ArrayList<>();
         for(int i = 0; i < response.length(); i++) {
             Comment comment = new Comment(response.getJSONObject(i));
-            model.updateUserInfo(i, comment.getAuthor().getId(), this);
+            model.updateUserInfo(i, comment.getAuthor_id(), this);
             comments.add(comment);
         }
         view.loadComments(comments);

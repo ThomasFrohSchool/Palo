@@ -41,7 +41,12 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Comment c = comments.get(position);
-        holder.authorUserNameTV.setText(c.getAuthor().getUsername());
+        if(c.getAuthor().getUsername() == null) {
+            holder.authorUserNameTV.setText("Placeholder");
+        }
+        else {
+            holder.authorUserNameTV.setText(c.getAuthor().getUsername());
+        }
         holder.postdateTV.setText(c.getPostDate());
         holder.captionTV.setText(c.getCaption());
         Picasso.get().load(c.getAuthor().getProfileImage()).into(holder.authorProfileImage);
