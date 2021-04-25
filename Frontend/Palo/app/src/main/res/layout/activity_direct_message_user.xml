@@ -31,7 +31,8 @@
         android:layout_height="38dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_action_back" />
+        app:srcCompat="@drawable/ic_action_back"
+        tools:ignore="VectorDrawableCompat" />
 
     <TextView
         android:id="@+id/messageHistory"
