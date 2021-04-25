@@ -42,7 +42,7 @@ public class FeedPresenter implements IFeedPresenter, IFeedVolleyListener {
                 Palo palo = new Palo (response.getJSONObject(i));
                 model.getUserRequest(i, palo.getAuthor().getId(), this);
                 if (palo.getAttachment().getSpotifyId() != null)
-                    model.getAttachmentRequest(i, palo.getAttachment().getType(), palo.getAttachment().getSpotifyId(), this);
+                    model.getAttachmentRequest((response.length()-1-i), palo.getAttachment().getType(), palo.getAttachment().getSpotifyId(), this);
                 palos.add(palo);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -54,6 +54,8 @@ public class FeedPresenter implements IFeedPresenter, IFeedVolleyListener {
     @Override
     public void onError(String message) {
         view.makeToast(message);
+        //TODO fix error in the toast function
+        System.out.println("Error in the feed fragment with toasts");
     }
 
     @Override
