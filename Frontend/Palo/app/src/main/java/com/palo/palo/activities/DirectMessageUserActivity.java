@@ -67,13 +67,13 @@ public class DirectMessageUserActivity extends AppCompatActivity {
         mWebSocketClient.close();
     }
 
-    private void connectWebSocket() {
+    public String connectWebSocket() {
         URI uri;
         try {
             uri = new URI(DMSOCKET + SharedPrefManager.getInstance(context).getUser().getUsername() + "/" + userTo);
         } catch (URISyntaxException e) {
             e.printStackTrace();
-            return;
+            return "Could not connect";
         }
 
         mWebSocketClient = new WebSocketClient(uri) {
@@ -100,5 +100,7 @@ public class DirectMessageUserActivity extends AppCompatActivity {
             }
         };
         mWebSocketClient.connect();
+
+        return "Connected to " + mWebSocketClient.getURI();
     }
 }
