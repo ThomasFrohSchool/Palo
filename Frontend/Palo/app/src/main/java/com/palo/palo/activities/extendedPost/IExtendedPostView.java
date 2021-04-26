@@ -15,4 +15,5 @@ public interface IExtendedPostView {
     public void clearCommentText();
     public void updateUser(int commentIndex, String username);
     public void dismissKeyboard();
+    public void showPlaybackLink(String playbackLink);
 }

@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -45,6 +46,7 @@ public class ExtendedPostActivity extends AppCompatActivity implements CommentAd
     EditText newCommentBody;
     TextView postComment;
     TextView likeTV;
+    ImageView currentUserIV;
     VideoView playbackVideoView;
     MediaController playbackController;
     Context context;
@@ -64,9 +66,9 @@ public class ExtendedPostActivity extends AppCompatActivity implements CommentAd
         likeTV = findViewById(R.id.paloLike);
         likeTV.setOnClickListener(v -> likeClicked());
 
-        // TODO set current user profile pic next to make comment text field.
+        currentUserIV = findViewById(R.id.currentUserProfileImage);
+        Picasso.get().load("https://icon-library.com/images/default-user-icon/default-user-icon-4.jpg").into(currentUserIV);
 
-        //comment initialization
         newCommentBody = findViewById(R.id.addCommentBody);
         postComment = findViewById(R.id.postCommentButton);
         postComment.setOnClickListener(v -> postComment());
@@ -75,21 +77,7 @@ public class ExtendedPostActivity extends AppCompatActivity implements CommentAd
         commentRV.setAdapter(commentAdapter);
         commentRV.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         if(attachedPalo.getAttachment() instanceof Song){
-            makeToast("attachment is a song...");
-            if(((Song) attachedPalo.getAttachment()).getPlaybackLink() == null){
-                makeToast("null playback link... need to handle at somepoint");
-            } else {
-                makeToast("playback link... =" + ((Song) attachedPalo.getAttachment()).getPlaybackLink() );
-                playbackVideoView = findViewById(R.id.playbackVideoView);
-                playbackController = new MediaController(this);
-                playbackVideoView.setVisibility(View.VISIBLE);
-                playbackVideoView.setVideoPath(((Song) attachedPalo.getAttachment()).getPlaybackLink());
-                playbackController.setAnchorView(playbackVideoView);
-                playbackVideoView.setMediaController(playbackController);
-//                playbackVideoView.start();
-    //            presenter.loadPlaybackLink();
-
-            }
+            presenter.loadPlaybackLink(((Song) attachedPalo.getAttachment()).getPlaybackLink());
         }
         presenter.loadComments();
     }
@@ -156,6 +144,27 @@ public class ExtendedPostActivity extends AppCompatActivity implements CommentAd
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         if (null != activity.getCurrentFocus())
             imm.hideSoftInputFromWindow(activity.getCurrentFocus().getApplicationWindowToken(), 0);
+    }
+
+    @Override
+    public void showPlaybackLink(String playbackLink) {
+        playbackVideoView = findViewById(R.id.playbackVideoView);
+        playbackController = new MediaController(this){
+            @Override
+            public void hide() {}
+        };
+        playbackVideoView.setVisibility(View.VISIBLE);
+        playbackVideoView.setVideoPath(playbackLink);
+        playbackController.setAnchorView(playbackVideoView);
+        playbackVideoView.setMediaController(playbackController);
+//                playbackVideoView.start();
+        playbackVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+//                        playbackVideoView.start();
+                playbackController.show(900000000);
+            }
+        });
     }
 
     public JSONObject setupCommentJson(){
