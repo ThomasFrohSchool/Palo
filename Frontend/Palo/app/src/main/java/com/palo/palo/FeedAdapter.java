@@ -10,7 +10,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import com.palo.palo.model.Palo;
 import com.squareup.picasso.Picasso;
@@ -44,7 +48,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.authorUserNameTV.setText(palos.get(position).getAuthorUsername());
-        holder.postdateTV.setText(palos.get(position).getPostDate());
+        holder.postdateTV.setText(formatDate(palos.get(position).getPostDate()));
         holder.captionTV.setText(palos.get(position).getCaption());
         Picasso.get().load(palos.get(position).getProfileImage()).into(holder.authorProfileImage);
 
@@ -69,6 +73,23 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
     public void updatePalo(int position, Palo palo){
         this.palos.set(position, palo);
         notifyItemChanged(position);
+    }
+
+    public String formatDate(String dateStr){
+        SimpleDateFormat formatter=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        try {
+            Date date = formatter.parse(dateStr);
+            Date now = new Date();
+            long showTime = TimeUnit.MILLISECONDS.toDays(now.getTime() - date.getTime());
+            if (showTime >0) return showTime + " days ago";
+            showTime = TimeUnit.MILLISECONDS.toHours(now.getTime() - date.getTime());
+            if (showTime > 0) return showTime + " hours ago";
+            showTime = TimeUnit.MILLISECONDS.toMinutes(now.getTime() - date.getTime()) ;
+            if (showTime > 0) return showTime + " minutes ago";
+            return "a few seconds ago";
+        } catch (ParseException e) {
+            return dateStr;
+        }
     }
 
     /**
