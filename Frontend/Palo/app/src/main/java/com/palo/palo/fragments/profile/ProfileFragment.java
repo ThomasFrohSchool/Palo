@@ -75,6 +75,7 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
             logoutButton = view.findViewById(R.id.logout);
             logoutButton.setOnClickListener(v -> {
                 if (v.equals(logoutButton)) {
+                    user = null;
                     SharedPrefManager.getInstance(getActivity().getApplicationContext()).logout();
                 }
             });
