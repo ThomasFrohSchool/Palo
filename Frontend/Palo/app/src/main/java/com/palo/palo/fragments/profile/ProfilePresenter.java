@@ -96,6 +96,8 @@ public class ProfilePresenter implements IProfilePresenter, IProfileVolleyListen
         String name = (type == 1) ? "" : response.getString("name");
         Palo palo = view.getPalo(paloIndex);
         palo.updateAttachment(name, response.getString("artist"), response.getString("imageUrl"), response.getString("id"));
+        if( type ==2) palo.updateAttachmentPlaybackLink(response.getString("playbackLink"));
+
         view.updatePalo(paloIndex, palo);
     }
 
