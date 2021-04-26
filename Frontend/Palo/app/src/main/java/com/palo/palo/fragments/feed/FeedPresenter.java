@@ -47,7 +47,7 @@ public class FeedPresenter implements IFeedPresenter, IFeedVolleyListener {
         for (int i = response.length()-1; i >= 0; i--) {
             try {
                 Palo palo = new Palo (response.getJSONObject(i), currentUserId);
-                model.getUserRequest(i, palo.getAuthor().getId(), this);
+                model.getUserRequest((response.length()-1-i), palo.getAuthor().getId(), this);
                 if (palo.getAttachment().getSpotifyId() != null)
                     model.getAttachmentRequest((response.length()-1-i), palo.getAttachment().getType(), palo.getAttachment().getSpotifyId(), this);
                 palos.add(palo);
