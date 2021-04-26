@@ -2,6 +2,7 @@ package com.palo.palo.fragments.profile;
 
 import android.content.Context;
 
+import com.palo.palo.SharedPrefManager;
 import com.palo.palo.model.Palo;
 
 import org.json.JSONArray;
@@ -71,7 +72,7 @@ public class ProfilePresenter implements IProfilePresenter, IProfileVolleyListen
         for (int i = response.length()-1; i >= 0; i--) {
             try {
                 //todo handle likes in palo...
-                Palo palo = new Palo (response.getJSONObject(i), username, PICS + userId + "/" + userId);
+                Palo palo = new Palo (response.getJSONObject(i), username, PICS + userId + "/" + userId, SharedPrefManager.getInstance(context).getUser().getId());
 //                model.getUserRequest(i, palo.getAuthor().getId(), this);
                 if (palo.getAttachment().getSpotifyId() != null)
                     model.getAttachmentRequest(response.length()-1-i, palo.getAttachment().getType(), palo.getAttachment().getSpotifyId(), this);

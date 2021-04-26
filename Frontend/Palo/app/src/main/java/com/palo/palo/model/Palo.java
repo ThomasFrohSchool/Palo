@@ -93,7 +93,7 @@ public class Palo implements Parcelable {
         likeCount = likeList.length();
     }
 
-    public Palo(JSONObject paloJSON, String username, String profilePic) throws JSONException {
+    public Palo(JSONObject paloJSON, String username, String profilePic, int currentUser) throws JSONException {
         System.out.println("!!!!" + paloJSON.toString());
         id = paloJSON.getInt("id");
         author = new User(paloJSON.getInt("user_id"), username);
@@ -118,10 +118,18 @@ public class Palo implements Parcelable {
         }
 
         //attachment = new Song("7niXXokVzkvRw81pF4Q9Ad"); //todo delete
-        
+
         isLiked = false;
         likeInt = 0;
-        likeCount = 0;
+        JSONArray likeList = paloJSON.getJSONArray("likeList");
+        for(int i = 0; i < likeList.length(); i++){
+            JSONObject object = likeList.getJSONObject(i);
+            if(object.getInt("user_id") == currentUser) {
+                isLiked = true;
+                likeInt = 1;
+            }
+        }
+        likeCount = likeList.length();
     }
 
     public User getAuthor() {
