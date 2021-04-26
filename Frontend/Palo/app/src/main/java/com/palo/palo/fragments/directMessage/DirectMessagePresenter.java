@@ -20,7 +20,7 @@ public class DirectMessagePresenter implements IDirectMessagePresenter, IDirectM
         this.model = new DirectMessageModel(context);
         this.context = context;
         this.usernameSearching = usernameSearching;
-//        loadUsers(); // todo comment when implemented...
+        this.loadUsers();
     }
 
     @Override
@@ -46,9 +46,11 @@ public class DirectMessagePresenter implements IDirectMessagePresenter, IDirectM
     @Override
     public void onUserWithMessagesSuccess(JSONArray response) throws JSONException {
         List<String> usernames = new ArrayList<>();
-        // todo: load usernames from search results...
+        for(int i = 0; i < response.length(); i++) {
+            usernames.add(response.getString(i));
+        }
         view.dismissKeyboard();
-        view.loadUsersSearch(usernames);
+        view.loadUsers(usernames);
     }
 
     @Override

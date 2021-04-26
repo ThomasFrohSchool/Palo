@@ -9,6 +9,7 @@ import com.palo.palo.volley.VolleySingleton;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
+import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.net.URI;
@@ -24,8 +25,7 @@ public class DirectMessageModel {
         this.context = context;
     }
 
-    public void getUsersRequest( IDirectMessageVolleyListener volleyListener){
-        //todo fix end point
+    public void getUsersRequest(IDirectMessageVolleyListener volleyListener){
         String url = DM_LIST + SharedPrefManager.getInstance(context).getUser().getUsername();
         JsonArrayRequest request = new JsonArrayRequest(url,
                 response -> {
