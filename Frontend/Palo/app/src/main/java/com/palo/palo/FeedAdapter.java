@@ -91,6 +91,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         public ViewHolder(@NonNull View itemView, OnFeedListener onFeedListener) {
             super(itemView);
             authorUserNameTV = itemView.findViewById(R.id.paloAuthorUserName);
+            authorUserNameTV.setOnClickListener(v -> onFeedListener.onUserNameClicked(getAdapterPosition()));
             postdateTV = itemView.findViewById(R.id.paloDate);
             captionTV = itemView.findViewById(R.id.paloCaption);
             authorProfileImage = itemView.findViewById(R.id.paloAuthorProfileImage);
@@ -104,21 +105,22 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
             itemView.setOnClickListener(v -> onFeedListener.onPaloClick(getAdapterPosition()));
             likeTV.setOnClickListener(v -> likeClicked(getAdapterPosition()));
         }
+
         public void likeClicked(int pos){
-            toggleLikeHeart(palos.get(pos).toggleIsLiked());
+//            toggleLikeHeart(palos.get(pos).toggleIsLiked());
             onFeedListener.onLikeClicked(pos);
-            notifyItemChanged(pos);
+//            notifyItemChanged(pos);
         }
 
         public void toggleLikeHeart(boolean isLiked){
             if(isLiked) likeTV.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_heart_full,0,0,0);
             else likeTV.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_heart_empty,0,0,0);
-
         }
     }
 
     public interface OnFeedListener {
         public void onPaloClick(int position);
         public void onLikeClicked(int position);
+        public void onUserNameClicked(int position);
     }
 }

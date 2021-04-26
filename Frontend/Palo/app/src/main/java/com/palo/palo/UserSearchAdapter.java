@@ -11,13 +11,20 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.palo.palo.model.User;
+import com.palo.palo.volley.VolleySingleton;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.palo.palo.volley.ServerURLs.PICS;
+import static com.palo.palo.volley.ServerURLs.USER_BY_ID;
 
 /**
  * Adapter for user search recyclerview.
@@ -28,18 +35,20 @@ public class UserSearchAdapter extends RecyclerView.Adapter<UserSearchAdapter.Vi
     int selectedIndex = -1;
     Context context;
     private onUserListener onUserListener;
-    private User user;
-    ArrayList<Integer> userFollowing;
+    User user;
+    List<Integer> userFollowing;
 
     public UserSearchAdapter(Context context, List<User> searchResults, onUserListener onUserListener) {
         user = SharedPrefManager.getInstance(context).getUser();
-        System.out.println("Picture: " + user.getProfileImage());
         this.inflater = LayoutInflater.from(context);
         this.searchResults = searchResults;
         this.context = context;
         this.onUserListener = onUserListener;
-        this.userFollowing = user.getUserFollowing();
-        System.out.println(user.getUserFollowing());
+        getFollowing();
+        //user.setUserFollowing(userFollowing);
+        //System.out.println(user.getUserFollowing());
+        //getFollowing();
+        //user.setUserFollowing(userFollowing);
     }
 
     @NonNull
@@ -53,13 +62,15 @@ public class UserSearchAdapter extends RecyclerView.Adapter<UserSearchAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.userNameTV.setText(searchResults.get(position).getUsername());
         Picasso.get().load(searchResults.get(position).getProfileImage()).into(holder.profilePic);
-        /*for(int i = 0; i < searchResults.size(); i++) {
+        //getFollowing();
+        //user.setUserFollowing(getFollowing());
+        for(int i = 0; i < searchResults.size(); i++) {
             for(int j = 0; j < userFollowing.size(); j++) {
                 if(searchResults.get(i).getId() == userFollowing.get(j)) {
                     holder.toggleFollow(true);
                 }
             }
-        }*/
+        }
         //holder.toggleFollow(user.toggleIsFollowing(searchResults.get(position).getId()));
     }
 
@@ -92,20 +103,73 @@ public class UserSearchAdapter extends RecyclerView.Adapter<UserSearchAdapter.Vi
         }
 
         public void followClicked(int pos) {
-            toggleFollow(searchResults.get(pos).toggleIsFollowing(searchResults.get(pos).getId()));
-            onUserListener.onFollowClicked(pos);
+            getFollowing();
+            toggleFollow(toggleIsFollowing(searchResults.get(pos).getId()));
+            if(getIsFollowing(searchResults.get(pos).getId()))
+                onUserListener.onAddFollowClicked(pos);
+            else
+                onUserListener.onRemoveFollowClicked(pos);
+            //onUserListener.onAddFollowClicked(pos);
             notifyItemChanged(pos);
         }
 
         public void toggleFollow(boolean isFollowing) {
-            if(isFollowing)
+            if(isFollowing) {
                 userFollowTV.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_close, 0, 0, 0);
-            else
+                userFollowTV.setText("Unfollow");
+            }
+            else {
                 userFollowTV.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_add, 0, 0, 0);
+                userFollowTV.setText("Follow");
+            }
         }
     }
 
+    public boolean getIsFollowing(int id) {
+        //int pos;
+        for(int i = 0; i < userFollowing.size(); i++) {
+            if(userFollowing.get(i) == id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean toggleIsFollowing(int id) {
+        //int pos;
+        for(int i = 0; i < userFollowing.size(); i++) {
+            if(userFollowing.get(i) == id) {
+                userFollowing.remove(i);
+
+                return false;
+            }
+        }
+        userFollowing.add(id);
+        return true;
+    }
+
     public interface onUserListener {
-        public void onFollowClicked(int position);
+        public String onAddFollowClicked(int position);
+        public String onRemoveFollowClicked(int position);
+    }
+
+    private void getFollowing() {
+        ArrayList<Integer> u = new ArrayList<>();
+
+        JsonObjectRequest j = new JsonObjectRequest(Request.Method.GET, USER_BY_ID + user.getId(), null,
+                response -> {
+                    try {
+                        for(int i = 0; i < response.getJSONArray("following").length(); i++) {
+                            //Integer f = following.getInt(i);
+                            u.add(response.getJSONArray("following").getInt(i));
+                        }
+                        user.setUserFollowing(u);
+                        userFollowing = u;
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }, Throwable::printStackTrace);
+
+        VolleySingleton.getInstance(context).addToRequestQueue(j);
     }
 }

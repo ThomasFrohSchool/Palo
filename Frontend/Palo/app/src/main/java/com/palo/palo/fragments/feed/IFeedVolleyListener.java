@@ -10,4 +10,5 @@ public interface IFeedVolleyListener {
     public void onError(String message);
     public void onUserRequestSuccess(int paloIndex, JSONObject response) throws JSONException;
     public void onAttachmentRequestSuccess(int paloIndex, int type, JSONObject response) throws JSONException;
+    public void onLikeRequestSuccess(int position, boolean isLiked);
 }

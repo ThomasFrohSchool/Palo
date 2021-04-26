@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -24,6 +25,7 @@ import android.widget.VideoView;
 import com.palo.palo.CommentAdapter;
 import com.palo.palo.R;
 import com.palo.palo.SharedPrefManager;
+import com.palo.palo.activities.profile.ProfileActivity;
 import com.palo.palo.model.Comment;
 import com.palo.palo.model.Palo;
 import com.palo.palo.model.Song;
@@ -35,13 +37,14 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExtendedPostActivity extends AppCompatActivity implements IExtendedPostView{
+public class ExtendedPostActivity extends AppCompatActivity implements CommentAdapter.OnCommentListener, IExtendedPostView{
     Palo attachedPalo;
     RecyclerView commentRV;
     CommentAdapter commentAdapter;
     List<Comment> comments;
     EditText newCommentBody;
     TextView postComment;
+    TextView likeTV;
     VideoView playbackVideoView;
     MediaController playbackController;
     Context context;
@@ -58,6 +61,8 @@ public class ExtendedPostActivity extends AppCompatActivity implements IExtended
         attachedPalo = getIntent().getParcelableExtra("selected_post");
         setPaloView(attachedPalo);
         presenter = new ExtendedPostPresenter(this, context, attachedPalo.getId());
+        likeTV = findViewById(R.id.paloLike);
+        likeTV.setOnClickListener(v -> likeClicked());
 
         // TODO set current user profile pic next to make comment text field.
 
@@ -65,7 +70,7 @@ public class ExtendedPostActivity extends AppCompatActivity implements IExtended
         newCommentBody = findViewById(R.id.addCommentBody);
         postComment = findViewById(R.id.postCommentButton);
         postComment.setOnClickListener(v -> postComment());
-        commentAdapter = new CommentAdapter(getApplicationContext(), new ArrayList<>());
+        commentAdapter = new CommentAdapter(getApplicationContext(), new ArrayList<>(), this);
         commentRV = findViewById(R.id.commentRecyclerView);
         commentRV.setAdapter(commentAdapter);
         commentRV.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -89,6 +94,10 @@ public class ExtendedPostActivity extends AppCompatActivity implements IExtended
         presenter.loadComments();
     }
 
+    public void likeClicked(){
+        System.out.println("post like clicked..." + attachedPalo.getIsLiked());
+        presenter.likePalo(attachedPalo.getId(), SharedPrefManager.getInstance(context).getUser().getId(), !attachedPalo.getIsLiked());
+    }
 
     @Override
     public void makeToast(String message) {
@@ -124,6 +133,13 @@ public class ExtendedPostActivity extends AppCompatActivity implements IExtended
     }
 
     @Override
+    public void updateLikeToPalo( boolean isLiked) {
+        attachedPalo.setIsLiked(isLiked);
+        if(isLiked) likeTV.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_heart_full,0,0,0);
+        else likeTV.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_heart_empty,0,0,0);
+    }
+
+    @Override
     public void clearCommentText() {
         newCommentBody.setText("");
     }
@@ -151,5 +167,13 @@ public class ExtendedPostActivity extends AppCompatActivity implements IExtended
             e.printStackTrace();
         }
         return newComment;
+    }
+
+    @Override
+    public void onCommentUserClicked(int position) {
+        System.out.println("post like clicked..." + comments.get(position).getAuthor().getUsername());
+        Intent intent =  new Intent(this, ProfileActivity.class);
+        intent.putExtra("user_obj", comments.get(position).getAuthor());
+        startActivity(intent);
     }
 }

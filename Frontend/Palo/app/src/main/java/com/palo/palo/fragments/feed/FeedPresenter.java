@@ -30,6 +30,13 @@ public class FeedPresenter implements IFeedPresenter, IFeedVolleyListener {
     }
 
     @Override
+    public void likePalo(int position, int paloId, int userId, boolean toLike) {
+        if(toLike)
+            model.addPaloLike(position, paloId, userId, this);
+        model.removePaloLike(position, paloId, userId, this);
+    }
+
+    @Override
     public void onEmptyResponse(String response) {
         view.loadEmptyFeed();
     }
@@ -39,7 +46,7 @@ public class FeedPresenter implements IFeedPresenter, IFeedVolleyListener {
         ArrayList<Palo> palos = new ArrayList<>();
         for (int i = response.length()-1; i >= 0; i--) {
             try {
-                Palo palo = new Palo (response.getJSONObject(i));
+                Palo palo = new Palo (response.getJSONObject(i), currentUserId);
                 model.getUserRequest(i, palo.getAuthor().getId(), this);
                 if (palo.getAttachment().getSpotifyId() != null)
                     model.getAttachmentRequest((response.length()-1-i), palo.getAttachment().getType(), palo.getAttachment().getSpotifyId(), this);
@@ -54,6 +61,8 @@ public class FeedPresenter implements IFeedPresenter, IFeedVolleyListener {
     @Override
     public void onError(String message) {
         view.makeToast(message);
+        //TODO fix error in the toast function
+        System.out.println("Error in the feed fragment with toasts");
     }
 
     @Override
@@ -72,6 +81,12 @@ public class FeedPresenter implements IFeedPresenter, IFeedVolleyListener {
         palo.updateAttachment(name, response.getString("artist"), response.getString("imageUrl"), response.getString("id"));
         if( type ==2) palo.updateAttachmentPlaybackLink(response.getString("playbackLink"));
         view.updatePalo(paloIndex, palo);
+    }
+
+    @Override
+    public void onLikeRequestSuccess(int position,  boolean isLiked) {
+        //todo refresh palo in recycler view
+        view.updateLikeToPalo(position, isLiked);
     }
 }
 

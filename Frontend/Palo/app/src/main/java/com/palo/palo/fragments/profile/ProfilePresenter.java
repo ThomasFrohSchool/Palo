@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import static com.palo.palo.volley.ServerURLs.PICS;
+import static com.palo.palo.volley.ServerURLs.POSTS_FROM_USER;
 
 
 public class ProfilePresenter implements IProfilePresenter, IProfileVolleyListener {
@@ -38,8 +39,15 @@ public class ProfilePresenter implements IProfilePresenter, IProfileVolleyListen
     @Override
     public void loadPosts(int userId) {
         //todo update path to server path
-        String url = "https://440b43ef-556f-4d7d-a95d-081ca321b8f9.mock.pstmn.io" + "/Palo?q=" + username;
+        String url = POSTS_FROM_USER + userId;
         model.getUserPosts(url, username, this);
+    }
+
+    @Override
+    public void likePalo(int position, int paloId, int userId, boolean toLike) {
+        if(toLike)
+            model.addPaloLike(position, paloId, userId, this);
+        model.removePaloLike(position, paloId, userId, this);
     }
 
     @Override
@@ -61,6 +69,7 @@ public class ProfilePresenter implements IProfilePresenter, IProfileVolleyListen
         for (int i = response.length()-1; i >= 0; i--) {
             try {
                 //todo update Palo constructor below to handle correct formated json response from server
+                //todo handle likes in palo...
                 Palo palo = new Palo (response.getJSONObject(i), username, PICS + userId + "/" + userId);
 //                model.getUserRequest(i, palo.getAuthor().getId(), this);
                 if (palo.getAttachment().getSpotifyId() != null)
@@ -86,5 +95,10 @@ public class ProfilePresenter implements IProfilePresenter, IProfileVolleyListen
         Palo palo = view.getPalo(paloIndex);
         palo.updateAttachment(name, response.getString("artist"), response.getString("imageUrl"), response.getString("id"));
         view.updatePalo(paloIndex, palo);
+    }
+
+    @Override
+    public void onLikeRequestSuccess(int position, boolean isLiked) {
+        view.updateLikeToPalo(position, isLiked);
     }
 }

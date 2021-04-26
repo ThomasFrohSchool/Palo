@@ -33,10 +33,10 @@ public class PostsController {
     PostsTable postsTable;
     @Autowired
     UserTable userTable;
-
     @Autowired
     CommentsTable commentsTable;
-
+    @Autowired
+    LikesTable likesTable;
     /**
      * 
      * @param post JSON object representation of a post
@@ -136,5 +136,45 @@ public class PostsController {
 
 
         return arr.toString();
+    }
+    @ApiOperation(value = "Allow a user to like a like")
+    @GetMapping(path = "/like/add/{postID}/{userID}")
+    public String likePost(@PathVariable("postID") int postID,@PathVariable("userID") int userID){
+        Posts p = postsTable.findById(postID);
+        List<Likes> ls = p.getLikeList();
+        for(Likes l : ls){
+            if(l.getUser_id() == userID){
+                return failure;
+            }
+        }
+        p.setLikes(p.getLikes()+1);
+        Likes newLike = new Likes(userID);
+        newLike.setPost(p);
+        likesTable.save(newLike);
+        p.addLikeList(newLike);
+        postsTable.save(p);
+        return success;
+    }
+    @ApiOperation(value = "Allow a user to remove a like")
+    @GetMapping(path = "/like/remove/{postID}/{userID}")
+    public String unlikePost(@PathVariable("postID") int postID, @PathVariable("userID") int userID){
+        Posts p = postsTable.findById(postID);
+        List<Likes> ls = p.getLikeList();
+        for(Likes l : ls){
+            if(l.getUser_id() == userID){
+                p.setLikes(p.getLikes()-1);
+                ls.remove(l);
+                p.setLikeList(ls);
+                likesTable.delete(l);
+                postsTable.save(p);
+                return success;
+            }
+        }
+        return failure;
+    }
+    @ApiOperation(value = "Return number of likes on a post")
+    @GetMapping(path = "/likes/{postID}")
+    public int getLikes(@PathVariable("postID") int postID){
+        return postsTable.findById(postID).getLikes();
     }
 }

@@ -9,4 +9,6 @@ public interface IExtendedPostVolleyListener {
     public void onPostSuccess(String message);
     public void onUserSuccess(JSONObject jsonObject, int commentIndex) throws JSONException;
     public void onError(String message);
+    public void onLikeRequestSuccess(boolean isLiked);
+
 }

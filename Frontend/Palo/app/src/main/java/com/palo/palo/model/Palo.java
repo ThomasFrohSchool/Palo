@@ -3,6 +3,9 @@ package com.palo.palo.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.JsonObject;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,6 +18,7 @@ public class Palo implements Parcelable {
     private Attachment attachment;
     private Boolean isLiked;
     int id;
+    private String likeStr;
 
     public Palo(){
         isLiked = false; //todo remove this
@@ -26,6 +30,12 @@ public class Palo implements Parcelable {
         postDate = parcel.readString();
         attachment = parcel.readParcelable(Attachment.class.getClassLoader());
         id = parcel.readInt();
+
+        likeStr = parcel.readString();
+        if(likeStr.equals("true"))
+            isLiked = true;
+        if(likeStr.equals("false"))
+            isLiked = false;
     }
 
     public Palo(JSONObject paloJSON) throws JSONException {
@@ -48,32 +58,57 @@ public class Palo implements Parcelable {
         isLiked = false;
     }
 
+    public Palo(JSONObject paloJSON, int currentUser) throws JSONException {
+        id = paloJSON.getInt("id");
+        author = new User(paloJSON.getInt("user_id"));
+        postDate = paloJSON.getString("createDate");
+        caption = paloJSON.getString("description");
+        switch (paloJSON.getInt("type")){
+            case 0:
+                attachment = new Album(paloJSON.getString("spot_id"));
+                break;
+            case 1:
+                attachment = new Artist(paloJSON.getString("spot_id"));
+                break;
+            case 2:
+                attachment = new Song(paloJSON.getString("spot_id"));
+                break;
+            default: System.out.println("error");
+        }
+        JSONArray likeList = paloJSON.getJSONArray("likeList");
+        for(int i = 0; i < likeList.length(); i++){
+            JSONObject object = likeList.getJSONObject(i);
+            if(object.getInt("user_id") == currentUser)
+                isLiked = true;
+        }
+        isLiked = false;
+    }
+
     public Palo(JSONObject paloJSON, String username, String profilePic) throws JSONException {
         System.out.println("!!!!" + paloJSON.toString());
-        //todo fix this (used in profile)
-//        id = paloJSON.getInt("id");
-//        author = new User(paloJSON.getInt("user_id"), username);
-        author = new User();
+        id = paloJSON.getInt("id");
+        author = new User(paloJSON.getInt("user_id"), username);
+        //author = new User();
         author.setUsername(username);
         author.setProfileImage(profilePic);
-//        postDate = paloJSON.getString("createDate");
-//        caption = paloJSON.getString("description");
-        postDate = paloJSON.getString("postdate");
-        caption = paloJSON.getString("caption");
-//        switch (paloJSON.getInt("type")){
-//            case 0:
-//                attachment = new Album(paloJSON.getString("spot_id"));
-//                break;
-//            case 1:
-//                attachment = new Artist(paloJSON.getString("spot_id"));
-//                break;
-//            case 2:
-//                attachment = new Song(paloJSON.getString("spot_id"));
-//                break;
-//            default: System.out.println("error");
-//        }
+        postDate = paloJSON.getString("createDate");
+        caption = paloJSON.getString("description");
+        //postDate = paloJSON.getString("createDate");
+        //caption = paloJSON.getString("caption");
+        switch (paloJSON.getInt("type")){
+            case 0:
+                attachment = new Album(paloJSON.getString("spot_id"));
+                break;
+            case 1:
+                attachment = new Artist(paloJSON.getString("spot_id"));
+                break;
+            case 2:
+                attachment = new Song(paloJSON.getString("spot_id"));
+                break;
+            default: System.out.println("error");
+        }
 
-        attachment = new Song("7niXXokVzkvRw81pF4Q9Ad"); //todo delete
+        //attachment = new Song("7niXXokVzkvRw81pF4Q9Ad"); //todo delete
         
         isLiked = false;
     }
@@ -158,6 +193,7 @@ public class Palo implements Parcelable {
         dest.writeString(postDate);
         dest.writeParcelable(attachment, flags);
         dest.writeInt(id);
+        dest.writeString(isLiked ? "true" : "false");
     }
 
     public static final Parcelable.Creator<Palo> CREATOR = new Parcelable.Creator<Palo>() {
