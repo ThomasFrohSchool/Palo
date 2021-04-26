@@ -78,7 +78,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
 
     @Override
     public void onPaloClick(int position) {
-        System.out.println("post clicked..." + palos.get(position).getCaption());
+        System.out.println("post clicked..." + palos.get(position).getAttachment().getClass().getSimpleName());
         Palo p = palos.get(position);
         Intent intent =  new Intent(getContext(), ExtendedPostActivity.class);
         intent.putExtra("selected_post", palos.get(position));
