@@ -69,9 +69,7 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         context = getActivity().getApplicationContext();
-        //TODO bug where after exiting an activity, the user's own profile will not display the logout button because the user is not null anymore
-        if(user == null) {
-            user = SharedPrefManager.getInstance(getActivity().getApplicationContext()).getUser();
+        if(user == null || user.getId() ==  SharedPrefManager.getInstance(getActivity().getApplicationContext()).getUser().getId()) {            user = SharedPrefManager.getInstance(getActivity().getApplicationContext()).getUser();
             logoutButton = view.findViewById(R.id.logout);
             logoutButton.setOnClickListener(v -> {
                 if (v.equals(logoutButton)) {
