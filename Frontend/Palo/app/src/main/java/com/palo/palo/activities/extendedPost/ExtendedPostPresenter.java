@@ -20,10 +20,18 @@ public class ExtendedPostPresenter implements IExtendedPostPresenter, IExtendedP
         this.model = new ExtendedPostModel(context);
         this.postId = postId;
     }
+    public ExtendedPostPresenter(IExtendedPostView view, int postId, ExtendedPostModel model){
+        this.view = view;
+        this.model = model;
+        this.postId = postId;
+    }
 
     @Override
-    public void postComment(JSONObject commentJson) {
-        model.postComment(commentJson, postId, this);
+    public void postComment(JSONObject commentJson) throws JSONException {
+        if(commentJson.getString("body")== "")
+            view.makeToast("Comment must have length > 1.");
+        else
+            model.postComment(commentJson, postId, this);
     }
 
     @Override
@@ -35,7 +43,8 @@ public class ExtendedPostPresenter implements IExtendedPostPresenter, IExtendedP
     public void likePalo(int paloId, int userId, boolean toLike) {
         if(toLike)
             model.addPaloLike(paloId, userId, this);
-        model.removePaloLike(paloId, userId, this);
+        else
+            model.removePaloLike(paloId, userId, this);
     }
 
     @Override
