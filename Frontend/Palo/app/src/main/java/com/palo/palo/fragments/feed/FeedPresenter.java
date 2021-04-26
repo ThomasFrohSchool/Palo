@@ -35,7 +35,8 @@ public class FeedPresenter implements IFeedPresenter, IFeedVolleyListener {
     public void likePalo(int position, int paloId, int userId, boolean toLike) {
         if(toLike)
             model.addPaloLike(position, paloId, userId, this);
-        model.removePaloLike(position, paloId, userId, this);
+        else
+            model.removePaloLike(position, paloId, userId, this);
     }
 
     @Override
@@ -92,7 +93,6 @@ public class FeedPresenter implements IFeedPresenter, IFeedVolleyListener {
 
     @Override
     public void onLikeRequestSuccess(int position,  boolean isLiked) {
-        //todo refresh palo in recycler view
         view.updateLikeToPalo(position, isLiked);
     }
 }

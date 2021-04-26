@@ -145,7 +145,11 @@ public class ExtendedPostActivity extends AppCompatActivity implements CommentAd
 
     @Override
     public void postComment() {
-        presenter.postComment(setupCommentJson());
+        try {
+            presenter.postComment(setupCommentJson());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
