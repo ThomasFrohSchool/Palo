@@ -1,6 +1,7 @@
 package com.palo.palo.model;
 
 import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Model for album attachment recieved from spotify.
@@ -18,7 +19,11 @@ public class Album extends Attachment {
         super(spotifyId);
     }
     public Album(Parcel parcel){
-        //TODO
+        setSpotifyLink(parcel.readString());
+        title = parcel.readString();
+        artist = parcel.readString();
+        albumCover = parcel.readString();
+        setSpotifyLink(parcel.readString());
     }
 
     public Album(JSONObject json) throws JSONException {
@@ -51,8 +56,36 @@ public class Album extends Attachment {
     public void setAlbumCover(String albumCover) {
         this.albumCover = albumCover;
     }
+
+    @Override
+    public int describeContents() {
+        return hashCode();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(getSpotifyId());
+        dest.writeString(title);
+        dest.writeString(artist);
+        dest.writeString(albumCover);
+        dest.writeString(getSpotifyLink());
+    }
+
     @Override
     public int getType(){
         return 0;
     }
+
+    public static final Parcelable.Creator<Album> CREATOR = new Parcelable.Creator<Album>() {
+
+        @Override
+        public Album createFromParcel(Parcel parcel) {
+            return new Album(parcel);
+        }
+
+        @Override
+        public Album[] newArray(int size) {
+            return new Album[0];
+        }
+    };
 }

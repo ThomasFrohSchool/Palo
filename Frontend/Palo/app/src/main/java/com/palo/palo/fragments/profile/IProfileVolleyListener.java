@@ -11,4 +11,6 @@ public interface IProfileVolleyListener {
 
     public void onError(String message);
     public void onAttachmentRequestSuccess(int paloIndex, int type, JSONObject response) throws JSONException;
+
+    public void onLikeRequestSuccess(int position, boolean isLiked);
 }

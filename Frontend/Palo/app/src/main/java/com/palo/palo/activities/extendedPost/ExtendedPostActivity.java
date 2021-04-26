@@ -3,23 +3,35 @@ package com.palo.palo.activities.extendedPost;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.palo.palo.CommentAdapter;
 import com.palo.palo.R;
 import com.palo.palo.SharedPrefManager;
+import com.palo.palo.activities.profile.ProfileActivity;
 import com.palo.palo.model.Comment;
 import com.palo.palo.model.Palo;
+import com.palo.palo.model.Song;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -28,13 +40,19 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExtendedPostActivity extends AppCompatActivity implements IExtendedPostView{
+public class ExtendedPostActivity extends AppCompatActivity implements CommentAdapter.OnCommentListener, IExtendedPostView{
     Palo attachedPalo;
     RecyclerView commentRV;
+    SwipeRefreshLayout layout;
     CommentAdapter commentAdapter;
     List<Comment> comments;
     EditText newCommentBody;
     TextView postComment;
+    TextView likeTV;
+    TextView likeCountTV;
+    ImageView currentUserIV;
+    VideoView playbackVideoView;
+    MediaController playbackController;
     Context context;
     IExtendedPostPresenter presenter;
     private String TAG = ExtendedPostActivity.class.getSimpleName();
@@ -49,21 +67,53 @@ public class ExtendedPostActivity extends AppCompatActivity implements IExtended
         attachedPalo = getIntent().getParcelableExtra("selected_post");
         setPaloView(attachedPalo);
         presenter = new ExtendedPostPresenter(this, context, attachedPalo.getId());
+        likeTV = findViewById(R.id.paloLike);
+        likeCountTV = findViewById(R.id.paloLikeCount);
+        likeTV.setOnClickListener(v -> likeClicked());
+        initializeLike(attachedPalo.getIsLiked());
 
-        // TODO set current user profile pic next to make comment text field.
+        currentUserIV = findViewById(R.id.currentUserProfileImage);
+        Picasso.get().load("https://icon-library.com/images/default-user-icon/default-user-icon-4.jpg").into(currentUserIV);
 
-        //comment initialization
         newCommentBody = findViewById(R.id.addCommentBody);
         postComment = findViewById(R.id.postCommentButton);
         postComment.setOnClickListener(v -> postComment());
-        commentAdapter = new CommentAdapter(getApplicationContext(), new ArrayList<>());
+        layout = findViewById(R.id.commentSwipeRefreshLayout);
+        commentAdapter = new CommentAdapter(getApplicationContext(), new ArrayList<>(), this);
         commentRV = findViewById(R.id.commentRecyclerView);
         commentRV.setAdapter(commentAdapter);
         commentRV.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-
+        if(attachedPalo.getAttachment() instanceof Song){
+            presenter.loadPlaybackLink(((Song) attachedPalo.getAttachment()).getPlaybackLink());
+        }
         presenter.loadComments();
+
+        layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                layout.setRefreshing(false);
+                presenter.loadComments();
+            }
+        });
     }
 
+    private void initializeLike(boolean isLiked) {
+        attachedPalo.setIsLiked(isLiked);
+        setLikeCount();
+        if(isLiked)
+            likeTV.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_heart_full,0,0,0);
+        else
+            likeTV.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_heart_empty,0,0,0);
+    }
+
+    private void setLikeCount() {
+        likeCountTV.setText("(" + attachedPalo.getLikeCount() + ")");
+    }
+
+    public void likeClicked(){
+        System.out.println("post like clicked..." + attachedPalo.getIsLiked());
+        presenter.likePalo(attachedPalo.getId(), SharedPrefManager.getInstance(context).getUser().getId(), !attachedPalo.getIsLiked());
+    }
 
     @Override
     public void makeToast(String message) {
@@ -79,7 +129,7 @@ public class ExtendedPostActivity extends AppCompatActivity implements IExtended
     public void setPaloView(Palo palo) {
         Picasso.get().load(palo.getAuthor().getProfileImage()).into((ImageView) findViewById(R.id.paloAuthorProfileImage));
         ((TextView) findViewById(R.id.paloAuthorUserName)).setText(palo.getAuthor().getUsername());
-        ((TextView) findViewById(R.id.paloDate)).setText(palo.getPostDate()); // TODO display date in a nicer way
+        ((TextView) findViewById(R.id.paloDate)).setText(palo.getPostDate());
         ((TextView) findViewById(R.id.paloCaption)).setText(palo.getCaption());
 
         ((TextView) findViewById(R.id.songTitle)).setText(palo.getAttachment().getTitle());
@@ -96,6 +146,19 @@ public class ExtendedPostActivity extends AppCompatActivity implements IExtended
     @Override
     public void postComment() {
         presenter.postComment(setupCommentJson());
+    }
+
+    @Override
+    public void updateLikeToPalo( boolean isLiked) {
+        attachedPalo.setIsLiked(isLiked);
+        attachedPalo.updateLikeCount(isLiked);
+        setLikeCount();
+        if(isLiked){
+            likeTV.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_heart_full,0,0,0);
+        }
+        else {
+            likeTV.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_heart_empty,0,0,0);
+        }
     }
 
     @Override
@@ -117,6 +180,25 @@ public class ExtendedPostActivity extends AppCompatActivity implements IExtended
             imm.hideSoftInputFromWindow(activity.getCurrentFocus().getApplicationWindowToken(), 0);
     }
 
+    @Override
+    public void showPlaybackLink(String playbackLink) {
+        playbackVideoView = findViewById(R.id.playbackVideoView);
+        playbackController = new MediaController(this){
+//            @Override
+//            public void hide() {}
+        };
+        playbackVideoView.setVisibility(View.VISIBLE);
+        playbackVideoView.setVideoPath(playbackLink);
+        playbackController.setAnchorView(playbackVideoView);
+        playbackVideoView.setMediaController(playbackController);
+        playbackVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                playbackController.show(900000000);
+            }
+        });
+    }
+
     public JSONObject setupCommentJson(){
         JSONObject newComment = new JSONObject();
         try {
@@ -126,5 +208,13 @@ public class ExtendedPostActivity extends AppCompatActivity implements IExtended
             e.printStackTrace();
         }
         return newComment;
+    }
+
+    @Override
+    public void onCommentUserClicked(int position) {
+        System.out.println("post like clicked..." + comments.get(position).getAuthor().getUsername());
+        Intent intent =  new Intent(this, ProfileActivity.class);
+        intent.putExtra("user_obj", comments.get(position).getAuthor());
+        startActivity(intent);
     }
 }

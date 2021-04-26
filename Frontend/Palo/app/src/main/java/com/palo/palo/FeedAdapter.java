@@ -10,7 +10,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import com.palo.palo.model.Palo;
 import com.squareup.picasso.Picasso;
@@ -44,7 +48,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.authorUserNameTV.setText(palos.get(position).getAuthorUsername());
-        holder.postdateTV.setText(palos.get(position).getPostDate());
+        holder.postdateTV.setText(formatDate(palos.get(position).getPostDate()));
         holder.captionTV.setText(palos.get(position).getCaption());
         Picasso.get().load(palos.get(position).getProfileImage()).into(holder.authorProfileImage);
 
@@ -52,7 +56,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         holder.songTitleTV.setText(palos.get(position).getAttachment().getTitle());
         holder.songArtistTV.setText(palos.get(position).getAttachment().getArtist());
         Picasso.get().load(palos.get(position).getAttachment().getAlbumCover()).into(holder.songCoverImage);
-
+        holder.likeCountTV.setText("("+palos.get(position).getLikeCount()+")");
         holder.toggleLikeHeart(palos.get(position).getIsLiked());
     }
 
@@ -71,6 +75,23 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         notifyItemChanged(position);
     }
 
+    public String formatDate(String dateStr){
+        SimpleDateFormat formatter=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        try {
+            Date date = formatter.parse(dateStr);
+            Date now = new Date();
+            long showTime = TimeUnit.MILLISECONDS.toDays(now.getTime() - date.getTime());
+            if (showTime >0) return showTime + " days ago";
+            showTime = TimeUnit.MILLISECONDS.toHours(now.getTime() - date.getTime());
+            if (showTime > 0) return showTime + " hours ago";
+            showTime = TimeUnit.MILLISECONDS.toMinutes(now.getTime() - date.getTime()) ;
+            if (showTime > 0) return showTime + " minutes ago";
+            return "a few seconds ago";
+        } catch (ParseException e) {
+            return dateStr;
+        }
+    }
+
     /**
      * ViewHolder for FeedAdapter. Set posts info for each item in Feed Adapter.
      */
@@ -80,7 +101,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         ImageView authorProfileImage;
 
         // views for interation with palo
-        TextView commentTV, likeTV;
+        TextView commentTV, likeTV, likeCountTV;
 
         // views for attached song
         TextView songTitleTV, songArtistTV;
@@ -91,12 +112,13 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         public ViewHolder(@NonNull View itemView, OnFeedListener onFeedListener) {
             super(itemView);
             authorUserNameTV = itemView.findViewById(R.id.paloAuthorUserName);
+            authorUserNameTV.setOnClickListener(v -> onFeedListener.onUserNameClicked(getAdapterPosition()));
             postdateTV = itemView.findViewById(R.id.paloDate);
             captionTV = itemView.findViewById(R.id.paloCaption);
             authorProfileImage = itemView.findViewById(R.id.paloAuthorProfileImage);
             commentTV = itemView.findViewById(R.id.paloComment);
             likeTV = itemView.findViewById(R.id.paloLike);
-
+            likeCountTV = itemView.findViewById(R.id.paloLikeCount);
             songTitleTV = itemView.findViewById(R.id.songTitle);
             songArtistTV = itemView.findViewById(R.id.songArtist);
             songCoverImage = itemView.findViewById(R.id.coverImage);
@@ -104,21 +126,22 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
             itemView.setOnClickListener(v -> onFeedListener.onPaloClick(getAdapterPosition()));
             likeTV.setOnClickListener(v -> likeClicked(getAdapterPosition()));
         }
+
         public void likeClicked(int pos){
-            toggleLikeHeart(palos.get(pos).toggleIsLiked());
+//            toggleLikeHeart(palos.get(pos).toggleIsLiked());
             onFeedListener.onLikeClicked(pos);
-            notifyItemChanged(pos);
+//            notifyItemChanged(pos);
         }
 
         public void toggleLikeHeart(boolean isLiked){
             if(isLiked) likeTV.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_heart_full,0,0,0);
             else likeTV.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_heart_empty,0,0,0);
-
         }
     }
 
     public interface OnFeedListener {
         public void onPaloClick(int position);
         public void onLikeClicked(int position);
+        public void onUserNameClicked(int position);
     }
 }

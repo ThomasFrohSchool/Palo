@@ -10,6 +10,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import static com.palo.palo.volley.ServerURLs.PICS;
+
 public class FeedPresenter implements IFeedPresenter, IFeedVolleyListener {
     private IFeedView view;
     private FeedModel model;
@@ -30,6 +32,13 @@ public class FeedPresenter implements IFeedPresenter, IFeedVolleyListener {
     }
 
     @Override
+    public void likePalo(int position, int paloId, int userId, boolean toLike) {
+        if(toLike)
+            model.addPaloLike(position, paloId, userId, this);
+        model.removePaloLike(position, paloId, userId, this);
+    }
+
+    @Override
     public void onEmptyResponse(String response) {
         view.loadEmptyFeed();
     }
@@ -37,16 +46,18 @@ public class FeedPresenter implements IFeedPresenter, IFeedVolleyListener {
     @Override
     public void onSuccess(JSONArray response) throws JSONException {
         ArrayList<Palo> palos = new ArrayList<>();
+        int a = 0;
         for (int i = response.length()-1; i >= 0; i--) {
             try {
-                Palo palo = new Palo (response.getJSONObject(i));
-                model.getUserRequest(i, palo.getAuthor().getId(), this);
+                Palo palo = new Palo (response.getJSONObject(i), currentUserId);
+                model.getUserRequest((response.length()-1-i), palo.getAuthor().getId(), this);
                 if (palo.getAttachment().getSpotifyId() != null)
                     model.getAttachmentRequest((response.length()-1-i), palo.getAttachment().getType(), palo.getAttachment().getSpotifyId(), this);
                 palos.add(palo);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            a++;
         }
         view.loadPalos(palos);
     }
@@ -62,17 +73,27 @@ public class FeedPresenter implements IFeedPresenter, IFeedVolleyListener {
     public void onUserRequestSuccess(int paloIndex, JSONObject response) throws JSONException {
         Palo palo = view.getPalo(paloIndex);
         palo.setAuthorUsername(response.getString("username"));
-        // TODO set profile image as well...
+        palo.setPaloAuthorProfileImage(PICS + response.getString("id") + "/" + response.getString("id"));
         view.updatePalo(paloIndex, palo);
     }
 
 
     @Override
     public void onAttachmentRequestSuccess(int paloIndex, int type, JSONObject response) throws JSONException {
-        String name = (type == 1) ? "" : response.getString("name");
+        String name = (type == 1) ? response.getString("artist") : response.getString("name");
+        String artist = (type == 1) ? " " : response.getString("artist");
+
+        System.out.println(type + " " + name);
         Palo palo = view.getPalo(paloIndex);
-        palo.updateAttachment(name, response.getString("artist"), response.getString("imageUrl"), response.getString("id"));
+        palo.updateAttachment(name, artist, response.getString("imageUrl"), response.getString("id"));
+        if( type ==2) palo.updateAttachmentPlaybackLink(response.getString("playbackLink"));
         view.updatePalo(paloIndex, palo);
+    }
+
+    @Override
+    public void onLikeRequestSuccess(int position,  boolean isLiked) {
+        //todo refresh palo in recycler view
+        view.updateLikeToPalo(position, isLiked);
     }
 }
 

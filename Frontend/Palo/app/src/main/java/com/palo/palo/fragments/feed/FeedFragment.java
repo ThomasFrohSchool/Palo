@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import com.palo.palo.FeedAdapter;
 import com.palo.palo.R;
 import com.palo.palo.SharedPrefManager;
 import com.palo.palo.activities.extendedPost.ExtendedPostActivity;
+import com.palo.palo.activities.profile.ProfileActivity;
 import com.palo.palo.model.Palo;
 
 import java.util.ArrayList;
@@ -59,6 +61,8 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
         context = getActivity().getApplicationContext();
         recyclerView = view.findViewById(R.id.songList);
         layout = view.findViewById(R.id.feedSwipeRefreshLayout);
+        emptyFeedMessage = view.findViewById(R.id.emptyFeedMessage);
+        //refreshFeed= view.findViewById(R.id.refreshFeedButton);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         feedAdapter = new FeedAdapter(context, new ArrayList<>(), this);
         recyclerView.setAdapter(feedAdapter);
@@ -74,7 +78,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
 
     @Override
     public void onPaloClick(int position) {
-        System.out.println("post clicked..." + palos.get(position).getCaption());
+        System.out.println("post clicked..." + palos.get(position).getAttachment().getClass().getSimpleName());
         Palo p = palos.get(position);
         Intent intent =  new Intent(getContext(), ExtendedPostActivity.class);
         intent.putExtra("selected_post", palos.get(position));
@@ -83,13 +87,27 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
 
     @Override
     public void onLikeClicked(int position) {
-        System.out.println("post like clicked..." + palos.get(position).getAttachment().getTitle());
+        Palo palo =  palos.get(position);
+        System.out.println("post like clicked..." + palo.getCaption() + palo.getIsLiked());
+        feedPresenter.likePalo(position, palo.getId(), SharedPrefManager.getInstance(context).getUser().getId(), !palo.getIsLiked());
+    }
+
+    @Override
+    public void onUserNameClicked(int position) {
+        System.out.println("post like clicked..." + palos.get(position).getAuthorUsername());
+        Palo p = palos.get(position);
+        Intent intent =  new Intent(getContext(), ProfileActivity.class);
+        intent.putExtra("user_obj", palos.get(position).getAuthor());
+        startActivity(intent);
     }
 
     @Override
     public void loadPalos(List<Palo> palos) {
         System.out.println("hello");
         this.palos = palos;
+        if(palos.size() > 0) {
+            emptyFeedMessage.setVisibility(View.INVISIBLE);
+        }
         recyclerView.setVisibility(View.VISIBLE);
         feedAdapter.swapDataSet(palos);
     }
@@ -98,7 +116,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
     public void loadEmptyFeed() {
         recyclerView.setVisibility(View.INVISIBLE);
         emptyFeedMessage.setVisibility(View.VISIBLE);
-        refreshFeed.setVisibility(View.VISIBLE);
+        //refreshFeed.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -108,7 +126,8 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
 
     @Override
     public void makeToast(String message) {
-        //Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+        System.out.println(message);
+//        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -119,5 +138,14 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
     @Override
     public Palo getPalo(int paloIndex) {
         return palos.get(paloIndex);
+    }
+
+    @Override
+    public void updateLikeToPalo(int paloIndex, boolean isLiked) {
+        Palo p = palos.get(paloIndex);
+        p.setIsLiked(isLiked);
+        p.updateLikeCount(isLiked);
+        System.out.println("updateLike = " + isLiked);
+        feedAdapter.updatePalo(paloIndex, p);
     }
 }

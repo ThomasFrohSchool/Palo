@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.palo.palo.FeedAdapter;
 import com.palo.palo.R;
@@ -38,15 +39,24 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
     private TextView paloAmt;
     private TextView followerAmt;
     private TextView followingAmt;
+    Button logoutButton;
+    View settingView;
     private static User user;
     private RecyclerView r;
+    SwipeRefreshLayout layout;
     FeedAdapter postAdapter;
     List<Palo> palos;
 //    private String str;
     private Context context;
     private IProfilePresenter profilePresenter;
+    User users;
 
-    public ProfileFragment() {}
+    public ProfileFragment() {
+    }
+
+    public ProfileFragment(User user) {
+        this.user = user;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,7 +71,19 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         context = getActivity().getApplicationContext();
-        user = SharedPrefManager.getInstance(getActivity().getApplicationContext()).getUser();
+        if(user == null || user.getId() ==  SharedPrefManager.getInstance(getActivity().getApplicationContext()).getUser().getId()) {            user = SharedPrefManager.getInstance(getActivity().getApplicationContext()).getUser();
+            logoutButton = view.findViewById(R.id.logout);
+            logoutButton.setOnClickListener(v -> {
+                if (v.equals(logoutButton)) {
+                    SharedPrefManager.getInstance(getActivity().getApplicationContext()).logout();
+                }
+            });
+        } else {
+            settingView = view.findViewById(R.id.settingsImage);
+            logoutButton = view.findViewById(R.id.logout);
+            this.hideOwnProfileStuff();
+        }
+//        user = SharedPrefManager.getInstance(getActivity().getApplicationContext()).getUser();
         profileImage = view.findViewById(R.id.profileImage);
         profileName = view.findViewById(R.id.profileName);
         paloAmt = view.findViewById(R.id.paloAmt);
@@ -69,18 +91,20 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
         followingAmt = view.findViewById(R.id.followingAmt);
         r = view.findViewById(R.id.userPalos);
 
-        Button logoutButton = view.findViewById(R.id.logout);
-        logoutButton.setOnClickListener(v -> {
-            if (v.equals(logoutButton)) {
-                SharedPrefManager.getInstance(getActivity().getApplicationContext()).logout();
-            }
-        });
-
         profileName.setText(user.getUsername());
         postAdapter = new FeedAdapter(getActivity().getApplicationContext(), new ArrayList<>(), this);
         r.setAdapter(postAdapter);
         r.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         profilePresenter = new ProfilePresenter(this, context, user.getId(), user.getUsername());
+        layout = view.findViewById(R.id.profileSwipeRefreshLayout);
+
+        layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                layout.setRefreshing(false);
+                profilePresenter.loadProfile(SharedPrefManager.getInstance(view.getContext()).getUser().getId());
+            }
+        });
     }
 
     @Override
@@ -94,7 +118,14 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
 
     @Override
     public void onLikeClicked(int position) {
-        System.out.println("post like clicked..." + palos.get(position).getCaption());
+        Palo palo =  palos.get(position);
+        System.out.println("post like clicked..." + palo.getCaption() + palo.getIsLiked());
+        profilePresenter.likePalo(position, palo.getId(), SharedPrefManager.getInstance(context).getUser().getId(), !palo.getIsLiked());
+    }
+
+    @Override
+    public void onUserNameClicked(int position) {
+        //not needed you're already on profile
     }
 
     @Override
@@ -136,16 +167,35 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
 
     @Override
     public void setFollowersCount(String num) {
+        System.out.println(num);
         followerAmt.setText(num);
     }
 
     @Override
     public void setFollowingCount(String num) {
+        System.out.println(num);
+
         followingAmt.setText(num);
     }
 
     @Override
     public void setPaloCount(String num) {
+        System.out.println(num);
+
         paloAmt.setText(num);
+    }
+
+    @Override
+    public void hideOwnProfileStuff() {
+        logoutButton.setVisibility(View.INVISIBLE);
+        settingView.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void updateLikeToPalo(int paloIndex, boolean isLiked) {
+        Palo p = palos.get(paloIndex);
+        p.setIsLiked(isLiked);
+        System.out.println("updateLike = " + isLiked);
+        postAdapter.updatePalo(paloIndex, p);
     }
 }

@@ -32,6 +32,22 @@ public class ExtendedPostPresenter implements IExtendedPostPresenter, IExtendedP
     }
 
     @Override
+    public void likePalo(int paloId, int userId, boolean toLike) {
+        if(toLike)
+            model.addPaloLike(paloId, userId, this);
+        model.removePaloLike(paloId, userId, this);
+    }
+
+    @Override
+    public void loadPlaybackLink(String playbackLink) {
+        if(playbackLink == null || playbackLink.equals("null")){
+            view.logd("null playback link... will not show song playing area");
+        } else {
+            view.showPlaybackLink(playbackLink);
+        }
+    }
+
+    @Override
     public void onCommentLoadSuccess(JSONArray response) throws JSONException {
         ArrayList<Comment> comments = new ArrayList<>();
         for(int i = 0; i < response.length(); i++) {
@@ -65,5 +81,10 @@ public class ExtendedPostPresenter implements IExtendedPostPresenter, IExtendedP
     public void onError(String message) {
         view.logd(message);
 //        view.makeToast(message);
+    }
+
+    @Override
+    public void onLikeRequestSuccess( boolean isLiked) {
+        view.updateLikeToPalo(isLiked);
     }
 }

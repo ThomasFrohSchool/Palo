@@ -5,12 +5,15 @@ import android.content.Context;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.palo.palo.fragments.feed.IFeedVolleyListener;
 import com.palo.palo.volley.VolleySingleton;
 
 import org.json.JSONException;
 
 
+import static com.palo.palo.volley.ServerURLs.ADD_LIKE;
 import static com.palo.palo.volley.ServerURLs.ATTACHMENT;
+import static com.palo.palo.volley.ServerURLs.REMOVE_LIKE;
 import static com.palo.palo.volley.ServerURLs.USER_BY_ID;
 
 public class ProfileModel {
@@ -48,6 +51,31 @@ public class ProfileModel {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,ATTACHMENT(type) + spotifyId, null, response -> {
             try {
                 volleyListener.onAttachmentRequestSuccess(paloIndex, type, response);
+            } catch (JSONException e) {
+                volleyListener.onError(response.toString());
+            }
+        }, error -> volleyListener.onError(error.getMessage()));
+        VolleySingleton.getInstance(context).addToRequestQueue(request);
+    }
+
+    public void addPaloLike(int position, int paloId, int userId, IProfileVolleyListener volleyListener){
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, ADD_LIKE(paloId, userId), null, response -> {
+            try {
+                if(response.getString("message").equals("success"))
+                    volleyListener.onLikeRequestSuccess(position, true);
+            } catch (JSONException e) {
+                volleyListener.onError(response.toString());
+            }
+        }, error -> volleyListener.onError(error.getMessage()));
+        VolleySingleton.getInstance(context).addToRequestQueue(request);
+    }
+
+
+    public void removePaloLike(int position, int paloId, int userId, IProfileVolleyListener volleyListener){
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, REMOVE_LIKE(paloId, userId), null, response -> {
+            try {
+                if(response.getString("message").equals("success"))
+                    volleyListener.onLikeRequestSuccess(position, false);
             } catch (JSONException e) {
                 volleyListener.onError(response.toString());
             }
