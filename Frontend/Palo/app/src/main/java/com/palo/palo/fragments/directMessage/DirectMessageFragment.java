@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.palo.palo.R;
+import com.palo.palo.SharedPrefManager;
 import com.palo.palo.UserSearchDMAdapter;
 import com.palo.palo.activities.DirectMessageUserActivity;
 
@@ -37,6 +39,7 @@ public class DirectMessageFragment extends Fragment implements UserSearchDMAdapt
     RecyclerView recyclerView;
     UserSearchDMAdapter userSearchDMAdapter;
     List<String> usernames;
+    SwipeRefreshLayout layout;
     Context context;
     IDirectMessagePresenter presenter;
     String TAG = DirectMessageFragment.class.getSimpleName();
@@ -59,6 +62,7 @@ public class DirectMessageFragment extends Fragment implements UserSearchDMAdapt
         searchET = view.findViewById(R.id.searchUserDM);
         searchButton = view.findViewById(R.id.userSearchBarButton);
         clearSearchResults = view.findViewById(R.id.clearUserSearchButton);
+        layout = view.findViewById(R.id.dmSwipeRefreshLayout);
         recyclerView = view.findViewById(R.id.directMessageRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         userSearchDMAdapter = new UserSearchDMAdapter(context, new ArrayList<>(), this);
@@ -67,6 +71,13 @@ public class DirectMessageFragment extends Fragment implements UserSearchDMAdapt
         searchButton.setOnClickListener(v -> presenter.loadUsersSearch(searchET.getText().toString()));
         clearSearchResults.setOnClickListener(v -> presenter.loadUsers());
         presenter.loadUsers();
+        layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                layout.setRefreshing(false);
+                presenter.loadUsers();
+            }
+        });
     }
 
     @Override
@@ -80,6 +91,7 @@ public class DirectMessageFragment extends Fragment implements UserSearchDMAdapt
     public void loadUsers(List<String> users) {
         clearSearchResults.setVisibility(View.GONE);
         this.usernames = users;
+        System.out.println("USERS:" + users.toString());
         userSearchDMAdapter.swapDataSet(users);
     }
 

@@ -74,12 +74,20 @@
 
                 />
 
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/dmSwipeRefreshLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="14"
+                >
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/directMessageRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="531dp"
                 android:layout_weight="14"
                 app:layout_constraintTop_toBottomOf="@+id/clearUserSearchButton" />
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
