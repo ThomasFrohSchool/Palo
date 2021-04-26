@@ -2,10 +2,13 @@ package com.palo.palo;
 
 import android.content.Context;
 
+import com.google.gson.JsonObject;
 import com.palo.palo.activities.extendedPost.ExtendedPostModel;
 import com.palo.palo.activities.extendedPost.ExtendedPostPresenter;
 import com.palo.palo.activities.extendedPost.IExtendedPostView;
+import com.palo.palo.model.Comment;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -15,8 +18,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ExtendedPostPresenterTest {
@@ -30,7 +35,7 @@ public class ExtendedPostPresenterTest {
     @Test
     public void postCommentTestCase1() throws JSONException {
         //test correct formatted json
-        JSONObject comment1 = Mockito.mock(JSONObject.class);
+        JSONObject comment1 = mock(JSONObject.class);
         Mockito.when(comment1.getString("body")).thenReturn("cool this is what I commented.");
 //        Mockito.when(comment1.getInt("user_id")).thenReturn(17);
 
@@ -42,7 +47,7 @@ public class ExtendedPostPresenterTest {
     @Test
     public void postCommentTestCase2() throws JSONException {
         //Tests when body of json is empty string
-        JSONObject comment1 = Mockito.mock(JSONObject.class);
+        JSONObject comment1 = mock(JSONObject.class);
         Mockito.when(comment1.getString("body")).thenReturn("");
 //        Mockito.when(comment1.getInt("user_id")).thenReturn(17);
 

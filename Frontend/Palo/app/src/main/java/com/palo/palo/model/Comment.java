@@ -25,7 +25,6 @@ public class Comment {
         author = new User(author_id);
         postDate = commentJSON.getString("createDate");
         caption = commentJSON.getString("body");
-        author = new User(author_id);
     }
     public User getAuthor() {
         return author;
