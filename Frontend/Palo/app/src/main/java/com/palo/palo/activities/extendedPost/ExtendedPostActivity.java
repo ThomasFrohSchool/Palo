@@ -49,6 +49,7 @@ public class ExtendedPostActivity extends AppCompatActivity implements CommentAd
     EditText newCommentBody;
     TextView postComment;
     TextView likeTV;
+    TextView likeCountTV;
     ImageView currentUserIV;
     VideoView playbackVideoView;
     MediaController playbackController;
@@ -67,7 +68,9 @@ public class ExtendedPostActivity extends AppCompatActivity implements CommentAd
         setPaloView(attachedPalo);
         presenter = new ExtendedPostPresenter(this, context, attachedPalo.getId());
         likeTV = findViewById(R.id.paloLike);
+        likeCountTV = findViewById(R.id.paloLikeCount);
         likeTV.setOnClickListener(v -> likeClicked());
+        initializeLike(attachedPalo.getIsLiked());
 
         currentUserIV = findViewById(R.id.currentUserProfileImage);
         Picasso.get().load("https://icon-library.com/images/default-user-icon/default-user-icon-4.jpg").into(currentUserIV);
@@ -92,6 +95,19 @@ public class ExtendedPostActivity extends AppCompatActivity implements CommentAd
                 presenter.loadComments();
             }
         });
+    }
+
+    private void initializeLike(boolean isLiked) {
+        attachedPalo.setIsLiked(isLiked);
+        setLikeCount();
+        if(isLiked)
+            likeTV.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_heart_full,0,0,0);
+        else
+            likeTV.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_heart_empty,0,0,0);
+    }
+
+    private void setLikeCount() {
+        likeCountTV.setText("(" + attachedPalo.getLikeCount() + ")");
     }
 
     public void likeClicked(){
@@ -135,8 +151,14 @@ public class ExtendedPostActivity extends AppCompatActivity implements CommentAd
     @Override
     public void updateLikeToPalo( boolean isLiked) {
         attachedPalo.setIsLiked(isLiked);
-        if(isLiked) likeTV.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_heart_full,0,0,0);
-        else likeTV.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_heart_empty,0,0,0);
+        attachedPalo.updateLikeCount(isLiked);
+        setLikeCount();
+        if(isLiked){
+            likeTV.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_heart_full,0,0,0);
+        }
+        else {
+            likeTV.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_heart_empty,0,0,0);
+        }
     }
 
     @Override

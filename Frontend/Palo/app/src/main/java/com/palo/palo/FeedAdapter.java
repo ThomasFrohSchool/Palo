@@ -56,7 +56,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         holder.songTitleTV.setText(palos.get(position).getAttachment().getTitle());
         holder.songArtistTV.setText(palos.get(position).getAttachment().getArtist());
         Picasso.get().load(palos.get(position).getAttachment().getAlbumCover()).into(holder.songCoverImage);
-
+        holder.likeCountTV.setText("("+palos.get(position).getLikeCount()+")");
         holder.toggleLikeHeart(palos.get(position).getIsLiked());
     }
 
@@ -101,7 +101,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         ImageView authorProfileImage;
 
         // views for interation with palo
-        TextView commentTV, likeTV;
+        TextView commentTV, likeTV, likeCountTV;
 
         // views for attached song
         TextView songTitleTV, songArtistTV;
@@ -118,7 +118,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
             authorProfileImage = itemView.findViewById(R.id.paloAuthorProfileImage);
             commentTV = itemView.findViewById(R.id.paloComment);
             likeTV = itemView.findViewById(R.id.paloLike);
-
+            likeCountTV = itemView.findViewById(R.id.paloLikeCount);
             songTitleTV = itemView.findViewById(R.id.songTitle);
             songArtistTV = itemView.findViewById(R.id.songArtist);
             songCoverImage = itemView.findViewById(R.id.coverImage);

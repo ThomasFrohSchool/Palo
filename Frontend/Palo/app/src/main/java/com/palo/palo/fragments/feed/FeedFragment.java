@@ -141,6 +141,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
     public void updateLikeToPalo(int paloIndex, boolean isLiked) {
         Palo p = palos.get(paloIndex);
         p.setIsLiked(isLiked);
+        p.updateLikeCount(isLiked);
         System.out.println("updateLike = " + isLiked);
         feedAdapter.updatePalo(paloIndex, p);
     }

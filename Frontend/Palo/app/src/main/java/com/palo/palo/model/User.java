@@ -33,6 +33,7 @@ public class User implements Parcelable {
         this.email = email;
         this.userFollowing = new ArrayList<>();
         this.userFollowers = new ArrayList<>();
+        this.profileImage = "https://icon-library.com/images/default-user-icon/default-user-icon-4.jpg";
     }
     
     public User(Parcel parcel){
@@ -60,6 +61,8 @@ public class User implements Parcelable {
     public User(int userId, String username) {
         id = userId;
         this.username = username;
+        this.profileImage = "https://icon-library.com/images/default-user-icon/default-user-icon-4.jpg";
+
     }
 
     public int getId() {

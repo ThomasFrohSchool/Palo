@@ -48,7 +48,7 @@
             android:id="@+id/card_extended_palo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_weight="3"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
@@ -136,6 +136,16 @@
                     android:layout_marginLeft="8dp"
                     app:layout_constraintTop_toBottomOf="@id/paloAttachedSong"
                     app:layout_constraintStart_toStartOf="parent" />
+                <TextView
+                    android:id="@+id/paloLikeCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="@color/darkGrey"
+                    android:drawablePadding="4dp"
+                    android:layout_marginLeft="8dp"
+                    app:layout_constraintTop_toBottomOf="@id/paloAttachedSong"
+                    app:layout_constraintStart_toEndOf="@id/paloLike" />
                 <VideoView
                     android:id="@+id/playbackVideoView"
                     android:visibility="gone"
@@ -150,12 +160,12 @@
             android:id="@+id/commentSwipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="14"
+            android:layout_weight="15"
             >
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/commentRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="match_parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/addCommentLayout"
             app:layout_constraintEnd_toEndOf="parent"/>
