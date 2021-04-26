@@ -37,15 +37,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:textSize="45sp"
-    android:text="No posts found from followers. Make a post or follow someone new."
+    android:text="No posts found from followers. Make a post or follow someone new. Once you follow someone, swipe down to refresh."
     android:gravity="center_horizontal|center_vertical"
     />
-    <Button
-        android:visibility="gone"
-        android:id="@+id/refreshFeedButton"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:text="Refresh"
-        />
     </LinearLayout>
 </FrameLayout>

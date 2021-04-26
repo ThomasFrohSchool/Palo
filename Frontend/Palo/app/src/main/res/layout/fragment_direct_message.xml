@@ -31,16 +31,17 @@
                 android:layout_marginLeft="4dp"
                 android:layout_marginRight="4dp"
                 app:layout_constraintTop_toBottomOf="@id/attached_song_layout">
+
                 <TextView
                     android:id="@+id/searchUserDMTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Search to start chat with someone:"
-                    android:textStyle="bold"
-                    android:textSize="20sp"
-                    android:gravity="top|start"
                     android:layout_marginVertical="4dp"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    android:gravity="top|start"
+                    android:text="Search to start a chat with someone:"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
                     android:id="@+id/searchUserDM"
@@ -76,7 +77,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/directMessageRecyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="524dp"
+                android:layout_height="531dp"
                 android:layout_weight="14"
                 app:layout_constraintTop_toBottomOf="@+id/clearUserSearchButton" />
         </LinearLayout>

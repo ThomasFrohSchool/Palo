@@ -62,7 +62,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
         recyclerView = view.findViewById(R.id.songList);
         layout = view.findViewById(R.id.feedSwipeRefreshLayout);
         emptyFeedMessage = view.findViewById(R.id.emptyFeedMessage);
-        refreshFeed= view.findViewById(R.id.refreshFeedButton);
+        //refreshFeed= view.findViewById(R.id.refreshFeedButton);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         feedAdapter = new FeedAdapter(context, new ArrayList<>(), this);
         recyclerView.setAdapter(feedAdapter);
@@ -105,6 +105,9 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
     public void loadPalos(List<Palo> palos) {
         System.out.println("hello");
         this.palos = palos;
+        if(palos.size() > 0) {
+            emptyFeedMessage.setVisibility(View.INVISIBLE);
+        }
         recyclerView.setVisibility(View.VISIBLE);
         feedAdapter.swapDataSet(palos);
     }
@@ -113,7 +116,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnFeedListener
     public void loadEmptyFeed() {
         recyclerView.setVisibility(View.INVISIBLE);
         emptyFeedMessage.setVisibility(View.VISIBLE);
-        refreshFeed.setVisibility(View.VISIBLE);
+        //refreshFeed.setVisibility(View.VISIBLE);
     }
 
     @Override
