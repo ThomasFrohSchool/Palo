@@ -66,12 +66,11 @@ public class DirectMessageFragment extends Fragment implements UserSearchDMAdapt
         presenter = new DirectMessagePresenter(this, context);
         searchButton.setOnClickListener(v -> presenter.loadUsersSearch(searchET.getText().toString()));
         clearSearchResults.setOnClickListener(v -> presenter.loadUsers());
-
+        presenter.loadUsers();
     }
 
     @Override
     public void onUserClicked(int position) {
-        //TODO go to chat screen...
         Intent intent = new Intent(context, DirectMessageUserActivity.class);
         intent.putExtra("USER_TO_SEND", usernames.get(position));
         startActivity(intent);
