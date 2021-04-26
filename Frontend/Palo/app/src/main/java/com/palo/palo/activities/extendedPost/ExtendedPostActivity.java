@@ -3,12 +3,14 @@ package com.palo.palo.activities.extendedPost;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -41,6 +43,7 @@ import java.util.List;
 public class ExtendedPostActivity extends AppCompatActivity implements CommentAdapter.OnCommentListener, IExtendedPostView{
     Palo attachedPalo;
     RecyclerView commentRV;
+    SwipeRefreshLayout layout;
     CommentAdapter commentAdapter;
     List<Comment> comments;
     EditText newCommentBody;
@@ -72,6 +75,7 @@ public class ExtendedPostActivity extends AppCompatActivity implements CommentAd
         newCommentBody = findViewById(R.id.addCommentBody);
         postComment = findViewById(R.id.postCommentButton);
         postComment.setOnClickListener(v -> postComment());
+        layout = findViewById(R.id.commentSwipeRefreshLayout);
         commentAdapter = new CommentAdapter(getApplicationContext(), new ArrayList<>(), this);
         commentRV = findViewById(R.id.commentRecyclerView);
         commentRV.setAdapter(commentAdapter);
@@ -80,6 +84,14 @@ public class ExtendedPostActivity extends AppCompatActivity implements CommentAd
             presenter.loadPlaybackLink(((Song) attachedPalo.getAttachment()).getPlaybackLink());
         }
         presenter.loadComments();
+
+        layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                layout.setRefreshing(false);
+                presenter.loadComments();
+            }
+        });
     }
 
     public void likeClicked(){
@@ -101,7 +113,7 @@ public class ExtendedPostActivity extends AppCompatActivity implements CommentAd
     public void setPaloView(Palo palo) {
         Picasso.get().load(palo.getAuthor().getProfileImage()).into((ImageView) findViewById(R.id.paloAuthorProfileImage));
         ((TextView) findViewById(R.id.paloAuthorUserName)).setText(palo.getAuthor().getUsername());
-        ((TextView) findViewById(R.id.paloDate)).setText(palo.getPostDate()); // TODO display date in a nicer way
+        ((TextView) findViewById(R.id.paloDate)).setText(palo.getPostDate());
         ((TextView) findViewById(R.id.paloCaption)).setText(palo.getCaption());
 
         ((TextView) findViewById(R.id.songTitle)).setText(palo.getAttachment().getTitle());
@@ -150,18 +162,16 @@ public class ExtendedPostActivity extends AppCompatActivity implements CommentAd
     public void showPlaybackLink(String playbackLink) {
         playbackVideoView = findViewById(R.id.playbackVideoView);
         playbackController = new MediaController(this){
-            @Override
-            public void hide() {}
+//            @Override
+//            public void hide() {}
         };
         playbackVideoView.setVisibility(View.VISIBLE);
         playbackVideoView.setVideoPath(playbackLink);
         playbackController.setAnchorView(playbackVideoView);
         playbackVideoView.setMediaController(playbackController);
-//                playbackVideoView.start();
         playbackVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
-//                        playbackVideoView.start();
                 playbackController.show(900000000);
             }
         });
