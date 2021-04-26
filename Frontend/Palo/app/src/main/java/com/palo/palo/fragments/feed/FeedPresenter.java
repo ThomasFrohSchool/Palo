@@ -80,9 +80,13 @@ public class FeedPresenter implements IFeedPresenter, IFeedVolleyListener {
 
     @Override
     public void onAttachmentRequestSuccess(int paloIndex, int type, JSONObject response) throws JSONException {
-        String name = (type == 1) ? "" : response.getString("name");
+        String name = (type == 1) ? response.getString("artist") : response.getString("name");
+        String artist = (type == 1) ? " " : response.getString("artist");
+
+        System.out.println(type + " " + name);
         Palo palo = view.getPalo(paloIndex);
-        palo.updateAttachment(name, response.getString("artist"), response.getString("imageUrl"), response.getString("id"));
+        palo.updateAttachment(name, artist, response.getString("imageUrl"), response.getString("id"));
+        if( type ==2) palo.updateAttachmentPlaybackLink(response.getString("playbackLink"));
         view.updatePalo(paloIndex, palo);
     }
 

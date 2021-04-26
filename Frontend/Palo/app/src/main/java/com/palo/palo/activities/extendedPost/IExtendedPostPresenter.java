@@ -7,4 +7,5 @@ public interface IExtendedPostPresenter {
     public void loadComments();
     public void likePalo(int paloId, int userId, boolean toLike);
 
+    public void loadPlaybackLink(String playbackLink);
 }

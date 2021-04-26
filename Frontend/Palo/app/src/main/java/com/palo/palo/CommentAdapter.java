@@ -14,7 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.palo.palo.model.Comment;
 import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Adapter for comment recyclerview.
@@ -47,7 +51,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         else {
             holder.authorUserNameTV.setText(c.getAuthor().getUsername());
         }
-        holder.postdateTV.setText(c.getPostDate());
+        holder.postdateTV.setText(formatDate(c.getPostDate()));
         holder.captionTV.setText(c.getCaption());
         Picasso.get().load(c.getAuthor().getProfileImage()).into(holder.authorProfileImage);
     }
@@ -66,6 +70,24 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         this.comments.set(position, comment);
         notifyItemChanged(position);
     }
+
+    public String formatDate(String dateStr){
+        SimpleDateFormat formatter=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        try {
+            Date date = formatter.parse(dateStr);
+            Date now = new Date();
+            long showTime = TimeUnit.MILLISECONDS.toDays(now.getTime() - date.getTime());
+            if (showTime >0) return showTime + " days ago";
+            showTime = TimeUnit.MILLISECONDS.toHours(now.getTime() - date.getTime());
+            if (showTime > 0) return showTime + " hours ago";
+            showTime = TimeUnit.MILLISECONDS.toMinutes(now.getTime() - date.getTime()) ;
+            if (showTime > 0) return showTime + " minutes ago";
+            return "a few seconds ago";
+        } catch (ParseException e) {
+            return dateStr;
+        }
+    }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView authorUserNameTV, postdateTV, captionTV;

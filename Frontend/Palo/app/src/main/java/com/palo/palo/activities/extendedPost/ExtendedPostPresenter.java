@@ -39,6 +39,15 @@ public class ExtendedPostPresenter implements IExtendedPostPresenter, IExtendedP
     }
 
     @Override
+    public void loadPlaybackLink(String playbackLink) {
+        if(playbackLink == null || playbackLink.equals("null")){
+            view.logd("null playback link... will not show song playing area");
+        } else {
+            view.showPlaybackLink(playbackLink);
+        }
+    }
+
+    @Override
     public void onCommentLoadSuccess(JSONArray response) throws JSONException {
         ArrayList<Comment> comments = new ArrayList<>();
         for(int i = 0; i < response.length(); i++) {
@@ -76,7 +85,6 @@ public class ExtendedPostPresenter implements IExtendedPostPresenter, IExtendedP
 
     @Override
     public void onLikeRequestSuccess( boolean isLiked) {
-        //todo refresh palo in recycler view
         view.updateLikeToPalo(isLiked);
     }
 }
