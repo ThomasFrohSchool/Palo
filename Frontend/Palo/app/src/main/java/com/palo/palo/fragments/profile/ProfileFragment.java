@@ -41,7 +41,7 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
     private TextView followingAmt;
     Button logoutButton;
     View settingView;
-    private static User user;
+    private User user;
     private RecyclerView r;
     SwipeRefreshLayout layout;
     FeedAdapter postAdapter;
@@ -71,7 +71,8 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         context = getActivity().getApplicationContext();
-        if(user == null || user.getId() ==  SharedPrefManager.getInstance(getActivity().getApplicationContext()).getUser().getId()) {            user = SharedPrefManager.getInstance(getActivity().getApplicationContext()).getUser();
+        if(user == null || user.getId() ==  SharedPrefManager.getInstance(getActivity().getApplicationContext()).getUser().getId()) {
+            user = SharedPrefManager.getInstance(getActivity().getApplicationContext()).getUser();
             logoutButton = view.findViewById(R.id.logout);
             logoutButton.setOnClickListener(v -> {
                 if (v.equals(logoutButton)) {
