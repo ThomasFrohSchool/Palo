@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.palo.palo.FeedAdapter;
 import com.palo.palo.R;
@@ -42,6 +43,7 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
     View settingView;
     private static User user;
     private RecyclerView r;
+    SwipeRefreshLayout layout;
     FeedAdapter postAdapter;
     List<Palo> palos;
 //    private String str;
@@ -94,6 +96,15 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
         r.setAdapter(postAdapter);
         r.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         profilePresenter = new ProfilePresenter(this, context, user.getId(), user.getUsername());
+        layout = view.findViewById(R.id.profileSwipeRefreshLayout);
+
+        layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                layout.setRefreshing(false);
+                profilePresenter.loadProfile(SharedPrefManager.getInstance(view.getContext()).getUser().getId());
+            }
+        });
     }
 
     @Override
