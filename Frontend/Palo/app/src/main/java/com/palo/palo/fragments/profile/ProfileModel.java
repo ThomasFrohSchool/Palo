@@ -39,6 +39,7 @@ public class ProfileModel {
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
                 response -> {
                     try {
+                        System.out.println("hooo");
                         volleyListener.onPostsSuccess(response);
                     } catch (JSONException e) {
                         e.printStackTrace();

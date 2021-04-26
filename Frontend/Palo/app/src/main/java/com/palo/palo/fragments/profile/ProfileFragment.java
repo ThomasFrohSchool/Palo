@@ -91,7 +91,7 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
         followerAmt = view.findViewById(R.id.followerAmt);
         followingAmt = view.findViewById(R.id.followingAmt);
         r = view.findViewById(R.id.userPalos);
-
+        r.setVisibility(View.VISIBLE);
         profileName.setText(user.getUsername());
         postAdapter = new FeedAdapter(getActivity().getApplicationContext(), new ArrayList<>(), this);
         r.setAdapter(postAdapter);
@@ -103,7 +103,7 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
             @Override
             public void onRefresh() {
                 layout.setRefreshing(false);
-                profilePresenter.loadProfile(SharedPrefManager.getInstance(view.getContext()).getUser().getId());
+                profilePresenter.loadProfile(user.getId());
             }
         });
     }

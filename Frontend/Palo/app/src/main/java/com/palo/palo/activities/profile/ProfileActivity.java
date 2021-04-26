@@ -16,7 +16,7 @@ public class ProfileActivity extends AppCompatActivity {
     TextView profileHeader;
     ImageButton backButton;
     FragmentManager fragmentManager = getSupportFragmentManager();
-    ProfileFragment profileFragment;
+    ProfileFragment profFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +30,8 @@ public class ProfileActivity extends AppCompatActivity {
         backButton = findViewById(R.id.backProfileButton);
         backButton.setOnClickListener(v -> finish());
 
-        profileFragment = new ProfileFragment(user);
-        fragmentManager.beginTransaction().add(R.id.profileFrame, profileFragment, "profileFrag").commit();
+        profFragment = new ProfileFragment(user);
+        fragmentManager.beginTransaction().add(R.id.profileFrame, profFragment, "profFrag").show(profFragment).commit();
+
     }
 }

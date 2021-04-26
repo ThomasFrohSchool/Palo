@@ -107,7 +107,8 @@ public class SearchFragment extends Fragment implements UserSearchAdapter.onUser
 
     @Override
     public void makeToast(String message) {
-        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+        System.out.println(message);
+//        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
     }
 
     @Override

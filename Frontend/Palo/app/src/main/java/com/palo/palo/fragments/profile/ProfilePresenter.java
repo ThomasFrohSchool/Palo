@@ -39,6 +39,7 @@ public class ProfilePresenter implements IProfilePresenter, IProfileVolleyListen
     @Override
     public void loadPosts(int userId) {
         //todo update path to server path
+        System.out.println("cool stuff " + userId);
         String url = POSTS_FROM_USER + userId;
         model.getUserPosts(url, username, this);
     }
@@ -47,7 +48,8 @@ public class ProfilePresenter implements IProfilePresenter, IProfileVolleyListen
     public void likePalo(int position, int paloId, int userId, boolean toLike) {
         if(toLike)
             model.addPaloLike(position, paloId, userId, this);
-        model.removePaloLike(position, paloId, userId, this);
+        else
+            model.removePaloLike(position, paloId, userId, this);
     }
 
     @Override
