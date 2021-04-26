@@ -43,6 +43,8 @@ public class ExtendedPostPresenterTest {
         presenter.postComment(comment1);
 
         verify(model,times(1)).postComment(comment1, 1, presenter);
+        verify(view,times(0)).makeToast("Comment must have length > 1.");
+
     }
     @Test
     public void postCommentTestCase2() throws JSONException {
