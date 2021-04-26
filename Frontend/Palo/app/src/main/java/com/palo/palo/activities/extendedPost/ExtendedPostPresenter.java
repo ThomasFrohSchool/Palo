@@ -10,6 +10,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import static com.palo.palo.volley.ServerURLs.PICS;
+
 public class ExtendedPostPresenter implements IExtendedPostPresenter, IExtendedPostVolleyListener {
     private IExtendedPostView view;
     private ExtendedPostModel model;
@@ -79,8 +81,8 @@ public class ExtendedPostPresenter implements IExtendedPostPresenter, IExtendedP
     @Override
     public void onUserSuccess(JSONObject jsonObject, int commentIndex) throws JSONException {
         try {
-            view.updateUser(commentIndex, jsonObject.getString("username"));
-            // TODO set profile image here...
+            String imageLink = PICS + jsonObject.getInt("id") + "/" + jsonObject.getInt("id");
+            view.updateUser(commentIndex, jsonObject.getString("username"), imageLink);
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -171,8 +171,9 @@ public class ExtendedPostActivity extends AppCompatActivity implements CommentAd
     }
 
     @Override
-    public void updateUser(int commentIndex, String username) {
+    public void updateUser(int commentIndex, String username, String imageLink) {
         comments.get(commentIndex).setAuthorUsername(username);
+        comments.get(commentIndex).setAuthorProfileImage(imageLink);
         commentAdapter.updateComment(commentIndex, comments.get(commentIndex));
     }
 
