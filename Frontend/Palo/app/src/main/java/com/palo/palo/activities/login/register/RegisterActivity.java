@@ -135,8 +135,8 @@ public class RegisterActivity extends AppCompatActivity implements IRegisterView
 
         if (hasEmptyCredentials(username, email, password)) return null;
         JSONObject json = new JSONObject();
-        json.put("username", email);
-        json.put("email", password);
+        json.put("username", username);
+        json.put("email", email);
         json.put("password", password);
         return json;
     }
