@@ -38,6 +38,8 @@ public class Comment {
         this.author.setUsername(username);
     }
 
+    public void setAuthorProfileImage(String image) { this.author.setProfileImage(image); }
+
     public String getPostDate() {
         return postDate;
     }

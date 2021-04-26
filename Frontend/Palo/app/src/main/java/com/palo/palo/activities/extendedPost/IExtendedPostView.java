@@ -13,7 +13,7 @@ public interface IExtendedPostView {
     public void postComment();
     public void updateLikeToPalo(boolean isLiked);
     public void clearCommentText();
-    public void updateUser(int commentIndex, String username);
+    public void updateUser(int commentIndex, String username, String imageLink);
     public void dismissKeyboard();
     public void showPlaybackLink(String playbackLink);
 }
