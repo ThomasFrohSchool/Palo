@@ -74,7 +74,7 @@ public class User implements Parcelable {
         JSONArray j = userJson.getJSONArray("followers");
         isFollower = false;
         for(int i = 0; i < j.length(); i++) {
-            if(currentUserID == j.getInt(i));
+            if(currentUserID == j.getInt(i))
                 isFollower = true;
         }
     }

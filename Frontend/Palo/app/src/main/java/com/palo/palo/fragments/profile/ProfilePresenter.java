@@ -65,7 +65,7 @@ public class ProfilePresenter implements IProfilePresenter, IProfileVolleyListen
         view.setFollowersCount(String.valueOf(response.getJSONArray("followers").length()));
         view.setFollowingCount(String.valueOf(response.getJSONArray("following").length()));
         if(response.getString("bio").equalsIgnoreCase("null")) {
-            view.setProfileBio("Set a bio here...");
+            view.setProfileBio("");
         }else {
             view.setProfileBio(response.getString("bio"));
         }

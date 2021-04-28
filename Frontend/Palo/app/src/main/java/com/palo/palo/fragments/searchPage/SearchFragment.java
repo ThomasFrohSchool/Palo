@@ -78,7 +78,9 @@ public class SearchFragment extends Fragment implements UserSearchAdapter.onUser
         r = view.findViewById(R.id.res);
         r.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         spotifyAdapter = new AttachementSearchAdapter(context, new ArrayList<>());
+        usersList = new ArrayList<>();
         userAdapter = new UserSearchAdapter(context, usersList, this);
+        r.setAdapter(userAdapter);
 
 
         p = new ProgressDialog(getActivity().getApplicationContext());
@@ -101,7 +103,7 @@ public class SearchFragment extends Fragment implements UserSearchAdapter.onUser
     public void loadUsers(List<User> users) {
         this.usersList = users;
         r.setVisibility(View.VISIBLE);
-        r.setAdapter(userAdapter);
+//        r.setAdapter(userAdapter);
         userAdapter.swapDataSet(users);
     }
 
@@ -150,6 +152,7 @@ public class SearchFragment extends Fragment implements UserSearchAdapter.onUser
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET, FOLLOW + SharedPrefManager.getInstance(context).getUser().getId() + "/" + usersList.get(position).getId(), null,
                 response -> {
+                    usersList.get(position).setIsFollower();
                     System.out.println("Attempting to follow " + usersList.get(position).getId());
                 },
                 error -> {
@@ -169,6 +172,8 @@ public class SearchFragment extends Fragment implements UserSearchAdapter.onUser
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET, UNFOLLOW + SharedPrefManager.getInstance(context).getUser().getId() + "/" + usersList.get(position).getId(), null,
                 response -> {
+                    usersList.get(position).setIsFollower();
+
                     System.out.println("Attempting to unfollow " + usersList.get(position).getId());
                 },
                 error -> {

@@ -98,13 +98,13 @@ public class UserSearchAdapter extends RecyclerView.Adapter<UserSearchAdapter.Vi
 
         public void followClicked(int pos) {
             //getFollowing();
-            toggleFollow(searchResults.get(pos).getIsFollower());
+//            toggleFollow(searchResults.get(pos).getIsFollower());
             if(searchResults.get(pos).getIsFollower()) {
-                onUserListener.onAddFollowClicked(pos);
+                onUserListener.onRemoveFollowClicked(pos);
                 searchResults.get(pos).setIsFollower();
             }
             else {
-                onUserListener.onRemoveFollowClicked(pos);
+                onUserListener.onAddFollowClicked(pos);
                 searchResults.get(pos).setIsFollower();
             }
             //onUserListener.onAddFollowClicked(pos);
