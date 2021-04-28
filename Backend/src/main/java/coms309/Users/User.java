@@ -19,6 +19,7 @@ public class User {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	private String bio;
 	private String username;
 	private String password;
 	private String email;
@@ -62,6 +63,9 @@ public class User {
 	}
 	public List<Posts> getPosts(){
 		return this.posts;
+	}
+	public String getBio(){
+		return this.bio;
 	}
 	public List<Integer> getFollowers(){
 		List<Integer> followerIDs = new ArrayList<Integer>();
@@ -115,5 +119,8 @@ public class User {
 	}
 	public void addFollowing(User following){
 		this.following.add(following);
+	}
+	public void setBio(String bio){
+		this.bio = bio;
 	}
 }
