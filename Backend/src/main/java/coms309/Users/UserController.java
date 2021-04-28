@@ -112,8 +112,8 @@ public class UserController {
         return results;
     }
     @ApiOperation(value = "Set a bio for a user profile")
-    @PostMapping(path = "/bio/{userID}")
-    String searchUsername(@PathVariable("userID") int userID, @RequestBody String bio){
+    @GetMapping(path = "/bio/{userID}")
+    String searchUsername(@PathVariable("userID") int userID, @RequestParam("bio") String bio){
         if(bio == null){
             return "DIFFICULT DIFFICULT LEMON DIFFICULT";
         }
