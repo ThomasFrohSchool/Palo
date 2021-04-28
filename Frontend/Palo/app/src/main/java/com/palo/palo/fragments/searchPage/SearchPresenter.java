@@ -2,6 +2,7 @@ package com.palo.palo.fragments.searchPage;
 
 import android.content.Context;
 
+import com.palo.palo.SharedPrefManager;
 import com.palo.palo.model.Album;
 import com.palo.palo.model.Artist;
 import com.palo.palo.model.Attachment;
@@ -18,12 +19,12 @@ import java.util.List;
 public class SearchPresenter implements ISearchPresenter, ISearchVolleyListener {
     private ISearchView view;
     private SearchModel model;
-//    private Context context;
+    private Context context;
 
     public SearchPresenter(ISearchView view, Context context) {
         this.view = view;
         this.model = new SearchModel(context);
-//        this.context = context;
+        this.context = context;
     }
     @Override
     public void onSpotifySearchSuccess(String response) throws JSONException {
@@ -47,14 +48,14 @@ public class SearchPresenter implements ISearchPresenter, ISearchVolleyListener 
     }
 
     @Override
-    public void onUserSearchSuccess(JSONArray jsonArray, String username) throws JSONException {
+    public void onUserSearchSuccess(JSONArray jsonArray) throws JSONException {
         view.logd(jsonArray.toString());
         List<User> users = new ArrayList<>();
         for(int i = 0; i < jsonArray.length(); i++) {
-            JSONObject userJson = jsonArray.getJSONObject(i);
-            if(username.equalsIgnoreCase(userJson.getString("username"))) {
-                users.add(new User(userJson));
-            }
+            User u = new User(jsonArray.getJSONObject(i), SharedPrefManager.getInstance(context).getUser().getId());
+            if(u.getId() == SharedPrefManager.getInstance(context).getUser().getId())
+                continue;
+            users.add(u);
         }
         view.dismissKeyboard();
         view.loadUsers(users);

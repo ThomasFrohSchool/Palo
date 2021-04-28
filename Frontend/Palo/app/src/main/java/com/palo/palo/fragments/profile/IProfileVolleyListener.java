@@ -7,6 +7,7 @@ import org.json.JSONObject;
 public interface IProfileVolleyListener {
     public void onEmptyResponse(String response);
     public void onProfileSuccess(JSONObject response) throws JSONException;
+    //public void onEditBioSuccess();
     public void onPostsSuccess(JSONArray response) throws JSONException;
 
     public void onError(String message);

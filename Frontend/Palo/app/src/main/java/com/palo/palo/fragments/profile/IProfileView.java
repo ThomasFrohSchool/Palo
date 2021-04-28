@@ -17,4 +17,5 @@ public interface IProfileView {
     public void setPaloCount(String num);
     public void hideOwnProfileStuff();
     public void updateLikeToPalo(int paloIndex, boolean isLiked);
+    public void setProfileBio(String bio);
 }

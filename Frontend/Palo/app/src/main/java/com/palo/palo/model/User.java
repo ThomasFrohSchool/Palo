@@ -9,6 +9,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,8 +23,10 @@ public class User implements Parcelable {
     private String username;
     public String email;
     private String profileImage;
+    private String bio;
     private List<Integer> userFollowing;
     private List<Integer> userFollowers;
+    private boolean isFollower;
 
     public User(){}
 
@@ -33,6 +36,7 @@ public class User implements Parcelable {
         this.email = email;
         this.userFollowing = new ArrayList<>();
         this.userFollowers = new ArrayList<>();
+        this.bio = "";
         this.profileImage = "https://icon-library.com/images/default-user-icon/default-user-icon-4.jpg";
     }
     
@@ -41,12 +45,14 @@ public class User implements Parcelable {
         username = parcel.readString();
         email = parcel.readString();
         profileImage = parcel.readString();
+        bio = parcel.readString();
         this.userFollowing = new ArrayList<>();
         this.userFollowers = new ArrayList<>();
     }
     public User(int id){
         this.id = id;
         this.username = "";
+        this.bio = "";
         this.profileImage = "https://icon-library.com/images/default-user-icon/default-user-icon-4.jpg";
         this.userFollowing = new ArrayList<>();
         this.userFollowers = new ArrayList<>();
@@ -56,14 +62,35 @@ public class User implements Parcelable {
         username = userJson.getString("username");
         id = userJson.getInt("id");
         profileImage = PICS + userJson.getInt("id") + "/" + userJson.getInt("id");
+        bio = userJson.getString("bio");
+    }
+
+    public User(JSONObject userJson, int currentUserID) throws JSONException {
+        username = userJson.getString("username");
+        id = userJson.getInt("id");
+        profileImage = PICS + userJson.getInt("id") + "/" + userJson.getInt("id");
+        bio = userJson.getString("bio");
+        userFollowing = new ArrayList<>();
+        JSONArray j = userJson.getJSONArray("followers");
+        isFollower = false;
+        for(int i = 0; i < j.length(); i++) {
+            if(currentUserID == j.getInt(i));
+                isFollower = true;
+        }
     }
 
     public User(int userId, String username) {
         id = userId;
         this.username = username;
         this.profileImage = "https://icon-library.com/images/default-user-icon/default-user-icon-4.jpg";
-
+        this.bio = "";
     }
+
+    public void setIsFollower() {
+        this.isFollower = !isFollower;
+    }
+
+    public boolean getIsFollower() { return isFollower; }
 
     public int getId() {
         return id;
@@ -98,6 +125,12 @@ public class User implements Parcelable {
     public void setUserFollowers(List<Integer> userFollowers) {
         this.userFollowers = userFollowers;
     }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public String getBio() { return bio; }
 
     /*public boolean getUserByIdFollowing(Integer id) {
         for(int i = 0; i < userFollowing.size(); i++) {

@@ -7,9 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,6 +19,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.palo.palo.FeedAdapter;
 import com.palo.palo.R;
 import com.palo.palo.SharedPrefManager;
+import com.palo.palo.activities.EditBioActivity;
 import com.palo.palo.activities.extendedPost.ExtendedPostActivity;
 import com.palo.palo.model.Palo;
 import com.palo.palo.model.User;
@@ -39,8 +40,10 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
     private TextView paloAmt;
     private TextView followerAmt;
     private TextView followingAmt;
+    private TextView bio;
+    private ImageButton editBio;
     Button logoutButton;
-    View settingView;
+    //View settingView;
     private User user;
     private RecyclerView r;
     SwipeRefreshLayout layout;
@@ -74,6 +77,14 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
         if(user == null || user.getId() ==  SharedPrefManager.getInstance(getActivity().getApplicationContext()).getUser().getId()) {
             user = SharedPrefManager.getInstance(getActivity().getApplicationContext()).getUser();
             logoutButton = view.findViewById(R.id.logout);
+            editBio = view.findViewById(R.id.editBio);
+            editBio.setOnClickListener(v -> {
+                if(v.equals(editBio)) {
+                    Intent i = new Intent(context, EditBioActivity.class);
+                    i.putExtra("ID",SharedPrefManager.getInstance(getActivity().getApplicationContext()).getUser().getId());
+                    startActivity(i);
+                }
+            });
             logoutButton.setOnClickListener(v -> {
                 if (v.equals(logoutButton)) {
                     user = null;
@@ -81,7 +92,7 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
                 }
             });
         } else {
-            settingView = view.findViewById(R.id.settingsImage);
+            editBio = view.findViewById(R.id.editBio);
             logoutButton = view.findViewById(R.id.logout);
             this.hideOwnProfileStuff();
         }
@@ -91,6 +102,7 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
         paloAmt = view.findViewById(R.id.paloAmt);
         followerAmt = view.findViewById(R.id.followerAmt);
         followingAmt = view.findViewById(R.id.followingAmt);
+        bio = view.findViewById(R.id.bio);
         r = view.findViewById(R.id.userPalos);
         r.setVisibility(View.VISIBLE);
         profileName.setText(user.getUsername());
@@ -181,6 +193,13 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
     }
 
     @Override
+    public void setProfileBio(String bio) {
+        System.out.println(bio);
+
+        this.bio.setText(bio);
+    }
+
+    @Override
     public void setPaloCount(String num) {
         System.out.println(num);
 
@@ -190,7 +209,7 @@ public class ProfileFragment extends Fragment implements FeedAdapter.OnFeedListe
     @Override
     public void hideOwnProfileStuff() {
         logoutButton.setVisibility(View.INVISIBLE);
-        settingView.setVisibility(View.INVISIBLE);
+        editBio.setVisibility(View.INVISIBLE);
     }
 
     @Override

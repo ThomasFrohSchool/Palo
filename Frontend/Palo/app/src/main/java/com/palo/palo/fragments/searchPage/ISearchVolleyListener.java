@@ -5,6 +5,6 @@ import org.json.JSONException;
 
 public interface ISearchVolleyListener {
     public void onSpotifySearchSuccess(String response) throws JSONException;
-    public void onUserSearchSuccess(JSONArray response, String username) throws JSONException;
+    public void onUserSearchSuccess(JSONArray response) throws JSONException;
     public void onSearchError(String message);
 }

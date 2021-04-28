@@ -10,6 +10,7 @@ import com.palo.palo.volley.VolleySingleton;
 import org.json.JSONException;
 
 import static com.palo.palo.volley.ServerURLs.SEARCH;
+import static com.palo.palo.volley.ServerURLs.SEARCH_BY_USERNAME;
 import static com.palo.palo.volley.ServerURLs.USERS;
 
 public class SearchModel {
@@ -37,10 +38,11 @@ public class SearchModel {
 
     public void getUserSearchResults(String searchMessage, ISearchVolleyListener volleyListener){
 //        String url = USERS + searchMessage;
-        JsonArrayRequest request = new JsonArrayRequest(USERS,
+        String url = SEARCH_BY_USERNAME + searchMessage;
+        JsonArrayRequest request = new JsonArrayRequest(url,
                 response -> {
                     try {
-                        volleyListener.onUserSearchSuccess(response, searchMessage);
+                        volleyListener.onUserSearchSuccess(response);
                     } catch (JSONException e) {
                         volleyListener.onSearchError(e.getMessage());
                     }

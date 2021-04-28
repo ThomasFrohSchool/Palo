@@ -26,6 +26,7 @@ public class ServerURLs {
     public static final String UNFOLLOW = ROOT + "remove/";
     public static final String ADD_LIKE(int postId, int userId){return ROOT + "like/add/"+ postId + "/" + userId;}
     public static final String REMOVE_LIKE(int postId, int userId){return ROOT + "like/remove/"+ postId + "/" + userId;}
+    public static final String EDITBIO = ROOT + "bio/";
 
     public static String ATTACHMENT(int type){
         switch (type){

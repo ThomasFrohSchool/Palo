@@ -13,6 +13,7 @@ import org.json.JSONException;
 
 import static com.palo.palo.volley.ServerURLs.ADD_LIKE;
 import static com.palo.palo.volley.ServerURLs.ATTACHMENT;
+import static com.palo.palo.volley.ServerURLs.EDITBIO;
 import static com.palo.palo.volley.ServerURLs.REMOVE_LIKE;
 import static com.palo.palo.volley.ServerURLs.USER_BY_ID;
 
@@ -83,4 +84,10 @@ public class ProfileModel {
         }, error -> volleyListener.onError(error.getMessage()));
         VolleySingleton.getInstance(context).addToRequestQueue(request);
     }
+
+    /*public void editBioRequest(int id) {
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, EDITBIO + id, null, response -> {
+
+        })
+    }*/
 }

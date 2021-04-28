@@ -64,7 +64,13 @@ public class ProfilePresenter implements IProfilePresenter, IProfileVolleyListen
         view.setProfilePicture(PICS + userId + "/" + userId);
         view.setFollowersCount(String.valueOf(response.getJSONArray("followers").length()));
         view.setFollowingCount(String.valueOf(response.getJSONArray("following").length()));
+        view.setProfileBio(response.getString("bio"));
     }
+
+    /*@Override
+    public void onEditBioSuccess() {
+
+    }*/
 
     @Override
     public void onPostsSuccess(JSONArray response) {

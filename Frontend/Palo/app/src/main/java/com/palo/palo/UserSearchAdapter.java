@@ -64,13 +64,7 @@ public class UserSearchAdapter extends RecyclerView.Adapter<UserSearchAdapter.Vi
         Picasso.get().load(searchResults.get(position).getProfileImage()).into(holder.profilePic);
         //getFollowing();
         //user.setUserFollowing(getFollowing());
-        for(int i = 0; i < searchResults.size(); i++) {
-            for(int j = 0; j < userFollowing.size(); j++) {
-                if(searchResults.get(i).getId() == userFollowing.get(j)) {
-                    holder.toggleFollow(true);
-                }
-            }
-        }
+        holder.toggleFollow(searchResults.get(position).getIsFollower());
         //holder.toggleFollow(user.toggleIsFollowing(searchResults.get(position).getId()));
     }
 
@@ -103,12 +97,16 @@ public class UserSearchAdapter extends RecyclerView.Adapter<UserSearchAdapter.Vi
         }
 
         public void followClicked(int pos) {
-            getFollowing();
-            toggleFollow(toggleIsFollowing(searchResults.get(pos).getId()));
-            if(getIsFollowing(searchResults.get(pos).getId()))
+            //getFollowing();
+            toggleFollow(searchResults.get(pos).getIsFollower());
+            if(searchResults.get(pos).getIsFollower()) {
                 onUserListener.onAddFollowClicked(pos);
-            else
+                searchResults.get(pos).setIsFollower();
+            }
+            else {
                 onUserListener.onRemoveFollowClicked(pos);
+                searchResults.get(pos).setIsFollower();
+            }
             //onUserListener.onAddFollowClicked(pos);
             notifyItemChanged(pos);
         }
@@ -125,7 +123,7 @@ public class UserSearchAdapter extends RecyclerView.Adapter<UserSearchAdapter.Vi
         }
     }
 
-    public boolean getIsFollowing(int id) {
+    /*public boolean getIsFollowing(int id) {
         //int pos;
         for(int i = 0; i < userFollowing.size(); i++) {
             if(userFollowing.get(i) == id) {
@@ -133,9 +131,9 @@ public class UserSearchAdapter extends RecyclerView.Adapter<UserSearchAdapter.Vi
             }
         }
         return false;
-    }
+    }*/
 
-    public boolean toggleIsFollowing(int id) {
+    /*public boolean toggleIsFollowing(int id) {
         //int pos;
         for(int i = 0; i < userFollowing.size(); i++) {
             if(userFollowing.get(i) == id) {
@@ -146,7 +144,7 @@ public class UserSearchAdapter extends RecyclerView.Adapter<UserSearchAdapter.Vi
         }
         userFollowing.add(id);
         return true;
-    }
+    }*/
 
     public interface onUserListener {
         public String onAddFollowClicked(int position);
