@@ -100,15 +100,28 @@ public class UserController {
     }
 
 
-    @ApiOperation(value = "Add user1ID as a follower of user2ID")
+    @ApiOperation(value = "Search for all users with names similar to name")
     @GetMapping(path = "/searchUsername")
     List<User> searchUsername(@ApiParam(value = "Name that will be searched", required = true) @RequestParam("name") String name){
         if(name == null){
             return null;
         }
-        List<User> results = userTable.findByUsername(name);
+        List<User> results = userTable.findByUsernameLike("%"+name+"%");
         if (results.size() == 0)
             return null;
         return results;
+    }
+    @ApiOperation(value = "Set a bio for a user profile")
+    @GetMapping(path = "/bio/{userID}")
+    String searchUsername(@PathVariable("userID") int userID, @RequestParam("bio") String bio){
+        if(bio == null){
+            return "DIFFICULT DIFFICULT LEMON DIFFICULT";
+        }
+        User results = userTable.findById(userID);
+        if (results == null)
+            return "DIFFICULT DIFFICULT LEMON DIFFICULT";
+        results.setBio(bio);
+        userTable.save(results);
+        return "WINNER WINNER CHICKEN DINNER";
     }
 }
